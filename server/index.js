@@ -7,19 +7,14 @@ require('dotenv').config();
 
 app.use(express.json());
 app.use(cors());
-app.use('/api/users', userRoute);
 
-app.post('', () => {});
+app.use('/api/users', userRoute);
 
 const port = process.env.PORT || 5000;
 const uri = process.env.ATLAS_URI;
 
 app.listen(port, (req, res) => {
   console.log(`server: ${port}`);
-});
-
-app.get('/login', async (req, res) => {
-  console.log('login');
 });
 
 mongoose
