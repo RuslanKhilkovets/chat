@@ -6,6 +6,8 @@ const Register = () => {
   const { registerInfo, updateRegisterInfo, registerError, registerUser, isRegisterLoading } =
     useContext(AuthContext);
 
+    console.log(registerError);
+    
   return (
     <>
       <Form onSubmit={registerUser}>
