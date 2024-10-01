@@ -34,6 +34,8 @@ export const AuthContextProvider = ({ children }) => {
     const res = await postRequest(baseUrl + '/users/register', JSON.stringify(registerInfo));
     if (res.error) {
       setRegisterError(res.message);
+      setIsRegisterLoading(false);
+      return;
     }
 
     setIsRegisterLoading(false);
@@ -50,6 +52,8 @@ export const AuthContextProvider = ({ children }) => {
     const res = await postRequest(baseUrl + '/users/login', JSON.stringify(loginInfo));
     if (res.error) {
       setLoginError(res.message);
+      setIsLoginLoading(false);
+      return;
     }
 
     setIsLoginLoading(false);
