@@ -5,8 +5,7 @@ import { AuthContext } from '../context/AuthContext';
 const Login = () => {
   const { loginInfo, updateLoginInfo, loginError, loginUser, isLoginLoading } =
     useContext(AuthContext);
-  console.log(loginError);
-  
+
   return (
     <>
       <Form onSubmit={loginUser}>
