@@ -34,7 +34,7 @@ mongoose
 
 const io = new Server(expressServer, {
   cors: {
-    origin: process.env.CLIENT_URL,
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   },
 });
