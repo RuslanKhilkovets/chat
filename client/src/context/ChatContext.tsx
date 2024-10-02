@@ -227,6 +227,7 @@ export const ChatContextProvider = ({ children, user }) => {
     });
     setNotifications(mNotifications);
   }, []);
+
   return (
     <ChatContext.Provider
       value={{
