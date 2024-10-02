@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const { Server } = require('socket.io');
 const userRoute = require('./routes/userRoute');
 const chatRoute = require('./routes/chatRoute');
 const messageRoute = require('./routes/messageRoute');
@@ -18,7 +19,7 @@ app.use('/api/messages', messageRoute);
 const port = process.env.PORT || 5000;
 const uri = process.env.ATLAS_URI;
 
-app.listen(port, (req, res) => {
+const expressServer = app.listen(port, (req, res) => {
   console.log(`server: ${port}`);
 });
 
@@ -30,3 +31,47 @@ mongoose
   .catch(err => {
     console.log(`mongo error ${err.message}`);
   });
+
+const io = new Server(expressServer, {
+  cors: {
+    origin: process.env.CLIENT_URL,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  },
+});
+
+let onlineUsers = [];
+
+io.on('connection', socket => {
+  console.log('New connection', socket.id);
+
+  socket.on('addNewUser', userId => {
+    if (!onlineUsers.some(user => user.userId === userId) && userId !== null) {
+      onlineUsers.push({
+        userId,
+        socketId: socket.id,
+      });
+    }
+
+    io.emit('getOnlineUsers', onlineUsers);
+  });
+
+  socket.on('sendMessage', message => {
+    const user = onlineUsers.find(user => user.userId === message.recipientId);
+
+    if (user) {
+      io.to(user.socketId).emit('getMessage', message);
+      io.to(user.socketId).emit('getNotification', {
+        senderId: message.senderId,
+        isRead: false,
+        date: new Date(),
+      });
+    }
+  });
+
+  socket.on('disconnect', () => {
+    onlineUsers = onlineUsers.filter(user => user.socketId !== socket.id);
+    console.log('User disconnected', socket.id);
+
+    io.emit('getOnlineUsers', onlineUsers);
+  });
+});
