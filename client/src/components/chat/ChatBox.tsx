@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect, useRef } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { ChatContext } from '../../context/ChatContext';
 import { useFetchRecipient } from '../../hooks/useFetchRecipient';
@@ -12,6 +12,19 @@ const ChatBox = () => {
   const [textMessage, setTextMessage] = useState<string>('');
 
   const { recipientUser } = useFetchRecipient(currentChat, user);
+
+  // Ref to handle auto-scrolling
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Scroll to bottom function
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  // Auto-scroll whenever messages change
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   if (!recipientUser)
     return <p style={{ textAlign: 'center', width: '100%' }}>No conversation selected yet...</p>;
@@ -41,6 +54,7 @@ const ChatBox = () => {
               </Stack>
             );
           })}
+        <div ref={messagesEndRef} />
       </Stack>
       <Stack direction="horizontal" gap={3} className="chat-input flex-grow-0">
         <InputEmoji

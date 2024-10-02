@@ -9,7 +9,6 @@ import ChatBox from '../components/chat/ChatBox';
 const Chat = () => {
   const { user } = useContext(AuthContext);
   const { userChats, isUserChatsLoading, updateCurrentChat } = useContext(ChatContext);
-  console.log(userChats?.length === 0);
 
   return (
     <Container>
