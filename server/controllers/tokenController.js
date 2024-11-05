@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const tokenModel = require('../models/tokenModel');
+const logger = require('../utils/logger');
 
 const createToken = async (req, res) => {
   try {
@@ -7,6 +8,8 @@ const createToken = async (req, res) => {
 
     const tokenDoc = new tokenModel({ token: newToken, isUsed: false });
     await tokenDoc.save();
+
+    logger.info('Admin created new token');
 
     res.status(201).json({ token: newToken, isUsed: false });
   } catch (err) {

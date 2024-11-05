@@ -2,6 +2,7 @@ const adminModel = require('../models/adminModel');
 const bcrypt = require('bcrypt');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
+const logger = require('../utils/logger');
 
 const createToken = _id => {
   const jwtkey = process.env.JWT_SECRET_KEY;
@@ -55,7 +56,9 @@ const loginAdmin = async (req, res) => {
 
     const token = createToken(admin._id);
 
-    res.status(200).json({ _id: admin._id, login: admin.login, login, token });
+    logger.info('Admin accessed dashboard', { _id: admin._id, login });
+
+    res.status(200).json({ _id: admin._id, login: admin.login, token });
   } catch (err) {
     console.error(err);
   }
