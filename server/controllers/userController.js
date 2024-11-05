@@ -1,4 +1,5 @@
 const userModel = require('../models/userModel');
+const tokenModel = require('../models/tokenModel');
 const bcrypt = require('bcrypt');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
@@ -11,7 +12,7 @@ const createToken = _id => {
 
 const registerUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, registerToken, email, password } = req.body;
 
     let user = await userModel.findOne({ email });
 
@@ -19,7 +20,7 @@ const registerUser = async (req, res) => {
       return res.status(400).json({ message: 'User with given email already exists' });
     }
 
-    if (!name || !email || !password)
+    if (!name || !email || !password || !registerToken)
       return res.status(400).json({ message: 'All fields must be provided' });
 
     if (!validator.isEmail(email)) {
@@ -29,16 +30,24 @@ const registerUser = async (req, res) => {
     if (!validator.isStrongPassword(password))
       return res.status(400).json({ message: 'Password must be a strong' });
 
-    user = new userModel({ name, email, password });
+    const tokenDoc = await tokenModel.findOne({ token: registerToken, isUsed: false });
+
+    if (!tokenDoc)
+      return res.status(400).json({ message: 'Invalid or already used registration token' });
+
+    user = new userModel({ name, email, password, registerToken });
 
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(password, salt);
 
     await user.save();
 
+    tokenDoc.isUsed = true;
+    await tokenDoc.save();
+
     const token = createToken(user._id);
 
-    res.status(200).json({ _id: user._id, name, email, token });
+    res.status(200).json({ _id: user._id, name, email, registerToken, token });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server Error', error: err });

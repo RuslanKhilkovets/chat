@@ -8,7 +8,7 @@ const createToken = async (req, res) => {
     const tokenDoc = new tokenModel({ token: newToken, isUsed: false });
     await tokenDoc.save();
 
-    res.status(201).json({ token: newToken });
+    res.status(201).json({ token: newToken, isUsed: false });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal Server Error' });
