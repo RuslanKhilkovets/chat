@@ -1,8 +1,8 @@
-import Login from 'pages/Login';
+import Login from '../pages/Login';
 
 export const publicRoutes = [
   {
-    path: '/',
+    to: '/',
     component: Login,
   },
 ];

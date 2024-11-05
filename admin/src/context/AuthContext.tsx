@@ -1,17 +1,9 @@
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useEffect, useState } from 'react';
 import { baseUrl, postRequest } from '../utils/services';
 
 export const AuthContext = createContext({});
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
-
-export const AuthContextProvider = ({ children }: React.PropsWithChildren) => {
+export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [registerError, setRegisterError] = useState(null);
   const [isRegisterLoading, setIsRegisterLoading] = useState(false);
@@ -41,7 +33,6 @@ export const AuthContextProvider = ({ children }: React.PropsWithChildren) => {
     setRegisterError(null);
 
     const res = await postRequest(baseUrl + '/users/register', JSON.stringify(registerInfo));
-
     if (res.error) {
       setRegisterError(res.message);
       setIsRegisterLoading(false);
@@ -78,6 +69,8 @@ export const AuthContextProvider = ({ children }: React.PropsWithChildren) => {
 
   useEffect(() => {
     const userString = localStorage.getItem('user');
+    console.log(userString);
+
     if (userString) {
       setUser(JSON.parse(userString));
     } else {

@@ -1,13 +1,12 @@
-import { AuthContextProvider } from 'context/AuthContext';
-import { Navigation } from './navigation';
-import React from 'react';
+import { AuthContextProvider } from './context/AuthContext';
+import Navigation from './navigation/Navigation';
 
-const App: React.FC = () => {
+function App() {
   return (
     <AuthContextProvider>
       <Navigation />
     </AuthContextProvider>
   );
-};
+}
 
 export default App;

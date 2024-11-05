@@ -1,38 +1,50 @@
 import { useContext } from 'react';
-import { Alert, Button, Col, Form, Row, Stack } from 'react-bootstrap';
 import { AuthContext } from '../context/AuthContext';
+import { Grid2, Typography } from '@mui/material';
+import './Login.css';
 
 const Login = () => {
   const { loginInfo, updateLoginInfo, loginError, loginUser, isLoginLoading } =
     useContext(AuthContext);
 
-  return (
-    <>
-      <Form onSubmit={loginUser}>
-        <Row style={{ height: '100vh', justifyContent: 'center', paddingTop: '20%' }}>
-          <Col xs={6}>
-            <Stack gap={3}>
-              <h2>Login</h2>
-              <Form.Control
-                type="email"
-                placeholder="Email"
-                onChange={e => updateLoginInfo({ ...loginInfo, email: e.target.value })}
-              />
-              <Form.Control
-                type="password"
-                placeholder="Password"
-                onChange={e => updateLoginInfo({ ...loginInfo, password: e.target.value })}
-              />
-              <Button variant="primary" type="submit">
-                {isLoginLoading ? 'Logging...' : 'Login'}
-              </Button>
+  const handleSubmit = e => {
+    e.preventDefault();
+    loginUser();
+  };
 
-              {loginError && <Alert variant="danger">{loginError}</Alert>}
-            </Stack>
-          </Col>
-        </Row>
-      </Form>
-    </>
+  return (
+    <Grid2
+      container
+      justifyContent="center"
+      alignItems="center"
+      style={{ height: '100vh', width: '100vw' }}
+    >
+      <div className="login-container">
+        <Typography variant="h3" sx={{ mb: 2 }}>
+          Login
+        </Typography>
+        <form onSubmit={handleSubmit} className="login-form">
+          <input
+            type="text"
+            placeholder="Login"
+            value={loginInfo.login || ''}
+            onChange={e => updateLoginInfo({ ...loginInfo, login: e.target.value })}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={loginInfo.password || ''}
+            onChange={e => updateLoginInfo({ ...loginInfo, password: e.target.value })}
+            required
+          />
+          <button type="submit" disabled={isLoginLoading}>
+            {isLoginLoading ? 'Logging...' : 'Login'}
+          </button>
+          {loginError && <div className="alert alert-danger">{loginError}</div>}
+        </form>
+      </div>
+    </Grid2>
   );
 };
 

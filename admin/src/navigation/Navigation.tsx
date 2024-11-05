@@ -1,18 +1,25 @@
-import { AuthContext, useAuth } from 'context/AuthContext';
-import publicRoutes from 'navigation/publicRoutes';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import privateRoutes from './privateRoutes';
+import publicRoutes from './publicRoutes';
+import Main from '../pages/Main';
+import Login from '../pages/Login';
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 
 const Navigation = () => {
-  const { user } = useAuth();
+  const { user } = useContext(AuthContext);
 
   return (
     <Router>
       <Routes>
-        {user
-          ? null
+        {!!user
+          ? privateRoutes.map(route => {
+              return <Route path={route.to} Component={route.component} />;
+            })
           : publicRoutes.map(route => {
-              return <Route path={route.path} element={<route.component />} />;
+              return <Route path={route.to} Component={route.component} />;
             })}
+        <Route path="*" Component={!!user ? Main : Login} />;
       </Routes>
     </Router>
   );
