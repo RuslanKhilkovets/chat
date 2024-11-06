@@ -32,7 +32,7 @@ const expressServer = app.listen(port, (req, res) => {
 mongoose
   .connect(uri)
   .then(() => {
-    console.log('mongo connnected ');
+    console.log('mongo connected');
   })
   .catch(err => {
     console.log(`mongo error ${err.message}`);
