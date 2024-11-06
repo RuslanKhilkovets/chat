@@ -1,3 +1,5 @@
+const Log = require('../models/logModel');
+
 const createLog = async (req, res) => {
   try {
     const { level, startDate, endDate } = req.query;
