@@ -1,4 +1,5 @@
 const chatModel = require('../models/chatModel');
+const logger = require('../utils/logger');
 
 const createChat = async (req, res) => {
   const { firstId, secondId } = req.body;
@@ -13,6 +14,8 @@ const createChat = async (req, res) => {
     const newChat = new chatModel({ members: [firstId, secondId] });
 
     const response = await newChat.save();
+
+    logger.info(`Created chat with users: ${firstId} and ${secondId}`);
 
     res.status(200).json(response);
   } catch (error) {

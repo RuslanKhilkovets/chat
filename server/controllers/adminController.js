@@ -34,6 +34,7 @@ const registerAdmin = async (req, res) => {
     await admin.save();
 
     const token = createToken(admin._id);
+    logger.info(`Admin with id = ${admin._id} had been registered`);
 
     res.status(200).json({ _id: admin._id, login, token });
   } catch (err) {

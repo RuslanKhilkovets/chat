@@ -3,6 +3,7 @@ const tokenModel = require('../models/tokenModel');
 const bcrypt = require('bcrypt');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
+const logger = require('../utils/logger');
 
 const createToken = _id => {
   const jwtkey = process.env.JWT_SECRET_KEY;
@@ -47,6 +48,8 @@ const registerUser = async (req, res) => {
 
     const token = createToken(user._id);
 
+    logger.info(`User with email ${email} registered. Used token ${registerToken}`);
+
     res.status(200).json({ _id: user._id, name, email, registerToken, token });
   } catch (err) {
     console.error(err);
@@ -67,6 +70,8 @@ const loginUser = async (req, res) => {
     if (!isValidPassword) return res.status(400).json({ message: 'Invalid password' });
 
     const token = createToken(user._id);
+
+    logger.info(`User with email ${email} has been logged.`);
 
     res.status(200).json({ _id: user._id, name: user.name, email, token });
   } catch (err) {

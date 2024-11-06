@@ -1,6 +1,6 @@
 const Log = require('../models/logModel');
 
-const createLog = async (req, res) => {
+const getAllLogs = async (req, res) => {
   try {
     const { level, startDate, endDate } = req.query;
 
@@ -19,4 +19,4 @@ const createLog = async (req, res) => {
   }
 };
 
-module.exports = { createLog };
+module.exports = { getAllLogs };

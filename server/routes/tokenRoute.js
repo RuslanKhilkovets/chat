@@ -1,8 +1,10 @@
 const express = require('express');
-const { createToken } = require('../controllers/tokenController');
+const { createToken, getTokensByAdmin, deleteToken } = require('../controllers/tokenController');
 
 const router = express.Router();
 
-router.post('/create', createToken);
+router.post('/create/:adminId', createToken);
+router.get('/:adminId', getTokensByAdmin);
+router.delete('/', deleteToken);
 
 module.exports = router;
