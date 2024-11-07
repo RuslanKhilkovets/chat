@@ -1,21 +1,28 @@
-import { createContext, useCallback, useEffect, useState } from 'react';
-import { baseUrl, postRequest } from '../utils/services';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import useAuthMutation from '../../hooks/useAuthMutation';
+import { Api } from '../../api/index';
 
 export const AuthContext = createContext({});
 
-export const AuthContextProvider = ({ children }) => {
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+
+  if (!context) return null;
+
+  return context;
+};
+
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [registerError, setRegisterError] = useState(null);
-  const [isRegisterLoading, setIsRegisterLoading] = useState(false);
   const [registerInfo, setRegisterInfo] = useState({
     name: '',
     email: '',
     password: '',
   });
   const [loginError, setLoginError] = useState(null);
-  const [isLoginLoading, setIsLoginLoading] = useState(false);
   const [loginInfo, setLoginInfo] = useState({
-    email: '',
+    login: '',
     password: '',
   });
 
@@ -27,41 +34,34 @@ export const AuthContextProvider = ({ children }) => {
     return setLoginInfo(info);
   }, []);
 
-  const registerUser = async e => {
-    e.preventDefault();
-    setIsRegisterLoading(true);
-    setRegisterError(null);
+  const { mutate: loginMutate, isLoading: isLoginLoading } = useAuthMutation({
+    mutationFn: Api.auth?.login,
+    onSuccess: res => {
+      setLoginError('');
+    },
+    onError({ message }) {
+      setLoginError(message);
+    },
+  });
 
-    const res = await postRequest(baseUrl + '/users/register', JSON.stringify(registerInfo));
-    if (res.error) {
-      setRegisterError(res.message);
-      setIsRegisterLoading(false);
-      return;
-    }
+  const { mutate: registerMutate, isLoading: isRegisterLoading } = useAuthMutation({
+    mutationFn: Api.auth?.register,
+    onSuccess: res => {
+      setRegisterError('');
+    },
+    onError({ message }) {
+      setRegisterError(message);
+    },
+  });
 
-    setIsRegisterLoading(false);
-
-    localStorage.setItem('user', JSON.stringify(res));
-    setUser(res);
+  const loginUser = () => {
+    loginMutate(loginInfo);
   };
 
-  const loginUser = async e => {
-    e.preventDefault();
-    setIsLoginLoading(true);
-    setLoginError(null);
-
-    const res = await postRequest(baseUrl + '/users/login', JSON.stringify(loginInfo));
-    if (res.error) {
-      setLoginError(res.message);
-      setIsLoginLoading(false);
-      return;
-    }
-
-    setIsLoginLoading(false);
-
-    localStorage.setItem('user', JSON.stringify(res));
-    setUser(res);
+  const registerUser = () => {
+    registerMutate(registerInfo);
   };
+
   const logout = useCallback(() => {
     localStorage.removeItem('user');
     setUser(null);
@@ -69,7 +69,6 @@ export const AuthContextProvider = ({ children }) => {
 
   useEffect(() => {
     const userString = localStorage.getItem('user');
-    console.log(userString);
 
     if (userString) {
       setUser(JSON.parse(userString));

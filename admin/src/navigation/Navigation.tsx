@@ -4,7 +4,7 @@ import publicRoutes from './publicRoutes';
 import Main from '../pages/Main';
 import Login from '../pages/Login';
 import { useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext } from '../context/Auth/AuthContext';
 
 const Navigation = () => {
   const { user } = useContext(AuthContext);

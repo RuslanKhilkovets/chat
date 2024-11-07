@@ -6,12 +6,13 @@ import { useAuth } from '../context/Auth/AuthContext';
 import { Link } from 'react-router-dom';
 import Logo from '../components/base/Logo';
 
-const Login = () => {
-  const { isLoginLoading, loginInfo, updateLoginInfo, loginError, loginUser } = useAuth();
+const Register = () => {
+  const { isRegisterLoading, registerInfo, updateRegisterInfo, registerError, registerUser } =
+    useAuth();
 
   const handleSubmit = e => {
     e.preventDefault();
-    loginUser();
+    registerUser();
   };
 
   return (
@@ -25,29 +26,36 @@ const Login = () => {
       >
         <div className="login-container">
           <Typography variant="h3" sx={{ mb: 2, color: '#E1FF00' }}>
-            Login
+            Register
           </Typography>
           <form onSubmit={handleSubmit} className="login-form">
             <Input
+              placeholder="Name"
+              value={registerInfo.name}
+              onChange={e => updateRegisterInfo({ ...registerInfo, name: e.target.value })}
+              required
+            />
+            <Input
               placeholder="Login"
-              value={loginInfo.login}
-              onChange={e => updateLoginInfo({ ...loginInfo, login: e.target.value })}
+              value={registerInfo.login}
+              onChange={e => updateRegisterInfo({ ...registerInfo, login: e.target.value })}
               required
             />
             <Input
               secureTextEntry
               placeholder="Password"
-              value={loginInfo.password}
-              onChange={e => updateLoginInfo({ ...loginInfo, password: e.target.value })}
+              value={registerInfo.password}
+              onChange={e => updateRegisterInfo({ ...registerInfo, password: e.target.value })}
               required
             />
-            <Link to={'/register'} style={{ color: '#E1FF00' }}>
-              Have not account yet?
+
+            <Link to={'/'} style={{ color: '#E1FF00' }}>
+              Already have an account? Login !
             </Link>
-            <Button disabled={isLoginLoading} onClick={handleSubmit}>
-              {isLoginLoading ? 'Logging...' : 'Login'}
+            <Button disabled={isRegisterLoading} onClick={handleSubmit}>
+              {isRegisterLoading ? 'Registering...' : 'Register'}
             </Button>
-            {loginError && <div className="alert alert-danger">{loginError}</div>}
+            {registerError && <div className="alert alert-danger">{registerError}</div>}
           </form>
         </div>
       </Grid2>
@@ -55,4 +63,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
