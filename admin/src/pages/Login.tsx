@@ -16,7 +16,9 @@ const Login = () => {
 
   return (
     <Paper sx={{ bgcolor: '#000' }}>
-      <Logo />
+      <div style={{ position: 'absolute', top: 20, left: 20 }}>
+        <Logo />
+      </div>
       <Grid2
         container
         justifyContent="center"
@@ -24,9 +26,16 @@ const Login = () => {
         style={{ height: '100vh', width: '100vw' }}
       >
         <div className="login-container">
-          <Typography variant="h3" sx={{ mb: 2, color: '#E1FF00' }}>
+          <p
+            style={{
+              marginBottom: 20,
+              color: '#E1FF00',
+              fontFamily: "'Jersey 20', serif",
+              fontSize: 80,
+            }}
+          >
             Login
-          </Typography>
+          </p>
           <form onSubmit={handleSubmit} className="login-form">
             <Input
               placeholder="Login"
@@ -41,8 +50,16 @@ const Login = () => {
               onChange={e => updateLoginInfo({ ...loginInfo, password: e.target.value })}
               required
             />
-            <Link to={'/register'} style={{ color: '#E1FF00' }}>
-              Have not account yet?
+            <Link
+              to={'/register'}
+              style={{
+                marginBottom: 20,
+                color: '#E1FF00',
+                fontFamily: "'Jersey 20', serif",
+                fontSize: 20,
+              }}
+            >
+              Have not account yet? Register
             </Link>
             <Button disabled={isLoginLoading} onClick={handleSubmit}>
               {isLoginLoading ? 'Logging...' : 'Login'}

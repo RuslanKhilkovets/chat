@@ -1,14 +1,17 @@
-import { Typography } from '@mui/material';
+import styled from 'styled-components';
 
 export const Logo = () => {
+  const StyledText = styled.p`
+    font-size: 50px;
+    font-family: 'Jersey 20', serif;
+    color: #e1ff00;
+    margin: 0;
+  `;
+
   return (
     <>
-      <Typography variant="h2" sx={{ color: '#E1FF00' }}>
-        Mchat
-      </Typography>
-      <Typography variant="h5" sx={{ color: '#E1FF00' }}>
-        Admin dashboard
-      </Typography>
+      <StyledText>Mchat</StyledText>
+      <StyledText>Admin dashboard</StyledText>
     </>
   );
 };
