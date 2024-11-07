@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './context/Auth/AuthContext';
-import { ThemeProvider } from './context/Auth/Theme/ThemeContext';
+import { ThemeProvider } from './context/Theme/ThemeContext';
 import Navigation from './navigation/Navigation';
 
 const queryClient = new QueryClient({

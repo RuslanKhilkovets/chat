@@ -26,21 +26,25 @@ const Sidebar: React.FC<ISidebarProps> = () => {
       <div style={{ marginBottom: 40 }}>
         <Logo />
       </div>
+
       <SidebarButton
         onClick={() => navigate('/manage')}
         activeTab={location.pathname === '/manage'}
       >
         Manage
       </SidebarButton>
+
       <SidebarButton
         onClick={() => navigate('/profile')}
         activeTab={location.pathname === '/profile'}
       >
         Profile
       </SidebarButton>
+
       <SidebarButton onClick={() => navigate('/logs')} activeTab={location.pathname === '/logs'}>
         Logs
       </SidebarButton>
+
       <button
         style={{
           width: 'min-content',

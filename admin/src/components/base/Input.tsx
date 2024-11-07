@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useTheme } from '../../context/Auth/Theme/ThemeContext';
+import { useTheme } from '../../context/Theme/ThemeContext';
 
 interface IInputProps {
   value: string;

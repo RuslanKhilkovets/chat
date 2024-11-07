@@ -21,9 +21,7 @@ client.interceptors.request.use(
 );
 
 client.interceptors.response.use(
-  response => {
-    return response;
-  },
+  response => response,
   error => {
     const errorStatus = error?.response?.status;
     const errorData = error?.response?.data;
