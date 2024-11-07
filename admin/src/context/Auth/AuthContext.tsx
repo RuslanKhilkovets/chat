@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
       setLoginError('');
       setUser(res.data);
 
-      localStorage.setItem('accessToken', res.data.token);
+      localStorage.setItem('user', JSON.stringify(res.data));
     },
     onError({ message }) {
       setLoginError(message);
@@ -73,6 +73,8 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const userString = localStorage.getItem('user');
+
+    console.log(userString);
 
     if (userString) {
       setUser(JSON.parse(userString));

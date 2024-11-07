@@ -1,25 +1,57 @@
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import SidebarButton from './base/SidebarButton';
+import Logo from './base/Logo';
+import { useAuth } from '../context/Auth/AuthContext';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-// Define the styled components
 const SidebarContainer = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 200px; // Adjust the width as needed
+  width: 200px;
   height: 100vh;
-  background-color: #f8f9fa; // Light background color
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); // Optional shadow for aesthetics
+  background-color: #000;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  padding: 20px; // Add some padding
+  padding: 20px;
 `;
 
-const Sidebar = () => {
+interface ISidebarProps {}
+
+const Sidebar: React.FC<ISidebarProps> = () => {
+  const { logout } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+
   return (
     <SidebarContainer>
-      <Link to="/">Home</Link>
-      <Link to="/about">About</Link>
+      <div style={{ marginBottom: 40 }}>
+        <Logo />
+      </div>
+      <SidebarButton
+        onClick={() => navigate('/manage')}
+        activeTab={location.pathname === '/manage'}
+      >
+        Manage
+      </SidebarButton>
+      <SidebarButton
+        onClick={() => navigate('/profile')}
+        activeTab={location.pathname === '/profile'}
+      >
+        Profile
+      </SidebarButton>
+      <SidebarButton onClick={() => navigate('/logs')} activeTab={location.pathname === '/logs'}>
+        Logs
+      </SidebarButton>
+      <button
+        style={{
+          width: 'min-content',
+          position: 'absolute',
+          bottom: 20,
+          left: 20,
+        }}
+        onClick={logout}
+      >
+        LOGOUT
+      </button>
     </SidebarContainer>
   );
 };

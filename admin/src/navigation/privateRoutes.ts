@@ -2,7 +2,7 @@ import Main from '../pages/Main';
 
 export const privateRoutes = [
   {
-    to: '/',
+    to: '/*',
     component: Main,
   },
 ];

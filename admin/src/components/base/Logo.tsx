@@ -2,9 +2,14 @@ import { Typography } from '@mui/material';
 
 export const Logo = () => {
   return (
-    <Typography variant="h1" sx={{ color: '#E1FF00', position: 'absolute', top: 20, left: 20 }}>
-      M
-    </Typography>
+    <>
+      <Typography variant="h2" sx={{ color: '#E1FF00' }}>
+        Mchat
+      </Typography>
+      <Typography variant="h5" sx={{ color: '#E1FF00' }}>
+        Admin dashboard
+      </Typography>
+    </>
   );
 };
 
