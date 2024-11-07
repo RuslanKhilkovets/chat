@@ -38,6 +38,9 @@ export const AuthProvider = ({ children }) => {
     mutationFn: Api.auth?.login,
     onSuccess: res => {
       setLoginError('');
+      setUser(res.data);
+
+      localStorage.setItem('accessToken', res.data.token);
     },
     onError({ message }) {
       setLoginError(message);
@@ -64,6 +67,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = useCallback(() => {
     localStorage.removeItem('user');
+    localStorage.removeItem('accessToken');
     setUser(null);
   }, []);
 
