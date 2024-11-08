@@ -28,7 +28,9 @@ const createToken = async (req, res) => {
 
     logger.info(`Admin with id = ${adminId} created a new token ${newToken}`);
 
-    res.status(201).json({ token: newToken, isUsed: false });
+    const tokens = (await tokenModel.find({ adminId })) || [];
+
+    res.status(200).json(tokens);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -83,7 +85,10 @@ const deleteToken = async (req, res) => {
     await tokenModel.deleteOne({ token });
 
     logger.info(`Token with value ${token} has been deleted by admin with id = ${adminId}`);
-    res.status(200).json({ message: 'Token deleted successfully' });
+
+    const tokens = (await tokenModel.find({ adminId })) || [];
+
+    res.status(200).json(tokens);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal Server Error' });
