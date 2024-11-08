@@ -55,8 +55,6 @@ const getTokensByAdmin = async (req, res) => {
       return res.status(404).json({ message: 'No tokens found for this admin' });
     }
 
-    logger.info(`Admin ${adminId} retrieved all tokens`);
-
     res.status(200).json(tokens);
   } catch (err) {
     console.error(err);
