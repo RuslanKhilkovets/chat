@@ -73,7 +73,8 @@ const loginUser = async (req, res) => {
 
     logger.info(`User with email ${email} has been logged.`);
 
-    res.status(200).json({ _id: user._id, name: user.name, email, token });
+    const responseModel = user.toObject();
+    res.status(200).json({ ...responseModel, token });
   } catch (err) {
     console.error(err);
   }

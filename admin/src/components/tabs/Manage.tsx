@@ -40,7 +40,6 @@ const Manage = () => {
     onSuccess: res => {
       setTokens(res.data);
     },
-    onError: ({ message }) => {},
   });
 
   const { mutate: deleteTokenMutate } = useAuthMutation({
@@ -48,7 +47,6 @@ const Manage = () => {
     onSuccess: res => {
       setTokens(res.data);
     },
-    onError: ({ message }) => {},
   });
 
   const handleCopyToken = token => {

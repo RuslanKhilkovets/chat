@@ -82,8 +82,6 @@ const getAdmin = async (_, res) => {
   try {
     const admins = await adminModel.find();
 
-    console.log(admins);
-
     if (admins.length === 0) {
       return res.status(404).json({ message: 'No admins found' });
     }
