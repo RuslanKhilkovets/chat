@@ -14,7 +14,7 @@ const StyledButton = styled.button<{ activeTab: boolean }>`
   border: none;
   padding: 8px;
   cursor: pointer;
-
+  font-size: 1.2rem;
   &:hover {
     background-color: ${({ activeTab }) => (activeTab ? '#D4E600' : '#333')};
     color: ${({ activeTab }) => (activeTab ? 'black' : '#E1FF00')};

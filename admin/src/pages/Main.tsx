@@ -8,7 +8,7 @@ const Main = () => {
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 10fr' }}>
       <Sidebar />
-      <div className="content" style={{ padding: '20px' }}>
+      <div className="content" style={{ padding: '20px', background: '#212121' }}>
         <Routes>
           <Route path="/manage" element={<Manage />} />
           <Route path="/profile" element={<Profile />} />

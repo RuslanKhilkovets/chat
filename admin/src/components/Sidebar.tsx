@@ -5,7 +5,7 @@ import { useAuth } from '../context/Auth/AuthContext';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const SidebarContainer = styled.div`
-  width: 200px;
+  width: 250px;
   height: 100vh;
   background-color: #000;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
@@ -14,9 +14,7 @@ const SidebarContainer = styled.div`
   padding: 20px;
 `;
 
-interface ISidebarProps {}
-
-const Sidebar: React.FC<ISidebarProps> = () => {
+const Sidebar: React.FC = () => {
   const { logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
