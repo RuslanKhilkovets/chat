@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import {
   Button,
   Table,
@@ -12,49 +12,51 @@ import {
   CircularProgress,
   Alert,
   IconButton,
-} from '@mui/material';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import DeleteIcon from '@mui/icons-material/Delete';
-import useAuthMutation from '../../hooks/useAuthMutation';
-import { Api } from '../../api/index';
+} from "@mui/material";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import DeleteIcon from "@mui/icons-material/Delete";
+import useAuthMutation from "../../hooks/useAuthMutation";
+import { Api } from "../../api/index";
 
 const Manage = () => {
   const [error, setError] = useState(null);
   const [tokens, setTokens] = useState([]);
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
-  const { _id: adminId } = JSON.parse(localStorage.getItem('user')) || null;
+  const { _id: adminId } = JSON.parse(localStorage.getItem("user")) || null;
 
-  const { mutate: getTokensMutate, isLoading: isGetTokensLoading } = useAuthMutation({
-    mutationFn: Api.tokens.getTokensByAdmin,
-    onSuccess: res => {
-      setTokens(res.data);
-    },
-    onError: ({ message }) => {
-      setError(message);
-    },
-  });
+  const { mutate: getTokensMutate, isLoading: isGetTokensLoading } =
+    useAuthMutation({
+      mutationFn: Api.tokens.getTokensByAdmin,
+      onSuccess: (res) => {
+        setTokens(res.data);
+      },
+      onError: ({ message }) => {
+        setError(message);
+      },
+    });
 
-  const { mutate: createTokenMutate, isLoading: isCreateTokenLoading } = useAuthMutation({
-    mutationFn: Api.tokens.createToken,
-    onSuccess: res => {
-      setTokens(res.data);
-    },
-  });
+  const { mutate: createTokenMutate, isLoading: isCreateTokenLoading } =
+    useAuthMutation({
+      mutationFn: Api.tokens.createToken,
+      onSuccess: (res) => {
+        setTokens(res.data);
+      },
+    });
 
   const { mutate: deleteTokenMutate } = useAuthMutation({
     mutationFn: Api.tokens.deleteToken,
-    onSuccess: res => {
+    onSuccess: (res) => {
       setTokens(res.data);
     },
   });
 
-  const handleCopyToken = token => {
+  const handleCopyToken = (token) => {
     navigator.clipboard.writeText(token);
   };
 
-  const handleDeleteToken = token => {
-    setTokens(prevTokens => prevTokens.filter(t => t?.token !== token));
+  const handleDeleteToken = (token) => {
+    setTokens((prevTokens) => prevTokens.filter((t) => t?.token !== token));
 
     const payload = {
       token,
@@ -64,13 +66,14 @@ const Manage = () => {
     deleteTokenMutate(payload);
   };
 
-  const onSort = key => {
-    const direction = sortConfig.key === key && sortConfig.direction === 'asc' ? 'desc' : 'asc';
+  const onSort = (key) => {
+    const direction =
+      sortConfig.key === key && sortConfig.direction === "asc" ? "desc" : "asc";
     setSortConfig({ key, direction });
 
     const sortedTokens = [...tokens].sort((a, b) => {
-      if (a[key] < b[key]) return direction === 'asc' ? -1 : 1;
-      if (a[key] > b[key]) return direction === 'asc' ? 1 : -1;
+      if (a[key] < b[key]) return direction === "asc" ? -1 : 1;
+      if (a[key] > b[key]) return direction === "asc" ? 1 : -1;
       return 0;
     });
 
@@ -91,7 +94,7 @@ const Manage = () => {
         onClick={() => createTokenMutate(adminId)}
         style={buttonStyle}
       >
-        {isCreateTokenLoading ? 'Creating...' : 'Create New Token'}
+        {isCreateTokenLoading ? "Creating..." : "Create New Token"}
       </Button>
 
       {error ? (
@@ -101,25 +104,32 @@ const Manage = () => {
       ) : isGetTokensLoading ? (
         <CircularProgress style={loadingStyle} />
       ) : tokens && tokens.length !== 0 ? (
-        <TableContainer component={Paper} style={tableContainerStyle}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell style={tableHeaderStyle}>Token</TableCell>
-                <TableCell style={tableHeaderStyle} onClick={() => onSort('isUsed')}>
-                  Used{' '}
-                  {sortConfig.key === 'isUsed' ? (sortConfig.direction === 'asc' ? '▲' : '▼') : ''}
-                </TableCell>
-                <TableCell style={tableHeaderStyle}></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {tokens.map(token => (
-                <TableRow key={token._id} hover>
-                  <TableCell style={tableCellStyle}>{token.token}</TableCell>
-                  <TableCell style={tableCellStyle}>{token.isUsed ? 'Yes' : 'No'}</TableCell>
-                  <TableCell style={tableCellStyle}>
-                    <IconButton onClick={() => handleCopyToken(token.token)} aria-label="copy">
+        <div style={tableContainerStyle}>
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead>
+              <tr>
+                <th style={tableHeaderStyle}>Token</th>
+                <th style={tableHeaderStyle} onClick={() => onSort("isUsed")}>
+                  Used{" "}
+                  {sortConfig.key === "isUsed"
+                    ? sortConfig.direction === "asc"
+                      ? "▲"
+                      : "▼"
+                    : ""}
+                </th>
+                <th style={tableHeaderStyle}></th>
+              </tr>
+            </thead>
+            <tbody>
+              {tokens.map((token) => (
+                <tr key={token._id} hover>
+                  <th style={tableCellStyle}>{token.token}</th>
+                  <th style={tableCellStyle}>{token.isUsed ? "Yes" : "No"}</th>
+                  <th style={tableCellStyle}>
+                    <IconButton
+                      onClick={() => handleCopyToken(token.token)}
+                      aria-label="copy"
+                    >
                       <ContentCopyIcon />
                     </IconButton>
                     <IconButton
@@ -129,12 +139,12 @@ const Manage = () => {
                     >
                       <DeleteIcon />
                     </IconButton>
-                  </TableCell>
-                </TableRow>
+                  </th>
+                </tr>
               ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+            </tbody>
+          </table>
+        </div>
       ) : (
         <Typography>No tokens yet!</Typography>
       )}
@@ -147,34 +157,42 @@ const containerStyle = {
 };
 
 const headingStyle = {
-  color: '#E1FF00',
-  fontSize: '32px',
+  color: "#E1FF00",
+  fontSize: "32px",
 };
 
 const buttonStyle = {
-  marginBottom: '20px',
+  marginBottom: "20px",
 };
 
 const alertStyle = {
-  marginTop: '20px',
+  marginTop: "20px",
 };
 
 const loadingStyle = {
-  marginTop: '20px',
+  marginTop: "20px",
 };
 
 const tableContainerStyle = {
-  height: '80vh',
+  maxHeight: "75vh",
+  overflowY: "auto",
+  position: "relative",
 };
-
 const tableHeaderStyle = {
-  backgroundColor: '#333',
-  color: '#fff',
-  cursor: 'pointer',
+  padding: "10px",
+  backgroundColor: "#333",
+  color: "#fff",
+  textAlign: "left",
+  position: "sticky",
+  top: 0,
+  zIndex: 1,
 };
 
 const tableCellStyle = {
-  color: '#333',
+  color: "#333",
+  height: "50px",
+  padding: "20px",
+  textAlign: "left",
 };
 
 export default Manage;
