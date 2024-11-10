@@ -1,0 +1,22 @@
+{
+  "extends": "@react-native/typescript-config/tsconfig.json",
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/components/index.js"],
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"],
+      "@images/*": ["assets/images/*"],
+      "@icons/*": ["assets/icons/*"],
+      "@constants/*": ["src/constants/*"],
+      "@validations/*": ["src/validations/*"],
+      "@components/*": ["src/components/*"],
+      "@types/*": ["src/types/*"],
+      "@screens/*": ["src/screens/*"],
+      "@helpers/*": ["src/helpers/*"],
+      "@contexts/*": ["src/context/*"],
+      "@navigation/*": ["src/navigation/*"],
+      "@store/*": ["src/store/*"]
+    }
+  }
+}
