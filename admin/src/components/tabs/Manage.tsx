@@ -130,14 +130,14 @@ const Manage = () => {
                       onClick={() => handleCopyToken(token.token)}
                       aria-label="copy"
                     >
-                      <ContentCopyIcon />
+                      <ContentCopyIcon color="info" />
                     </IconButton>
                     <IconButton
                       onClick={() => handleDeleteToken(token.token)}
                       aria-label="delete"
                       color="secondary"
                     >
-                      <DeleteIcon />
+                      <DeleteIcon color="error" />
                     </IconButton>
                   </th>
                 </tr>
@@ -157,7 +157,6 @@ const containerStyle = {
 };
 
 const headingStyle = {
-  color: "#E1FF00",
   fontSize: "32px",
 };
 
@@ -189,7 +188,6 @@ const tableHeaderStyle = {
 };
 
 const tableCellStyle = {
-  color: "#333",
   height: "50px",
   padding: "20px",
   textAlign: "left",

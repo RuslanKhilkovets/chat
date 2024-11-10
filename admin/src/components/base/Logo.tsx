@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const Logo = () => {
   const StyledText = styled.p`
-    font-size: 50px;
+    font-size: 40px;
     font-family: 'Jersey 20', serif;
     color: #e1ff00;
     margin: 0;
