@@ -1,10 +1,10 @@
-import {StartScreen} from '@/screens';
+import {ChatsScreen} from '@/screens';
 import {IRoute} from '@/types';
 
 export const privateRoutes: IRoute[] = [
   {
-    name: 'Start',
-    component: StartScreen,
+    name: 'Chats',
+    component: ChatsScreen,
   },
 ];
 

@@ -3,8 +3,6 @@ import SInfo from 'react-native-sensitive-info';
 import jwt_decode from 'jwt-decode';
 import {useDispatch} from 'react-redux';
 
-import {delCache} from '@/helpers';
-
 export const AuthContext = React.createContext();
 
 export const AuthProvider = ({children}) => {
@@ -35,13 +33,13 @@ export const AuthProvider = ({children}) => {
     return null;
   };
 
-  const login = async (token, userData) => {
+  const login = async userData => {
     // Зберігаємо токен доступу в захищеному місці збереження
-    await SInfo.setItem('accessToken', token, {
+    await SInfo.setItem('accessToken', userData.token, {
       sharedPreferencesName: 'prefs',
       keychainService: 'keychainService',
     }).then(() => {
-      setAccessToken(token);
+      setAccessToken(userData.token);
     });
     await SInfo.setItem('user', JSON.stringify(userData), {
       sharedPreferencesName: 'prefs',
@@ -61,8 +59,6 @@ export const AuthProvider = ({children}) => {
       sharedPreferencesName: 'prefs',
       keychainService: 'keychainService',
     });
-
-    await delCache('progress');
   };
 
   useEffect(() => {

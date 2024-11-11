@@ -3,6 +3,7 @@ import SInfo from 'react-native-sensitive-info';
 import {SERVER_URL} from '@env';
 
 import apiAuth from './auth';
+import apiChats from './chats';
 
 const client = axios.create({
   baseURL: `${SERVER_URL}/api`,
@@ -71,4 +72,5 @@ client.interceptors.response.use(
 
 export const Api = {
   auth: apiAuth(client),
+  chats: apiChats(client),
 };

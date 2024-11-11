@@ -2,6 +2,8 @@ import {createContext, useCallback, useEffect, useState} from 'react';
 import {baseUrl, getRequest, postRequest} from '../../helpers/services';
 import {io} from 'socket.io-client';
 import {SERVER_URL} from '@env';
+import {useAuthMutation} from '@/hooks';
+import {Api} from '@/api';
 
 export const ChatContext = createContext();
 
@@ -198,6 +200,12 @@ export const ChatProvider = ({children, user}) => {
     }
     setUserChats(prev => [...prev, response]);
   }, []);
+
+  const {mutate: createChatMutation} = useAuthMutation({
+    mutationFn: Api.chats.createChat,
+    onSuccess: res => {},
+    onError: () => {},
+  });
 
   const markAllAsRead = useCallback(notifications => {
     const mNotifications = notifications.map(notification => ({

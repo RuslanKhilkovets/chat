@@ -34,10 +34,11 @@ export const LoginScreen = () => {
 
   const onLoginSuccess = async (res: any) => {
     // TODO: add logic
-    console.log('Logged');
+    console.log('Logged', res.data);
 
+    login(res.data);
     reset();
-    navigation.navigate('Main');
+    navigation.navigate('Chats');
   };
 
   const onLoginError = ({errors}: any) => {
