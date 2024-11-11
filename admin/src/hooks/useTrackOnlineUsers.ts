@@ -8,18 +8,21 @@ export default function useTrackOnlineUsers() {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const newSocket = io(import.meta.env.VITE_SOCKET_URL);
-    setSocket(import.meta.env.VITE_SOCKET_URL);
+    if (user) {
+      const newSocket = io(import.meta.env.VITE_SOCKET_URL);
+      setSocket(newSocket);
 
-    console.log(import.meta.env.VITE_SOCKET_URL);
-
-    return () => {
-      newSocket.disconnect();
-    };
+      return () => {
+        newSocket.disconnect();
+        console.log('Socket disconnected');
+      };
+    }
   }, [user]);
 
   useEffect(() => {
-    if (socket && socket?.isConnected) {
+    if (socket) {
+      console.log('Socket connected:', socket);
+
       socket.on('getOnlineUsers', response => {
         setOnlineUsers(response);
       });

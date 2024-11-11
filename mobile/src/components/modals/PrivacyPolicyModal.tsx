@@ -46,7 +46,7 @@ const PrivacyPoliceModal = ({visible, onClose, openFrom}: IModalProps) => {
     <Modal
       visible={visible}
       onClose={onClose}
-      title="About"
+      title="Privacy policy"
       openFrom={openFrom}>
       <ScrollView style={styles.container}>
         <Text style={styles.text}>

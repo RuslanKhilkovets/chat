@@ -39,14 +39,14 @@ export const StartScreen = () => {
         fullWidth>
         Register
       </Button>
-      <Button
+      {/* <Button
         onPress={() => {}}
         type="primary"
         fullWidth
         style={{marginTop: 100}}
         before={<GoogleIcon />}>
         Sign in via Google
-      </Button>
+      </Button> */}
       <View style={{position: 'absolute', bottom: insets.bottom}}>
         <TouchableOpacity
           onPress={() => {

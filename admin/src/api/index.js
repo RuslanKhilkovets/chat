@@ -6,7 +6,7 @@ import apiTokens from './tokens';
 import apiUsers from './users';
 
 const client = axios.create({
-  baseURL: import.meta.env.VITE_SOCKET_URL,
+  baseURL: `${import.meta.env.VITE_SOCKET_URL}/api`,
 });
 
 client.interceptors.request.use(

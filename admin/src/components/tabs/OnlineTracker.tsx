@@ -20,6 +20,10 @@ const OnlineTracker = () => {
     getUsersMutation();
   }, []);
 
+  const isUserOnline = id => {
+    return onlineUsers.find(user => user.userId === id);
+  };
+
   return (
     <div className="tab">
       <h2 style={{ fontSize: '32px', color: '#E1FF00' }}>Users</h2>
@@ -45,7 +49,7 @@ const OnlineTracker = () => {
                     ' ' +
                     new Date(user.createdAt).toLocaleTimeString('ua')}
                 </td>
-                <td style={tableCellStyle}>{'no'}</td>
+                <td style={tableCellStyle}>{isUserOnline(user._id) ? 'yes' : 'no'}</td>
               </tr>
             ))}
           </tbody>
