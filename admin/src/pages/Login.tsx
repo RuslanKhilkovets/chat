@@ -50,7 +50,7 @@ const Login = () => {
               onChange={e => updateLoginInfo({ ...loginInfo, password: e.target.value })}
               required
             />
-            <Link
+            {/* <Link
               to={'/register'}
               style={{
                 marginBottom: 20,
@@ -60,7 +60,7 @@ const Login = () => {
               }}
             >
               Have not account yet? Register
-            </Link>
+            </Link> */}
             <Button disabled={isLoginLoading} onClick={handleSubmit}>
               {isLoginLoading ? 'Logging...' : 'Login'}
             </Button>

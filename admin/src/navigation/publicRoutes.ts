@@ -6,10 +6,10 @@ export const publicRoutes = [
     to: '/',
     component: Login,
   },
-  {
-    to: '/register',
-    component: Register,
-  },
+  // {
+  //   to: '/register',
+  //   component: Register,
+  // },
 ];
 
 export default publicRoutes;
