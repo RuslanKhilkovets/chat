@@ -33,6 +33,13 @@ const Sidebar: React.FC = () => {
       </SidebarButton>
 
       <SidebarButton
+        onClick={() => navigate('/online-tracker')}
+        activeTab={location.pathname === '/online-tracker'}
+      >
+        Online tracker
+      </SidebarButton>
+
+      <SidebarButton
         onClick={() => navigate('/profile')}
         activeTab={location.pathname === '/profile'}
       >
