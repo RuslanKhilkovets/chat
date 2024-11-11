@@ -38,7 +38,7 @@ const Login = () => {
           </p>
           <form onSubmit={handleSubmit} className="login-form">
             <Input
-              placeholder="Login"
+              placeholder="Email"
               value={loginInfo.login}
               onChange={e => updateLoginInfo({ ...loginInfo, login: e.target.value })}
               required

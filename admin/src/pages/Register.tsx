@@ -17,7 +17,9 @@ const Register = () => {
 
   return (
     <Paper sx={{ bgcolor: '#000' }}>
-      <Logo />
+      <div style={{ position: 'absolute', top: 20, left: 20 }}>
+        <Logo />
+      </div>
       <Grid2
         container
         justifyContent="center"
@@ -25,9 +27,16 @@ const Register = () => {
         style={{ height: '100vh', width: '100vw' }}
       >
         <div className="login-container">
-          <Typography variant="h3" sx={{ mb: 2, color: '#E1FF00' }}>
+          <p
+            style={{
+              marginBottom: 20,
+              color: '#E1FF00',
+              fontFamily: "'Jersey 20', serif",
+              fontSize: 80,
+            }}
+          >
             Register
-          </Typography>
+          </p>
           <form onSubmit={handleSubmit} className="login-form">
             {/* <Input
               placeholder="Name"
@@ -49,8 +58,16 @@ const Register = () => {
               required
             />
 
-            <Link to={'/'} style={{ color: '#E1FF00' }}>
-              Already have an account? Login !
+            <Link
+              to={'/login'}
+              style={{
+                marginBottom: 20,
+                color: '#E1FF00',
+                fontFamily: "'Jersey 20', serif",
+                fontSize: 20,
+              }}
+            >
+              Have not account yet? Register
             </Link>
             <Button disabled={isRegisterLoading} onClick={handleSubmit}>
               {isRegisterLoading ? 'Registering...' : 'Register'}
