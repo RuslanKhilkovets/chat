@@ -28,7 +28,7 @@ const Logs = () => {
         <p>Loading...</p>
       ) : (
         <div style={logsContainerStyle}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', overflowX: 'auto' }}>
             <thead>
               <tr>
                 <th style={tableHeaderStyle}>Timestamp</th>

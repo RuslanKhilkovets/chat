@@ -117,7 +117,9 @@ const Manage = () => {
               {tokens.map(token => (
                 <tr key={token._id} hover>
                   <th style={tableCellStyle}>{token.token}</th>
-                  <th style={tableCellStyle}>{token.isUsed ? 'Yes' : 'No'}</th>
+                  <th align="center" style={tableCellStyle}>
+                    {token.isUsed ? 'Yes' : 'No'}
+                  </th>
                   <th style={tableCellStyle}>
                     <IconButton onClick={() => handleCopyToken(token.token)} aria-label="copy">
                       <ContentCopyIcon color="info" />
