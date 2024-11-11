@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
-import useAuthMutation from "../../hooks/useAuthMutation";
-import { Api } from "../../api/index";
+import { useEffect, useState } from 'react';
+import useAuthMutation from '../../hooks/useAuthMutation';
+import { Api } from '../../api/index';
 
 const Logs = () => {
   const [error, setError] = useState(null);
   const [logs, setLogs] = useState([]);
   const { mutate: logsMutate, isLoading } = useAuthMutation({
     mutationFn: Api.logs.getAllLogs,
-    onSuccess: (res) => {
+    onSuccess: res => {
       setLogs(res.data);
     },
     onError: ({ message }) => {
@@ -21,16 +21,14 @@ const Logs = () => {
 
   return (
     <div className="tab">
-      <h2 style={{ fontSize: "32px", color: "#E1FF00" }}>
-        Logs (only for this account)
-      </h2>
+      <h2 style={{ fontSize: '32px', color: '#E1FF00' }}>Logs</h2>
       {error ? (
-        <p style={{ color: "red" }}>{error}</p>
+        <p style={{ color: 'red' }}>{error}</p>
       ) : isLoading ? (
         <p>Loading...</p>
       ) : (
         <div style={logsContainerStyle}>
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr>
                 <th style={tableHeaderStyle}>Timestamp</th>
@@ -40,11 +38,9 @@ const Logs = () => {
               </tr>
             </thead>
             <tbody>
-              {logs.map((log) => (
-                <tr key={log._id} style={{ borderBottom: "1px solid #ccc" }}>
-                  <td style={tableCellStyle}>
-                    {new Date(log.timestamp).toLocaleString()}
-                  </td>
+              {logs.map(log => (
+                <tr key={log._id} style={{ borderBottom: '1px solid #ccc' }}>
+                  <td style={tableCellStyle}>{new Date(log.timestamp).toLocaleString()}</td>
                   <td
                     style={{
                       ...tableCellStyle,
@@ -54,7 +50,7 @@ const Logs = () => {
                     {log.level}
                   </td>
                   <td style={tableCellStyle}>{log.message}</td>
-                  <td style={tableCellStyle}>{log.metadata?.login || "N/A"}</td>
+                  <td style={tableCellStyle}>{log.metadata?.login || 'N/A'}</td>
                 </tr>
               ))}
             </tbody>
@@ -66,35 +62,35 @@ const Logs = () => {
 };
 
 const logsContainerStyle = {
-  maxHeight: "90vh",
-  overflowY: "auto",
-  position: "relative",
+  maxHeight: '90vh',
+  overflowY: 'auto',
+  position: 'relative',
 };
 
 const tableHeaderStyle = {
-  padding: "10px",
-  backgroundColor: "#333",
-  color: "#fff",
-  textAlign: "left",
-  position: "sticky",
+  padding: '10px',
+  backgroundColor: '#333',
+  color: '#fff',
+  textAlign: 'left',
+  position: 'sticky',
   top: 0,
   zIndex: 1,
 };
 
 const tableCellStyle = {
-  padding: "10px",
+  padding: '10px',
 };
 
-const getLogLevelColor = (level) => {
+const getLogLevelColor = level => {
   switch (level) {
-    case "info":
-      return "#00bfff";
-    case "warning":
-      return "#ffcc00";
-    case "error":
-      return "#ff3333";
+    case 'info':
+      return '#00bfff';
+    case 'warning':
+      return '#ffcc00';
+    case 'error':
+      return '#ff3333';
     default:
-      return "#333";
+      return '#333';
   }
 };
 

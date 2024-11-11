@@ -3,6 +3,7 @@ import axios from 'axios';
 import apiAuth from './auth';
 import apiLogs from './logs';
 import apiTokens from './tokens';
+import apiUsers from './users';
 
 const client = axios.create({
   baseURL: import.meta.env.VITE_SOCKET_URL,
@@ -67,4 +68,5 @@ export const Api = {
   auth: apiAuth(client),
   logs: apiLogs(client),
   tokens: apiTokens(client),
+  users: apiUsers(client),
 };

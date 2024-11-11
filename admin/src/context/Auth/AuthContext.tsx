@@ -16,8 +16,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [registerError, setRegisterError] = useState(null);
   const [registerInfo, setRegisterInfo] = useState({
-    name: '',
-    email: '',
+    login: '',
     password: '',
   });
   const [loginError, setLoginError] = useState(null);
@@ -51,6 +50,7 @@ export const AuthProvider = ({ children }) => {
     mutationFn: Api.auth?.register,
     onSuccess: res => {
       setRegisterError('');
+      setRegisterInfo({ login: '', password: '' });
     },
     onError({ message }) {
       setRegisterError(message);
@@ -73,8 +73,6 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const userString = localStorage.getItem('user');
-
-    console.log(userString);
 
     if (userString) {
       setUser(JSON.parse(userString));

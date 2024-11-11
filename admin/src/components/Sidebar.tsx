@@ -39,13 +39,6 @@ const Sidebar: React.FC = () => {
         Online tracker
       </SidebarButton>
 
-      <SidebarButton
-        onClick={() => navigate('/profile')}
-        activeTab={location.pathname === '/profile'}
-      >
-        Profile
-      </SidebarButton>
-
       <SidebarButton onClick={() => navigate('/logs')} activeTab={location.pathname === '/logs'}>
         Logs
       </SidebarButton>

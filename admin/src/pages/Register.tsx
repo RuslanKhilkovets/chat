@@ -29,14 +29,14 @@ const Register = () => {
             Register
           </Typography>
           <form onSubmit={handleSubmit} className="login-form">
-            <Input
+            {/* <Input
               placeholder="Name"
               value={registerInfo.name}
               onChange={e => updateRegisterInfo({ ...registerInfo, name: e.target.value })}
               required
-            />
+            /> */}
             <Input
-              placeholder="Login"
+              placeholder="Email"
               value={registerInfo.login}
               onChange={e => updateRegisterInfo({ ...registerInfo, login: e.target.value })}
               required
