@@ -11,6 +11,7 @@ export {default as Header} from './base/Header';
 export {default as Drawer} from './base/Drawer';
 
 export {default as MenuItem} from './items/MenuItem';
+export {default as ChatItem} from './items/ChatItem';
 
 export {default as ScreenHeader} from './containers/ScreenHeader';
 export {default as Screen} from './containers/Screen';

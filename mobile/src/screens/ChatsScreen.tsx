@@ -1,12 +1,31 @@
 import * as React from 'react';
-import {StyleSheet, Text} from 'react-native';
-import {Header, Screen} from '@/components';
+import {ScrollView, StyleSheet} from 'react-native';
+import {ChatItem, Header, Screen} from '@/components';
 
 export const ChatsScreen = () => {
   return (
     <Screen headerShown={false}>
       <Header />
-      <Text style={styles.text}>Chats</Text>
+      <ScrollView>
+        <ChatItem />
+        <ChatItem />
+        <ChatItem />
+        <ChatItem />
+        <ChatItem />
+        <ChatItem />
+        <ChatItem />
+        <ChatItem />
+        <ChatItem />
+        <ChatItem />
+        <ChatItem />
+        <ChatItem />
+        <ChatItem />
+        <ChatItem />
+        <ChatItem />
+        <ChatItem />
+        <ChatItem />
+        <ChatItem />
+      </ScrollView>
     </Screen>
   );
 };
