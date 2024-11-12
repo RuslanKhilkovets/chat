@@ -93,6 +93,21 @@ const findUser = async (req, res) => {
   }
 };
 
+const findUsersByName = async (req, res) => {
+  try {
+    const users = await userModel.find({
+      name: { $regex: req.query.name, $options: 'i' },
+    });
+
+    if (!users.length) return res.status(404).json({ message: 'User not found' });
+
+    res.status(200).json(users);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server Error', error: err });
+  }
+};
+
 const getUser = async (req, res) => {
   try {
     const users = await userModel.find();
@@ -108,4 +123,4 @@ const getUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser, findUser, getUser };
+module.exports = { registerUser, loginUser, findUser, getUser, findUsersByName };
