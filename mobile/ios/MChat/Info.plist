@@ -35,6 +35,7 @@
 	<array>
 		<string>Jersey.ttf</string>
 		<string>Jersey-Regular.ttf</string>
+		<string>MaterialIcons.ttf</string>
 		<string>fontello.ttf</string>
 	</array>
 	<key>NSLocationWhenInUseUsageDescription</key>

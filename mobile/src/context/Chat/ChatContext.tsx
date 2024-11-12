@@ -203,7 +203,9 @@ export const ChatProvider = ({children, user}) => {
 
   const {mutate: createChatMutation} = useAuthMutation({
     mutationFn: Api.chats.createChat,
-    onSuccess: res => {},
+    onSuccess: res => {
+      console.log(res);
+    },
     onError: () => {},
   });
 

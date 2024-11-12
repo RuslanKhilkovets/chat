@@ -22,11 +22,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   headerTitle: {
-    width: 250,
-    textAlign: 'center',
-    color: '#000',
-    fontSize: 22,
-    fontFamily: 'Raleway-SemiBold',
+    color: 'yellow',
+    fontSize: 26,
+    fontFamily: 'Jersey20-Regular',
+    marginTop: 10,
   },
 
   icon: {

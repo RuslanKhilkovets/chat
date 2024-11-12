@@ -1,20 +1,12 @@
 import * as React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {Controller, useForm} from 'react-hook-form';
-import {useNavigation} from '@react-navigation/native';
-import {yupResolver} from '@hookform/resolvers/yup';
-
-import {Input, Screen} from '@/components';
-import {Button} from '@/components';
-import {useAuthMutation} from '@/hooks';
-import {AuthContext} from '@/context/Auth/AuthContext';
-import loginSchema from '@/validations/login';
-import {Api} from '@/api';
+import {StyleSheet, Text} from 'react-native';
+import {Header, Screen} from '@/components';
 
 export const ChatsScreen = () => {
   return (
-    <Screen>
-      <Text>Chats</Text>
+    <Screen headerShown={false}>
+      <Header />
+      <Text style={styles.text}>Chats</Text>
     </Screen>
   );
 };

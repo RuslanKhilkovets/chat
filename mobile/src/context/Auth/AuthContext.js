@@ -6,7 +6,6 @@ import {useDispatch} from 'react-redux';
 export const AuthContext = React.createContext();
 
 export const AuthProvider = ({children}) => {
-  const [isTokenChecked, setIsTokenChecked] = useState(false);
   const [accessToken, setAccessToken] = useState(null);
 
   useEffect(() => {
@@ -16,7 +15,6 @@ export const AuthProvider = ({children}) => {
       keychainService: 'keychainService',
     }).then(token => {
       token && setAccessToken(token);
-      setIsTokenChecked(true);
     });
   }, []);
 
@@ -79,7 +77,6 @@ export const AuthProvider = ({children}) => {
         login,
         logout,
         getToken,
-        isTokenChecked,
       }}>
       {children}
     </AuthContext.Provider>

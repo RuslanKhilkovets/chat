@@ -2,3 +2,7 @@ export {default as StartScreen} from './StartScreen';
 export {default as RegisterScreen} from './RegisterScreen';
 export {default as LoginScreen} from './LoginScreen';
 export {default as ChatsScreen} from './ChatsScreen';
+export {default as AboutScreen} from './AboutScreen';
+export {default as ProfileScreen} from './ProfileScreen';
+export {default as ThemeScreen} from './ThemeScreen';
+export {default as FindUsersScreen} from './FindUsersScreen';
