@@ -24,7 +24,7 @@ export const ChatProvider = ({children}) => {
   const [userChatsError, setUserChatsError] = useState(null);
   const [potentialChats, setPotentialChats] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
-  const [messages, setMessages] = useState(null);
+  const [messages, setMessages] = useState([]);
   const [isMessagesLoading, setIsMessagesLoading] = useState(false);
   const [messagesError, setMessagesError] = useState(null);
   const [sendTextMessageError, setSendTextMessageError] = useState(null);

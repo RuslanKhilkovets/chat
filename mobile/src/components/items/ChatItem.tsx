@@ -51,9 +51,9 @@ const styles = StyleSheet.create({
   chatItem: {
     padding: 10,
     gap: 15,
-    backgroundColor: '#2d2d2d',
+    backgroundColor: '#1a1a1a',
     paddingLeft: 20,
-    borderBottomColor: 'yellow',
+    borderBottomColor: 'black',
     borderBottomWidth: 1,
     flexDirection: 'row',
     alignItems: 'center',
