@@ -24,7 +24,7 @@ const Screen = ({
         styles.container,
         {
           backgroundColor: backColor,
-          paddingTop: Platform.OS === 'ios' ? insets.top : insets.top + 20,
+          paddingTop: Platform.OS === 'ios' ? insets.top - 10 : insets.top + 20,
           paddingBottom: insets.bottom,
         },
       ]}>

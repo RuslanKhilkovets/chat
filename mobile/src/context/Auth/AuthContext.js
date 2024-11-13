@@ -1,9 +1,12 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import SInfo from 'react-native-sensitive-info';
 import jwt_decode from 'jwt-decode';
-import {useDispatch} from 'react-redux';
 
 export const AuthContext = React.createContext();
+
+export const useAuthContext = () => {
+  return useContext(AuthContext);
+};
 
 export const AuthProvider = ({children}) => {
   const [accessToken, setAccessToken] = useState(null);

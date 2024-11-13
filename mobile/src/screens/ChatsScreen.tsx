@@ -1,31 +1,19 @@
 import * as React from 'react';
-import {ScrollView, StyleSheet} from 'react-native';
+import {FlatList, StyleSheet} from 'react-native';
 import {ChatItem, Header, Screen} from '@/components';
+import {useChatContext} from '@/context/Chat/ChatContext';
 
 export const ChatsScreen = () => {
+  const {userChats} = useChatContext();
+
   return (
     <Screen headerShown={false}>
       <Header />
-      <ScrollView>
-        <ChatItem />
-        <ChatItem />
-        <ChatItem />
-        <ChatItem />
-        <ChatItem />
-        <ChatItem />
-        <ChatItem />
-        <ChatItem />
-        <ChatItem />
-        <ChatItem />
-        <ChatItem />
-        <ChatItem />
-        <ChatItem />
-        <ChatItem />
-        <ChatItem />
-        <ChatItem />
-        <ChatItem />
-        <ChatItem />
-      </ScrollView>
+      <FlatList
+        data={userChats || []}
+        renderItem={({item}) => <ChatItem chat={item} />}
+        keyExtractor={item => item.id}
+      />
     </Screen>
   );
 };

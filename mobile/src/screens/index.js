@@ -6,3 +6,4 @@ export {default as AboutScreen} from './AboutScreen';
 export {default as ProfileScreen} from './ProfileScreen';
 export {default as ThemeScreen} from './ThemeScreen';
 export {default as FindUsersScreen} from './FindUsersScreen';
+export {default as ChatScreen} from './ChatScreen';

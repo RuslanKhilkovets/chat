@@ -20,14 +20,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     position: 'relative',
     justifyContent: 'center',
+    paddingVertical: 10,
   },
   headerTitle: {
     color: 'yellow',
     fontSize: 26,
     fontFamily: 'Jersey20-Regular',
-    marginTop: 10,
   },
-
   icon: {
     position: 'absolute',
     left: 0,

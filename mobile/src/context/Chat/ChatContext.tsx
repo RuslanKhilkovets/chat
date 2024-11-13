@@ -1,13 +1,24 @@
-import {createContext, useCallback, useEffect, useState} from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import {baseUrl, getRequest, postRequest} from '../../helpers/services';
 import {io} from 'socket.io-client';
 import {SERVER_URL} from '@env';
-import {useAuthMutation} from '@/hooks';
+import {useAuthMutation, useTypedSelector} from '@/hooks';
 import {Api} from '@/api';
 
 export const ChatContext = createContext();
 
-export const ChatProvider = ({children, user}) => {
+export const useChatContext = () => {
+  return useContext(ChatContext);
+};
+
+export const ChatProvider = ({children}) => {
+  const {user} = useTypedSelector(state => state);
   const [userChats, setUserChats] = useState(null);
   const [isUserChatLoading, setIsUserChatLoading] = useState(false);
   const [userChatsError, setUserChatsError] = useState(null);

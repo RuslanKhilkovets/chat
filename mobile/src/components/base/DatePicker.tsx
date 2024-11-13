@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {StyleSheet, View, Modal, Pressable, Text} from 'react-native';
+import {StyleSheet, View, Modal, Pressable} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import {AppIcon, Button} from '@/components';
