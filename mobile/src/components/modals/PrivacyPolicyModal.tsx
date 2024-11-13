@@ -1,11 +1,9 @@
 import {ScrollView, StyleSheet, Text} from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 
 import {Modal} from '@/components';
 import {IModalProps} from '@/types';
-
-const typingSpeed = 1;
-const cursorBlinkSpeed = 500;
+import {useAnimatedTyping} from '@/hooks';
 
 const PrivacyPoliceModal = ({visible, onClose, openFrom}: IModalProps) => {
   const fullText =
@@ -14,33 +12,10 @@ const PrivacyPoliceModal = ({visible, onClose, openFrom}: IModalProps) => {
     'Our policies ensure that no data is shared with third parties without your consent, and we give you full control over your personal information. For added protection, MChat offers features like self-destructing messages and screen lock options to safeguard your conversations. ' +
     'Your security is our priority, and we are committed to maintaining a safe environment for your personal and professional communications.';
 
-  const [displayedText, setDisplayedText] = useState('');
-  const [cursorVisible, setCursorVisible] = useState(true);
-
-  useEffect(() => {
-    if (visible) {
-      setDisplayedText('');
-      let charIndex = 0;
-
-      const typingInterval = setInterval(() => {
-        if (charIndex < fullText.length) {
-          setDisplayedText(prev => prev + fullText[charIndex]);
-          charIndex++;
-        } else {
-          clearInterval(typingInterval);
-        }
-      }, typingSpeed);
-
-      const cursorInterval = setInterval(() => {
-        setCursorVisible(prev => !prev);
-      }, cursorBlinkSpeed);
-
-      return () => {
-        clearInterval(typingInterval);
-        clearInterval(cursorInterval);
-      };
-    }
-  }, [visible]);
+  const {displayedText, cursorVisible} = useAnimatedTyping({
+    fullText,
+    visible,
+  });
 
   return (
     <Modal

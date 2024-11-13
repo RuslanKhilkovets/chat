@@ -3,6 +3,7 @@ import {
   ChatScreen,
   ChatsScreen,
   FindUsersScreen,
+  PrivacyPoliciesScreen,
   ProfileScreen,
   ThemeScreen,
 } from '@/screens';
@@ -37,6 +38,10 @@ export const privateRoutes: IRoute[] = [
   {
     name: 'FindUsers',
     component: FindUsersScreen,
+  },
+  {
+    name: 'PrivacyPolicies',
+    component: PrivacyPoliciesScreen,
   },
 ];
 

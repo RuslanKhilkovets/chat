@@ -56,6 +56,11 @@ const MenuDrawer = ({onClose, visible}: MenuDrawerProps) => {
             <MenuItem iconName="save" onPress={() => onRedirectHandle('Saved')}>
               Saved
             </MenuItem>
+            <MenuItem
+              iconName="shield"
+              onPress={() => onRedirectHandle('PrivacyPolicies')}>
+              Privacy policies
+            </MenuItem>
             <MenuItem iconName="info" onPress={() => onRedirectHandle('About')}>
               About app
             </MenuItem>
