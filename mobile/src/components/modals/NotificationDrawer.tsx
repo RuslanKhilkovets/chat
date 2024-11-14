@@ -1,4 +1,11 @@
-import {FlatList, Pressable, StyleSheet, Text, View} from 'react-native';
+import {
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React from 'react';
 import {IModalProps} from '@/types';
 import {Drawer} from '@/components';
@@ -24,7 +31,6 @@ const NotificationDrawer = ({visible, onClose}: NotificationDrawerProps) => {
       senderName: senderId?.name,
     };
   });
-  console.log(unread);
 
   return (
     <Drawer visible={visible} onClose={onClose} openFrom="right">
@@ -32,12 +38,19 @@ const NotificationDrawer = ({visible, onClose}: NotificationDrawerProps) => {
 
       <Text style={styles.title}>Notifications</Text>
 
-      <Pressable onPress={() => markAllAsRead(notifications)}>
-        <Text>Mark all as read</Text>
-      </Pressable>
+      {modifiedNotifications?.length !== 0 && (
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={styles.markAllAsRead}
+          onPress={() => markAllAsRead(notifications)}>
+          <Text>Mark all as read</Text>
+        </TouchableOpacity>
+      )}
 
       {modifiedNotifications?.length === 0 ? (
-        <Text>No notification yet...</Text>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <Text style={styles.noNotificationsText}>No notification yet...</Text>
+        </View>
       ) : null}
 
       {modifiedNotifications && (
@@ -45,19 +58,17 @@ const NotificationDrawer = ({visible, onClose}: NotificationDrawerProps) => {
           data={modifiedNotifications}
           renderItem={({item}) => {
             return (
-              <Pressable
+              <TouchableOpacity
+                activeOpacity={0.7}
                 onPress={() => {
                   markAsRead(item, userChats, user, notifications);
                 }}
-                // className={
-                //   item.isRead ? 'notification' : 'notification not-read'
-                // }
-              >
+                style={styles.notification}>
                 <Text>{`${item.senderName} sent you a message`}</Text>
-                <Text
-                // className="notification-time"
-                >{`${moment(item.date).calendar()}`}</Text>
-              </Pressable>
+                <Text style={styles.date}>{`${moment(
+                  item.date,
+                ).calendar()}`}</Text>
+              </TouchableOpacity>
             );
           }}
         />
@@ -74,5 +85,32 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     fontSize: 32,
     fontFamily: 'Jersey20-Regular',
+  },
+  markAllAsRead: {
+    alignSelf: 'flex-end',
+    padding: 20,
+    paddingVertical: 10,
+    marginVertical: 10,
+    backgroundColor: 'yellow',
+    color: '#fff',
+    borderRadius: 10,
+  },
+  noNotificationsText: {
+    fontSize: 24,
+    color: 'yellow',
+    fontFamily: 'Jersey20-Regular',
+  },
+  notification: {
+    width: '100%',
+    padding: 20,
+    paddingVertical: 10,
+    marginVertical: 5,
+    backgroundColor: 'yellow',
+    color: '#fff',
+    borderRadius: 10,
+  },
+  date: {
+    fontSize: 12,
+    textAlign: 'right',
   },
 });

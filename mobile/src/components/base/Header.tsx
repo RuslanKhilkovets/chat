@@ -1,11 +1,16 @@
 import {MenuDrawer, NotificationDrawer} from '@/components';
+import {useChatContext} from '@/context/Chat/ChatContext';
+import {unreadNotifications} from '@/helpers/unreadNotifications';
 import * as React from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export const Header = () => {
+  const {notifications} = useChatContext();
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = React.useState(false);
+
+  const unread = unreadNotifications(notifications);
 
   return (
     <View style={[styles.headerContainer]}>
@@ -14,11 +19,23 @@ export const Header = () => {
         style={styles.iconButton}>
         <Icon name="menu" size={32} color="black" />
       </TouchableOpacity>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={() => setIsNotificationsOpen(true)}
         style={styles.iconButton}>
         <Icon name="notifications" size={32} color="black" />
-      </TouchableOpacity>
+        {unread?.length !== 0 && (
+          <View
+            style={{
+              position: 'absolute',
+              height: 20,
+              width: 20,
+              borderRadius: 10,
+              backgroundColor: 'yellow',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}></View>
+        )}
+      </TouchableOpacity> */}
 
       <MenuDrawer
         visible={isDrawerOpen}
