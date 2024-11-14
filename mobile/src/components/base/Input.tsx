@@ -39,6 +39,8 @@ interface IInputProps {
     | 'numeric'
     | 'phone-pad'
     | 'decimal-pad';
+  transparent?: boolean;
+  autoFocus?: boolean;
 }
 
 const Input: React.FC<IInputProps> = ({
@@ -61,6 +63,8 @@ const Input: React.FC<IInputProps> = ({
   multiline = false,
   ref,
   keyboardType,
+  transparent,
+  autoFocus,
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(secureTextEntry);
@@ -77,6 +81,7 @@ const Input: React.FC<IInputProps> = ({
       <View
         style={[
           styles.inputContainer,
+          transparent && {backgroundColor: 'transparent', borderWidth: 0},
           !!error && styles.error,
           isFocused && styles.activeInput,
           disabled && styles.disabled,
@@ -109,6 +114,7 @@ const Input: React.FC<IInputProps> = ({
           />
         ) : (
           <TextInput
+            autoFocus={autoFocus}
             placeholderTextColor={theme[colorScheme].dark}
             ref={ref}
             textAlignVertical="top"

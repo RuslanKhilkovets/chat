@@ -33,6 +33,28 @@ export const ChatProvider = ({children}) => {
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
+  const [filterQuery, setFilterQuery] = useState('');
+  const [filteredChats, setFilteredChats] = useState([]);
+
+  const {mutate: findChatsByQueryString} = useAuthMutation({
+    mutationFn: Api.chats.findChatsBySenderName,
+    onSuccess: res => {
+      setFilteredChats(res.data.chats);
+    },
+  });
+
+  useEffect(() => {
+    userChats?.length !== 0 && setFilteredChats(userChats);
+  }, [userChats]);
+
+  useEffect(() => {
+    const payload = {
+      senderName: filterQuery,
+      currentUserId: user?._id,
+    };
+
+    findChatsByQueryString(payload);
+  }, [filterQuery]);
 
   useEffect(() => {
     const newSocket = io(SERVER_URL);
@@ -292,6 +314,9 @@ export const ChatProvider = ({children}) => {
         markAllAsRead,
         markAsRead,
         markThisUserNotificationsAsRead,
+        filterQuery,
+        setFilterQuery,
+        filteredChats,
       }}>
       {children}
     </ChatContext.Provider>

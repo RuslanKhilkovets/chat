@@ -8,4 +8,7 @@ export default axios => ({
   findChat(firstId, secondId) {
     return axios.post(`/chats/find/${firstId}/${secondId}`);
   },
+  findChatsBySenderName(payload) {
+    return axios.post(`/chats/findChatsBySenderName/`, payload);
+  },
 });

@@ -1,4 +1,5 @@
 const chatModel = require('../models/chatModel');
+const userModel = require('../models/userModel');
 const logger = require('../utils/logger');
 
 const createChat = async (req, res) => {
@@ -51,4 +52,36 @@ const findChat = async (req, res) => {
   }
 };
 
-module.exports = { createChat, findChat, findUserChats };
+const findChatsBySenderName = async (req, res) => {
+  const { senderName, currentUserId: userId } = req.body;
+
+  try {
+    const chats = await chatModel.find({ members: { $in: [userId] } });
+
+    const filteredChats = await Promise.all(
+      chats.map(async chat => {
+        const recipientId = chat.members.find(id => id !== userId);
+
+        if (recipientId) {
+          const recipient = await userModel.findById(recipientId);
+
+          if (recipient && recipient.name.toLowerCase().includes(senderName.toLowerCase())) {
+            return chat;
+          }
+        }
+        return null;
+      }),
+    );
+
+    const result = filteredChats.filter(chat => chat !== null);
+
+    console.log('result', result);
+
+    res.status(200).json({ chats: result });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json(error);
+  }
+};
+
+module.exports = { createChat, findChat, findUserChats, findChatsBySenderName };

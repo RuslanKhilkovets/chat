@@ -1,11 +1,4 @@
-import {
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import {IModalProps} from '@/types';
 import {Drawer} from '@/components';
@@ -110,7 +103,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   date: {
-    fontSize: 12,
     textAlign: 'right',
   },
 });
