@@ -4,6 +4,7 @@ import {SERVER_URL} from '@env';
 
 import apiAuth from './auth';
 import apiChats from './chats';
+import apiUsers from './users';
 
 const client = axios.create({
   baseURL: `${SERVER_URL}/api`,
@@ -73,4 +74,5 @@ client.interceptors.response.use(
 export const Api = {
   auth: apiAuth(client),
   chats: apiChats(client),
+  users: apiUsers(client),
 };

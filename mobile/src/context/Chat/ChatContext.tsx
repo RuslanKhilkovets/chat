@@ -232,6 +232,8 @@ export const ChatProvider = ({children}) => {
       throw new Error(response.message);
     }
     setUserChats(prev => [...prev, response]);
+
+    return response;
   }, []);
 
   const {mutate: createChatMutation} = useAuthMutation({

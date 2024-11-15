@@ -6,6 +6,8 @@ const userSchema = new moongoose.Schema(
     email: { type: String, required: true, unique: true, lowercase: true },
     password: { type: String, required: true, minLength: 8 },
     registerToken: { type: String, required: false, unique: true },
+    phone: { type: String, required: false, unique: true },
+    tag: { type: String, required: false, unique: true },
   },
   {
     timestamps: true,

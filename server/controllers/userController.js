@@ -13,7 +13,7 @@ const createToken = _id => {
 
 const registerUser = async (req, res) => {
   try {
-    const { name, registerToken, email, password } = req.body;
+    const { name, registerToken, email, password, phone, tag } = req.body;
 
     let user = await userModel.findOne({ email });
 
@@ -36,7 +36,7 @@ const registerUser = async (req, res) => {
     if (!tokenDoc)
       return res.status(400).json({ message: 'Invalid or already used registration token' });
 
-    user = new userModel({ name, email, password, registerToken });
+    user = new userModel({ name, email, password, registerToken, phone, tag });
 
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(password, salt);
@@ -93,15 +93,26 @@ const findUser = async (req, res) => {
   }
 };
 
-const findUsersByName = async (req, res) => {
+const findUsersByNameOrTag = async (req, res) => {
+  const { stringQuery } = req.query;
+
   try {
+    if (!stringQuery)
+      res.status(400).json({
+        message: 'Bad request. Query can not be empty and must be defined!',
+        users: [],
+      });
+
     const users = await userModel.find({
-      name: { $regex: req.query.name, $options: 'i' },
+      $or: [
+        { name: { $regex: stringQuery, $options: 'i' } },
+        { tag: { $regex: stringQuery, $options: 'i' } },
+      ],
     });
 
-    if (!users.length) return res.status(404).json({ message: 'User not found' });
+    if (!users.length) return res.status(404).json({ message: 'User not found', users: [] });
 
-    res.status(200).json(users);
+    res.status(200).json({ users });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server Error', error: err });
@@ -123,4 +134,4 @@ const getUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser, findUser, getUser, findUsersByName };
+module.exports = { registerUser, loginUser, findUser, getUser, findUsersByNameOrTag };
