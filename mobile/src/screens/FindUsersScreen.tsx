@@ -59,3 +59,8 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
 });
+const styles = StyleSheet.create({
+  inputContainer: {
+    paddingVertical: 20,
+  },
+});

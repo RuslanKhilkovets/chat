@@ -14,6 +14,7 @@ const createToken = _id => {
 const registerUser = async (req, res) => {
   try {
     const { name, registerToken, email, password, phone, tag } = req.body;
+    const { name, registerToken, email, password, phone, tag } = req.body;
 
     let user = await userModel.findOne({ email });
 
@@ -36,6 +37,7 @@ const registerUser = async (req, res) => {
     if (!tokenDoc)
       return res.status(400).json({ message: 'Invalid or already used registration token' });
 
+    user = new userModel({ name, email, password, registerToken, phone, tag });
     user = new userModel({ name, email, password, registerToken, phone, tag });
 
     const salt = await bcrypt.genSalt(10);
@@ -108,6 +110,10 @@ const findUsersByNameOrTag = async (req, res) => {
         { name: { $regex: stringQuery, $options: 'i' } },
         { tag: { $regex: stringQuery, $options: 'i' } },
       ],
+      $or: [
+        { name: { $regex: stringQuery, $options: 'i' } },
+        { tag: { $regex: stringQuery, $options: 'i' } },
+      ],
     });
 
     if (!users.length) return res.status(404).json({ message: 'User not found', users: [] });
@@ -134,4 +140,5 @@ const getUser = async (req, res) => {
   }
 };
 
+module.exports = { registerUser, loginUser, findUser, getUser, findUsersByNameOrTag };
 module.exports = { registerUser, loginUser, findUser, getUser, findUsersByNameOrTag };
