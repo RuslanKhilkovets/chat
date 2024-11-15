@@ -1,18 +1,32 @@
-import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {Input, Screen, UserItem} from '@/components';
-import {useAuthMutation} from '@/hooks';
+import {useAuthMutation, useTypedSelector} from '@/hooks';
 import {Api} from '@/api';
 
 const FindUsersScreen = () => {
+  const {_id: currentUserId} = useTypedSelector(state => state.user);
+
   const [filterQuery, setFilterQuery] = useState('');
   const [users, setUsers] = useState([]);
 
   const {mutate: findUsersMutation, isLoading} = useAuthMutation({
     mutationFn: Api.users.findByNameOrTag,
     onSuccess: res => {
-      setUsers(res.data.users);
-      console.log(res.data.users);
+      const receivedUsers = res.data.users;
+      if (receivedUsers) {
+        const otherUsers = receivedUsers.filter(
+          receivedUser => receivedUser?._id !== currentUserId,
+        );
+
+        setUsers(otherUsers);
+      }
     },
     onError: ({errors}) => {
       setUsers(errors.users);
@@ -41,12 +55,18 @@ const FindUsersScreen = () => {
           }}>
           <ActivityIndicator size={'large'} />
         </View>
-      ) : (
+      ) : users?.length !== 0 && filterQuery ? (
         <FlatList
           data={users}
           renderItem={({item}) => <UserItem user={item} />}
           keyExtractor={({item}) => String(item?._id)}
         />
+      ) : (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <Text style={styles.noChatsText}>
+            There is no users with given data!
+          </Text>
+        </View>
       )}
     </Screen>
   );
@@ -57,5 +77,11 @@ export default FindUsersScreen;
 const styles = StyleSheet.create({
   inputContainer: {
     paddingVertical: 20,
+  },
+  noChatsText: {
+    fontSize: 24,
+    fontFamily: 'Jersey20-Regular',
+    color: '#E1FF00',
+    textAlign: 'center',
   },
 });

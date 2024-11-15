@@ -57,10 +57,4 @@ const styles = StyleSheet.create({
     color: '#E1FF00',
     textAlign: 'center',
   },
-  screenLabel: {
-    fontSize: 50,
-    fontFamily: 'Jersey20-Regular',
-    color: '#E1FF00',
-    marginVertical: 70,
-  },
 });

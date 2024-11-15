@@ -19,7 +19,7 @@ export const useChatContext = () => {
 
 export const ChatProvider = ({children}) => {
   const user = useTypedSelector(state => state.user);
-  const [userChats, setUserChats] = useState(null);
+  const [userChats, setUserChats] = useState([]);
   const [isUserChatLoading, setIsUserChatLoading] = useState(false);
   const [userChatsError, setUserChatsError] = useState(null);
   const [potentialChats, setPotentialChats] = useState([]);
@@ -231,7 +231,11 @@ export const ChatProvider = ({children}) => {
     if (response.error) {
       throw new Error(response.message);
     }
-    setUserChats(prev => [...prev, response]);
+
+    const checkIfChatExists = (id: string) =>
+      userChats?.find(chat => chat._id === response?._id);
+
+    if (!checkIfChatExists) setUserChats(prev => [...prev, response]);
 
     return response;
   }, []);
