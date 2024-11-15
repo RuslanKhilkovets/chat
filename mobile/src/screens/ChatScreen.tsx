@@ -4,6 +4,9 @@ import {
   Pressable,
   StyleSheet,
   View,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {Input, MessageItem, Screen} from '@/components';
@@ -33,6 +36,12 @@ const ChatScreen = () => {
     updateCurrentChat(chat);
   }, [chat]);
 
+  useEffect(() => {
+    return () => {
+      updateCurrentChat(null);
+    };
+  }, []);
+
   const scrollToBottom = () => {
     flatListRef.current?.scrollToEnd({animated: true});
   };
@@ -44,46 +53,67 @@ const ChatScreen = () => {
   }, [messages]);
 
   const handleSendMessage = () => {
-    console.log(textMessage, user, currentChat._id, setTextMessage);
-
     if (textMessage.trim()) {
       sendMessage(textMessage, user, currentChat._id, setTextMessage);
     }
   };
 
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        scrollToBottom();
+      },
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+
   return (
     <Screen title={recipientUser?.name}>
-      {isMessagesLoading ? (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <ActivityIndicator size={'large'} color={'yellow'} />
+      <KeyboardAvoidingView
+        style={{flex: 1}}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <View style={{flex: 1}}>
+          {isMessagesLoading ? (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <ActivityIndicator size={'large'} color={'yellow'} />
+            </View>
+          ) : (
+            <>
+              <FlatList
+                ref={flatListRef}
+                data={messages}
+                renderItem={({item}) => <MessageItem message={item} />}
+                keyExtractor={item => item._id}
+                style={{marginBottom: 20}}
+                onContentSizeChange={scrollToBottom}
+              />
+              <View style={styles.inputContainer}>
+                <Input
+                  value={textMessage}
+                  onChangeText={text => setTextMessage(text)}
+                  placeholder="Message..."
+                  endAdornment={
+                    textMessage ? (
+                      <Pressable onPress={handleSendMessage}>
+                        <Icon name="send" color="yellow" size={20} />
+                      </Pressable>
+                    ) : null
+                  }
+                />
+              </View>
+            </>
+          )}
         </View>
-      ) : (
-        <>
-          <FlatList
-            ref={flatListRef}
-            data={messages}
-            renderItem={({item}) => <MessageItem message={item} />}
-            keyExtractor={item => item._id}
-            style={{flex: 1, marginBottom: 20}}
-            onContentSizeChange={scrollToBottom}
-          />
-          <View>
-            <Input
-              style={styles.inputContainer}
-              value={textMessage}
-              onChangeText={text => setTextMessage(text)}
-              placeholder="Message..."
-              endAdornment={
-                textMessage ? (
-                  <Pressable onPress={handleSendMessage}>
-                    <Icon name="send" color="yellow" size={20} />
-                  </Pressable>
-                ) : null
-              }
-            />
-          </View>
-        </>
-      )}
+      </KeyboardAvoidingView>
     </Screen>
   );
 };
@@ -93,6 +123,7 @@ export default ChatScreen;
 const styles = StyleSheet.create({
   inputContainer: {
     backgroundColor: '#000',
-    padding: 10,
+    padding: 5,
+    paddingHorizontal: 10,
   },
 });
