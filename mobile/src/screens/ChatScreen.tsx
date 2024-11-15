@@ -18,7 +18,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 const ChatScreen = () => {
   const route = useRoute();
   const chat = route?.params?.chat;
-  const {user} = useTypedSelector(state => state);
+  const user = useTypedSelector(state => state.user);
 
   const {
     currentChat,

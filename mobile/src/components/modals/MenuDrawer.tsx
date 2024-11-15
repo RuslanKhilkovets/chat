@@ -11,7 +11,7 @@ interface MenuDrawerProps extends IModalProps {}
 const MenuDrawer = ({onClose, visible}: MenuDrawerProps) => {
   const {navigate} = useNavigation();
   const {logout} = React.useContext(AuthContext);
-  const {user} = useTypedSelector(state => state);
+  const user = useTypedSelector(state => state.user);
 
   const onRedirectHandle = (screen: string) => {
     onClose();

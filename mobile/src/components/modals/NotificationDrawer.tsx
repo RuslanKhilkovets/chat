@@ -10,7 +10,7 @@ import moment from 'moment';
 interface NotificationDrawerProps extends IModalProps {}
 
 const NotificationDrawer = ({visible, onClose}: NotificationDrawerProps) => {
-  const {user} = useTypedSelector(state => state);
+  const user = useTypedSelector(state => state.user);
   const {notifications, userChats, allUsers, markAllAsRead, markAsRead} =
     useChatContext();
 

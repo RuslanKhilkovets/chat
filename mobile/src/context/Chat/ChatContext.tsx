@@ -18,7 +18,7 @@ export const useChatContext = () => {
 };
 
 export const ChatProvider = ({children}) => {
-  const {user} = useTypedSelector(state => state);
+  const user = useTypedSelector(state => state.user);
   const [userChats, setUserChats] = useState(null);
   const [isUserChatLoading, setIsUserChatLoading] = useState(false);
   const [userChatsError, setUserChatsError] = useState(null);

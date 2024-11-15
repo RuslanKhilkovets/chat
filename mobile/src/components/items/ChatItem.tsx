@@ -13,7 +13,7 @@ interface IChatItemProps {
 }
 
 const ChatItem = ({chat}: IChatItemProps) => {
-  const {user} = useTypedSelector(state => state);
+  const user = useTypedSelector(state => state.user);
   const {navigate} = useNavigation();
 
   const navigateToChat = (id: string) => {

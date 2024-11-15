@@ -8,7 +8,7 @@ interface IMessageItemProps {
 }
 
 const MessageItem = ({message}: IMessageItemProps) => {
-  const {user} = useTypedSelector(state => state);
+  const user = useTypedSelector(state => state.user);
 
   return (
     <View
