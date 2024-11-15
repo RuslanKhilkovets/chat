@@ -5,7 +5,6 @@ import {
   useEffect,
   useState,
 } from 'react';
-import {baseUrl, getRequest, postRequest} from '../../helpers/services';
 import {io} from 'socket.io-client';
 import {SERVER_URL} from '@env';
 import {useAuthMutation, useTypedSelector} from '@/hooks';
@@ -20,12 +19,9 @@ export const useChatContext = () => {
 export const ChatProvider = ({children}) => {
   const user = useTypedSelector(state => state.user);
   const [userChats, setUserChats] = useState([]);
-  const [isUserChatLoading, setIsUserChatLoading] = useState(false);
   const [userChatsError, setUserChatsError] = useState(null);
-  const [potentialChats, setPotentialChats] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [isMessagesLoading, setIsMessagesLoading] = useState(false);
   const [messagesError, setMessagesError] = useState(null);
   const [sendTextMessageError, setSendTextMessageError] = useState(null);
   const [newMessage, setNewMessage] = useState(null);
@@ -107,8 +103,6 @@ export const ChatProvider = ({children}) => {
     socket.on('getNotification', res => {
       const isChatOpen = currentChat?.members.some(id => id === res.senderId);
 
-      console.log(isChatOpen);
-
       if (isChatOpen) {
         setNotifications(prev => [{...res, isRead: true}, ...prev]);
       } else {
@@ -122,131 +116,95 @@ export const ChatProvider = ({children}) => {
     };
   }, [socket, currentChat]);
 
+  const {mutate: getUsers} = useAuthMutation({
+    mutationFn: Api.users.getUsers,
+    onSuccess: () => {
+      setAllUsers(response.data.users);
+    },
+    onError: error => {
+      setUserChatsError(error.message);
+    },
+  });
+
   useEffect(() => {
-    const getUsers = async () => {
-      const response = await getRequest(`${baseUrl}/users`);
-      if (response.error) {
-        setUserChatsError(response.message);
-        return;
-      }
-
-      const pChats = response.users.filter(u => {
-        let isChatCreated = false;
-        if (user?._id === u.id) {
-          return false;
-        }
-
-        if (userChats) {
-          isChatCreated = userChats?.some(chat => {
-            return chat.members[0] === u._id || chat.members[1] === u._id;
-          });
-        }
-        return !isChatCreated;
-      });
-      setPotentialChats(pChats);
-      setAllUsers(response.users);
-    };
     getUsers();
   }, [userChats]);
 
+  const {mutate: getUserChats, isLoading: isUserChatLoading} = useAuthMutation({
+    mutationFn: Api.chats.findUserChats,
+    onSuccess: response => {
+      setUserChats(response.data);
+    },
+    onError: error => {
+      setUserChatsError(error.message);
+    },
+  });
+
   useEffect(() => {
-    const getUserChats = async () => {
-      setIsUserChatLoading(true);
-      setUserChatsError(null);
-
-      try {
-        if (user._id) {
-          const response = await fetch(`${baseUrl}/chats/${user._id}`);
-          const data = await response.json();
-
-          setUserChats(data);
-        }
-      } catch (error) {
-        setUserChatsError(error.message);
-      } finally {
-        setIsUserChatLoading(false);
-      }
-    };
-    getUserChats();
+    getUserChats(user._id || 'nigga');
   }, [user, notifications]);
 
+  const {mutate: getMessages, isLoading: isMessagesLoading} = useAuthMutation({
+    mutationFn: Api.messages.getMessages,
+    onSuccess: res => {
+      setMessages(res.data);
+    },
+    onError: error => {
+      setMessagesError(error.message);
+    },
+  });
+
   useEffect(() => {
-    const getMessages = async () => {
-      setIsMessagesLoading(true);
-      setMessagesError(null);
-
-      try {
-        if (user._id) {
-          const response = await fetch(
-            `${baseUrl}/messages/${currentChat?._id}`,
-          );
-          const data = await response.json();
-
-          setMessages(data);
-        }
-      } catch (error) {
-        setMessagesError(error.message);
-      } finally {
-        setIsMessagesLoading(false);
-      }
-    };
-    getMessages();
+    getMessages(currentChat?._id);
   }, [currentChat]);
 
-  const sendMessage = useCallback(
-    async (textMessage, sender, currentChatId, setTextMessage) => {
-      if (!textMessage) {
-        throw new Error(`${currentChat} type smth`);
-      }
-      const response = await postRequest(
-        `${baseUrl}/messages`,
-        JSON.stringify({
-          chatId: currentChatId,
-          senderId: sender._id,
-          text: textMessage,
-        }),
-      );
-
-      if (response.error) {
-        setSendTextMessageError(response);
-        return;
-      }
-
+  const {mutate: sendMessageMutation} = useAuthMutation({
+    mutationFn: Api.messages.sendMessage,
+    onSuccess: response => {
       setNewMessage(response);
       setMessages(prev => [...prev, response]);
-      setTextMessage('');
     },
-    [],
-  );
+    onError: error => {
+      setSendTextMessageError(error.message);
+    },
+  });
+
+  const sendMessage = async (
+    textMessage,
+    sender,
+    currentChatId,
+    setTextMessage,
+  ) => {
+    const payload = JSON.stringify({
+      chatId: currentChatId,
+      senderId: sender._id,
+      text: textMessage,
+    });
+
+    await sendMessageMutation(payload).then(() => {
+      setTextMessage('');
+    });
+  };
 
   const updateCurrentChat = useCallback(chat => {
     setCurrentChat(chat);
   }, []);
 
-  const createChat = useCallback(async (firstId, secondId) => {
-    const response = await postRequest(
-      `${baseUrl}/chats`,
-      JSON.stringify({firstId, secondId}),
-    );
-    if (response.error) {
-      throw new Error(response.message);
-    }
-
-    const checkIfChatExists = (id: string) =>
-      userChats?.find(chat => chat._id === response?._id);
-
-    if (!checkIfChatExists) setUserChats(prev => [...prev, response]);
-
-    return response;
-  }, []);
-
   const {mutate: createChatMutation} = useAuthMutation({
     mutationFn: Api.chats.createChat,
     onSuccess: res => {
-      console.log(res);
+      const checkIfChatExists = (id: string) =>
+        userChats?.some(chat => chat._id === id);
+
+      if (!checkIfChatExists(res.data._id))
+        setUserChats(prev => [...prev, res.data]);
     },
     onError: () => {},
   });
+
+  const createChat = useCallback(async (firstId, secondId) => {
+    await createChatMutation(JSON.stringify({firstId, secondId}));
+  }, []);
 
   const markAllAsRead = useCallback(notifications => {
     const mNotifications = notifications.map(notification => ({
@@ -303,7 +261,6 @@ export const ChatProvider = ({children}) => {
         userChats,
         isUserChatLoading,
         userChatsError,
-        potentialChats,
         createChat,
         updateCurrentChat,
         messages,

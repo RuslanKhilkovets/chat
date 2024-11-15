@@ -3,10 +3,10 @@ export default axios => ({
     return axios.post('/chats/', payload);
   },
   findUserChats(userId) {
-    return axios.post(`/chats/${userId}`);
+    return axios.get(`/chats/${userId}`);
   },
   findChat(firstId, secondId) {
-    return axios.post(`/chats/find/${firstId}/${secondId}`);
+    return axios.get(`/chats/find/${firstId}/${secondId}`);
   },
   findChatsBySenderName(payload) {
     return axios.post(`/chats/findChatsBySenderName/`, payload);
