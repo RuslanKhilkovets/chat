@@ -27,3 +27,4 @@ export {default as MenuDrawer} from './modals/MenuDrawer';
 export {default as NotificationDrawer} from './modals/NotificationDrawer';
 
 export {default as CheckPasswordForm} from './forms/CheckPasswordForm';
+export {default as ChangeDataForm} from './forms/ChangeDataForm';

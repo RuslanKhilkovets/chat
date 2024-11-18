@@ -25,6 +25,10 @@ const CheckPasswordForm = ({setIsPasswordChecked}: ICheckPasswordFormProps) => {
   });
 
   const checkPassword = (id, password) => {
+    if (!password) {
+      setError('Field must be filled');
+      return;
+    }
     const payload = {
       id,
       password,
@@ -41,6 +45,7 @@ const CheckPasswordForm = ({setIsPasswordChecked}: ICheckPasswordFormProps) => {
         placeholder="Password"
         error={error}
         disabled={isLoading}
+        secureTextEntry
       />
       <Button
         onPress={() => checkPassword(userId, password)}

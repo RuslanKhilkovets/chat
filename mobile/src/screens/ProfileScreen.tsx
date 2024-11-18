@@ -3,6 +3,7 @@ import React from 'react';
 import {ProfileItem, Screen, SettingsItem} from '@/components';
 import {useTypedSelector} from '@/hooks';
 import {useNavigation} from '@react-navigation/native';
+import {ChangeDataType} from '@/constants';
 
 const ProfileScreen = () => {
   const user = useTypedSelector(state => state.user);
@@ -21,19 +22,25 @@ const ProfileScreen = () => {
         <View style={styles.infoBlock}>
           <Text style={styles.infoBlockText}>Account</Text>
           <ProfileItem
-            value={user.tag}
+            value={user.tag && `@${user.tag}`}
             title="User tag"
-            onPress={() => navigate('ChangePersonalData', {type: 'Tag'})}
+            onPress={() =>
+              navigate('ChangePersonalData', {type: ChangeDataType.TAG})
+            }
           />
           <ProfileItem
             value={user.email}
             title="Email"
-            onPress={() => navigate('ChangePersonalData', {type: 'Email'})}
+            onPress={() =>
+              navigate('ChangePersonalData', {type: ChangeDataType.EMAIL})
+            }
           />
           <ProfileItem
             value={user.phone}
             title="Phone"
-            onPress={() => navigate('ChangePersonalData', {type: 'Phone'})}
+            onPress={() =>
+              navigate('ChangePersonalData', {type: ChangeDataType.PHONE})
+            }
           />
         </View>
 

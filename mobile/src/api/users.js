@@ -8,4 +8,7 @@ export default axios => ({
   checkPassword(payload) {
     return axios.post(`/users/check/`, payload);
   },
+  changePersonalData(payload) {
+    return axios.patch(`/users/change`, payload);
+  },
 });
