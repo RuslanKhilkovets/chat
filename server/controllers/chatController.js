@@ -6,6 +6,9 @@ const createChat = async (req, res) => {
   const { firstId, secondId } = req.body;
 
   try {
+    if (!firstId || !secondId)
+      return res.status(400).json({ message: 'Creating chat requires at least 2 members' });
+
     const chat = await chatModel.findOne({ members: { $all: [firstId, secondId] } });
 
     if (chat) {

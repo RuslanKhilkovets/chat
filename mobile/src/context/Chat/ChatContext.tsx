@@ -190,21 +190,26 @@ export const ChatProvider = ({children}) => {
     setCurrentChat(chat);
   }, []);
 
-  const {mutate: createChatMutation} = useAuthMutation({
-    mutationFn: Api.chats.createChat,
-    onSuccess: res => {
-      const checkIfChatExists = (id: string) =>
-        userChats?.some(chat => chat._id === id);
+  const createChat = useCallback(
+    async (firstId, secondId) => {
+      try {
+        const response = await Api.chats.createChat({firstId, secondId});
 
-      if (!checkIfChatExists(res.data._id))
-        setUserChats(prev => [...prev, res.data]);
+        const chatId = response.data._id;
+
+        const chatExists = filteredChats?.some(chat => chat._id === chatId);
+        if (!chatExists) {
+          setUserChats(prevChats => [...prevChats, response.data]);
+        }
+
+        return response.data;
+      } catch (error) {
+        console.error('Error creating chat:', error);
+        throw error;
+      }
     },
-    onError: () => {},
-  });
-
-  const createChat = useCallback(async (firstId, secondId) => {
-    await createChatMutation(JSON.stringify({firstId, secondId}));
-  }, []);
+    [filteredChats, setUserChats],
+  );
 
   const markAllAsRead = useCallback(notifications => {
     const mNotifications = notifications.map(notification => ({
