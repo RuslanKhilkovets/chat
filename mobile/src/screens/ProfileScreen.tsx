@@ -22,6 +22,7 @@ const ProfileScreen = () => {
         <View style={styles.infoBlock}>
           <Text style={styles.infoBlockText}>Account</Text>
           <ProfileItem
+            iconName="blur-on"
             value={user.tag && `@${user.tag}`}
             title="User tag"
             onPress={() =>
@@ -29,6 +30,7 @@ const ProfileScreen = () => {
             }
           />
           <ProfileItem
+            iconName="alternate-email"
             value={user.email}
             title="Email"
             onPress={() =>
@@ -36,6 +38,7 @@ const ProfileScreen = () => {
             }
           />
           <ProfileItem
+            iconName="phone"
             value={user.phone}
             title="Phone"
             onPress={() =>
@@ -46,11 +49,28 @@ const ProfileScreen = () => {
 
         <View style={styles.infoBlock}>
           <Text style={styles.infoBlockText}>Settings</Text>
-          <SettingsItem title="Language" onPress={() => {}} />
-          <SettingsItem title="Theme" onPress={() => {}} />
-          <SettingsItem title="Notifications" onPress={() => {}} />
-          <SettingsItem title="Security" onPress={() => {}} />
+          <SettingsItem
+            iconName="language"
+            title="Language"
+            onPress={() => {}}
+          />
+          <SettingsItem
+            iconName="light-mode"
+            title="Theme"
+            onPress={() => {}}
+          />
+          <SettingsItem
+            iconName="notifications"
+            title="Notifications"
+            onPress={() => {}}
+          />
+          <SettingsItem
+            iconName="security"
+            title="Security"
+            onPress={() => {}}
+          />
         </View>
+        <Text style={styles.appVersion}>MChat v1.0</Text>
       </ScrollView>
     </Screen>
   );
@@ -92,5 +112,12 @@ const styles = StyleSheet.create({
     fontSize: 23,
     color: 'yellow',
     fontFamily: 'Jersey20-Regular',
+  },
+  appVersion: {
+    color: 'yellow',
+    fontFamily: 'Jersey20-Regular',
+    textAlign: 'center',
+    fontSize: 18,
+    marginVertical: 20,
   },
 });
