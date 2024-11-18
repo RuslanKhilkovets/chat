@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import {Drawer, MenuItem} from '@/components';
 import {IModalProps} from '@/types';
@@ -26,7 +26,9 @@ const MenuDrawer = ({onClose, visible}: MenuDrawerProps) => {
           flex: 1,
         }}>
         <View>
-          <View
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => onRedirectHandle('Profile')}
             style={{
               height: 70,
               width: 70,
@@ -41,7 +43,7 @@ const MenuDrawer = ({onClose, visible}: MenuDrawerProps) => {
             <MenuItem
               iconName="person"
               onPress={() => onRedirectHandle('Profile')}>
-              Profile
+              My profile
             </MenuItem>
             <MenuItem
               iconName="texture"

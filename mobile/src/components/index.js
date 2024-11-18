@@ -14,6 +14,8 @@ export {default as MenuItem} from './items/MenuItem';
 export {default as ChatItem} from './items/ChatItem';
 export {default as MessageItem} from './items/MessageItem';
 export {default as UserItem} from './items/UserItem';
+export {default as ProfileItem} from './items/ProfileItem';
+export {default as SettingsItem} from './items/SettingsItem';
 
 export {default as ScreenHeader} from './containers/ScreenHeader';
 export {default as Screen} from './containers/Screen';
