@@ -2,9 +2,11 @@ import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {ProfileItem, Screen, SettingsItem} from '@/components';
 import {useTypedSelector} from '@/hooks';
+import {useNavigation} from '@react-navigation/native';
 
 const ProfileScreen = () => {
   const user = useTypedSelector(state => state.user);
+  const {navigate} = useNavigation();
 
   return (
     <Screen title="Profile">
@@ -18,9 +20,21 @@ const ProfileScreen = () => {
         </View>
         <View style={styles.infoBlock}>
           <Text style={styles.infoBlockText}>Account</Text>
-          <ProfileItem value={user.tag} title="User tag" />
-          <ProfileItem value={user.email} title="Email" />
-          <ProfileItem value={user.phone} title="Phone" />
+          <ProfileItem
+            value={user.tag}
+            title="User tag"
+            onPress={() => navigate('ChangePersonalData', {type: 'Tag'})}
+          />
+          <ProfileItem
+            value={user.email}
+            title="Email"
+            onPress={() => navigate('ChangePersonalData', {type: 'Email'})}
+          />
+          <ProfileItem
+            value={user.phone}
+            title="Phone"
+            onPress={() => navigate('ChangePersonalData', {type: 'Phone'})}
+          />
         </View>
 
         <View style={styles.infoBlock}>
@@ -28,6 +42,7 @@ const ProfileScreen = () => {
           <SettingsItem title="Language" onPress={() => {}} />
           <SettingsItem title="Theme" onPress={() => {}} />
           <SettingsItem title="Notifications" onPress={() => {}} />
+          <SettingsItem title="Security" onPress={() => {}} />
         </View>
       </ScrollView>
     </Screen>
@@ -63,6 +78,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Jersey20-Regular',
   },
   infoBlock: {
+    marginTop: 20,
     gap: 10,
   },
   infoBlockText: {

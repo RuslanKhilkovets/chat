@@ -1,5 +1,6 @@
 import {
   AboutScreen,
+  ChangePersonalDataScreen,
   ChatScreen,
   ChatsScreen,
   FindUsersScreen,
@@ -42,6 +43,10 @@ export const privateRoutes: IRoute[] = [
   {
     name: 'PrivacyPolicies',
     component: PrivacyPoliciesScreen,
+  },
+  {
+    name: 'ChangePersonalData',
+    component: ChangePersonalDataScreen,
   },
 ];
 

@@ -5,4 +5,7 @@ export default axios => ({
   getUsers() {
     return axios.get(`/users/`);
   },
+  checkPassword(payload) {
+    return axios.post(`/users/check/`, payload);
+  },
 });

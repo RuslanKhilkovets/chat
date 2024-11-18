@@ -43,8 +43,6 @@ client.interceptors.response.use(
       errors: errorData,
     };
 
-    console.log(errorStatus, errorData);
-
     switch (errorStatus) {
       case 401:
         reject = {
@@ -55,16 +53,11 @@ client.interceptors.response.use(
         };
         break;
       case 400:
-        const entries = Object.entries(errorData?.errors);
-        let message = '';
-        for (const [key, value] of entries) {
-          message += `${key}: ${value?.join(', ')}`;
-        }
         reject = {
           status: errorStatus,
           title: 'Помилка заповнення полів',
           message: message,
-          errors: errorData?.errors,
+          errors: errorData?.message || errorData?.errors,
         };
         break;
     }

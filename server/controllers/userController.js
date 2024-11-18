@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const logger = require('../utils/logger');
+const { default: mongoose } = require('mongoose');
 
 const createToken = _id => {
   const jwtkey = process.env.JWT_SECRET_KEY;
@@ -54,6 +55,32 @@ const registerUser = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server Error', error: err });
+  }
+};
+
+const checkPassword = async (req, res) => {
+  const { id, password } = req.body;
+
+  try {
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'Invalid or missing user ID' });
+    }
+
+    const user = await userModel.findById(id);
+
+    if (!user) {
+      return res.status(400).json({ message: 'User not found' });
+    }
+
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+
+    if (isPasswordCorrect) {
+      return res.status(200).json({ message: 'Password is correct' });
+    }
+
+    return res.status(400).json({ message: 'Incorrect password' });
+  } catch (err) {
+    res.status(500).json({ message: 'Server Error', error: err.message });
   }
 };
 
@@ -134,4 +161,11 @@ const getUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser, findUser, getUser, findUsersByNameOrTag };
+module.exports = {
+  registerUser,
+  loginUser,
+  findUser,
+  getUser,
+  findUsersByNameOrTag,
+  checkPassword,
+};

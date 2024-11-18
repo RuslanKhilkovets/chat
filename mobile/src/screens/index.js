@@ -8,3 +8,4 @@ export {default as ThemeScreen} from './ThemeScreen';
 export {default as FindUsersScreen} from './FindUsersScreen';
 export {default as ChatScreen} from './ChatScreen';
 export {default as PrivacyPoliciesScreen} from './PrivacyPoliciesScreen';
+export {default as ChangePersonalDataScreen} from './ChangePersonalDataScreen';
