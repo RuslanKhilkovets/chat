@@ -4,11 +4,14 @@ import {
   ChatScreen,
   ChatsScreen,
   FindUsersScreen,
+  LanguageScreen,
+  NotificationsScreen,
   PrivacyPoliciesScreen,
   ProfileScreen,
+  SavedScreen,
+  SecurityScreen,
   ThemeScreen,
 } from '@/screens';
-import SavedScreen from '@/screens/SavedScreen';
 import {IRoute} from '@/types';
 
 export const privateRoutes: IRoute[] = [
@@ -47,6 +50,18 @@ export const privateRoutes: IRoute[] = [
   {
     name: 'ChangePersonalData',
     component: ChangePersonalDataScreen,
+  },
+  {
+    name: 'Language',
+    component: LanguageScreen,
+  },
+  {
+    name: 'Security',
+    component: SecurityScreen,
+  },
+  {
+    name: 'Notifications',
+    component: NotificationsScreen,
   },
 ];
 

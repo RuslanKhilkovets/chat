@@ -9,3 +9,7 @@ export {default as FindUsersScreen} from './FindUsersScreen';
 export {default as ChatScreen} from './ChatScreen';
 export {default as PrivacyPoliciesScreen} from './PrivacyPoliciesScreen';
 export {default as ChangePersonalDataScreen} from './ChangePersonalDataScreen';
+export {default as SavedScreen} from './SavedScreen';
+export {default as LanguageScreen} from './LanguageScreen';
+export {default as NotificationsScreen} from './NotificationsScreen';
+export {default as SecurityScreen} from './SecurityScreen';

@@ -53,22 +53,22 @@ const ProfileScreen = () => {
           <SettingsItem
             iconName="language"
             title="Language"
-            onPress={() => {}}
+            onPress={() => navigate('Language')}
           />
           <SettingsItem
             iconName="light-mode"
             title="Theme"
-            onPress={() => {}}
+            onPress={() => navigate('Theme')}
           />
           <SettingsItem
             iconName="notifications"
             title="Notifications"
-            onPress={() => {}}
+            onPress={() => navigate('Notifications')}
           />
           <SettingsItem
             iconName="security"
             title="Security"
-            onPress={() => {}}
+            onPress={() => navigate('Security')}
           />
         </View>
         <Text style={styles.appVersion}>MChat v1.0</Text>
