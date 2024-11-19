@@ -61,11 +61,15 @@ const FindUsersScreen = () => {
           renderItem={({item}) => <UserItem user={item} />}
           keyExtractor={({item}) => String(item?._id)}
         />
-      ) : (
+      ) : filterQuery ? (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <Text style={styles.noChatsText}>
-            There is no users with given data!
+            There are no users with given data!
           </Text>
+        </View>
+      ) : (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <Text style={styles.noChatsText}>Type something...</Text>
         </View>
       )}
     </Screen>
