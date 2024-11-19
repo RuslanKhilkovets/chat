@@ -1,8 +1,8 @@
 enum ChangeDataType {
-  EMAIL = 'Email',
-  TAG = 'Tag',
-  PHONE = 'Phone',
-  NAME = 'Name',
+  EMAIL = 'email',
+  TAG = 'tag',
+  PHONE = 'phone',
+  NAME = 'name',
 }
 
 export default ChangeDataType;

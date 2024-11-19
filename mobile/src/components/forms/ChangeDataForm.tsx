@@ -1,45 +1,84 @@
+import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import React, {useState} from 'react';
-import {Button, Input} from '@/components';
-import {useAuthMutation, useTypedSelector} from '@/hooks';
+import {RouteProp, useRoute} from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
+import {useForm, Controller} from 'react-hook-form';
+import * as yup from 'yup';
+import {yupResolver} from '@hookform/resolvers/yup';
+import SInfo from 'react-native-sensitive-info';
+
+import {Button, Input, PhoneInput} from '@/components';
+import {useAuthMutation, useGoBack, useTypedSelector} from '@/hooks';
 import {Api} from '@/api';
-import {useRoute} from '@react-navigation/native';
+import {setUser} from '@/store/user';
+import {ChangeDataType} from '@/constants';
+import personalDataSchema from '@/validations/personalData';
 
 const ChangeDataForm = () => {
   const {_id: userId} = useTypedSelector(state => state.user);
+  const route =
+    useRoute<RouteProp<{params: {type: ChangeDataType}}, 'params'>>();
 
-  const route = useRoute();
   const {type} = route.params || {};
+  const dispatch = useDispatch();
 
-  const [fieldToChange, setFieldToChange] = useState('');
-  const [error, setError] = useState('');
+  const goBack = useGoBack();
 
-  const {mutate: checkPasswordMutation, isLoading} = useAuthMutation({
-    mutationFn: Api.users.changePersonalData,
-    onSuccess: res => {
-      console.log(res);
-    },
-    onError: error => {
-      // setError('Incorrect password');
+  const schema = personalDataSchema[type] || yup.object();
+  const {
+    control,
+    handleSubmit,
+    formState: {errors},
+  } = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: {fieldToChange: ''},
+  });
+
+  const {mutate: updateMutation, isLoading} = useAuthMutation({
+    mutationFn: Api.users.update,
+    onSuccess: async res => {
+      const {user} = res.data;
+
+      dispatch(setUser(user));
+      await SInfo.setItem('user', JSON.stringify(user), {
+        sharedPreferencesName: 'prefs',
+        keychainService: 'keychainService',
+      });
+
+      goBack();
     },
   });
 
-  const changePersonalData = () => {
-    const payload = {};
-
-    checkPasswordMutation(payload);
+  const onSubmit = data => {
+    const payload = {[type]: data.fieldToChange};
+    updateMutation({userId, data: payload});
   };
 
   return (
     <View style={styles.container}>
-      <Input
-        value={fieldToChange}
-        onChangeText={setFieldToChange}
-        placeholder={type}
-        error={error}
-        disabled={isLoading}
+      <Controller
+        name="fieldToChange"
+        control={control}
+        render={({field: {onChange, value}}) =>
+          type === ChangeDataType.PHONE ? (
+            <PhoneInput
+              value={value}
+              onChange={onChange}
+              placeholder={type?.toUpperCase()}
+              error={errors.fieldToChange?.message}
+            />
+          ) : (
+            <Input
+              value={value}
+              onChangeText={onChange}
+              placeholder={type}
+              error={errors.fieldToChange?.message}
+              disabled={isLoading}
+            />
+          )
+        }
       />
-      <Button onPress={() => changePersonalData()} isLoading={isLoading}>
+      <Button onPress={handleSubmit(onSubmit)} isLoading={isLoading}>
         Change {type}
       </Button>
     </View>

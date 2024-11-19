@@ -161,6 +161,41 @@ const getUser = async (req, res) => {
   }
 };
 
+const updateUser = async (req, res) => {
+  const { userId } = req.params;
+  const { name, phone, tag, email } = req.body;
+
+  try {
+    if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: 'Invalid or missing user ID' });
+    }
+
+    const user = await userModel.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (email && !validator.isEmail(email)) {
+      return res.status(400).json({ message: 'Invalid email format' });
+    }
+
+    if (name !== undefined) user.name = name;
+    if (phone !== undefined) user.phone = phone;
+    if (tag !== undefined) user.tag = tag;
+    if (email !== undefined) user.email = email;
+
+    const updatedUser = await user.save();
+
+    logger.info(`User with ID ${userId} updated successfully.`);
+
+    res.status(200).json({ message: 'User updated successfully', user: updatedUser });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server Error', error: err.message });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -168,4 +203,5 @@ module.exports = {
   getUser,
   findUsersByNameOrTag,
   checkPassword,
+  updateUser,
 };

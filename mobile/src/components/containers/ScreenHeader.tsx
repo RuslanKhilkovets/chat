@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
     color: 'yellow',
     fontSize: 26,
     fontFamily: 'Jersey20-Regular',
+    textTransform: 'capitalize',
   },
   icon: {
     position: 'absolute',

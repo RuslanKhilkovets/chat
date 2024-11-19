@@ -1,14 +1,14 @@
 export default axios => ({
   findByNameOrTag(query) {
-    return axios.get(`/users/find?stringQuery=${query}`);
+    return axios.get('/users/find', {params: {stringQuery: query}});
   },
   getUsers() {
-    return axios.get(`/users/`);
+    return axios.get('/users/');
   },
   checkPassword(payload) {
-    return axios.post(`/users/check/`, payload);
+    return axios.post('/users/check', payload);
   },
-  changePersonalData(payload) {
-    return axios.patch(`/users/change`, payload);
+  update(payload) {
+    return axios.patch(`/users/${payload.userId}`, payload.data);
   },
 });

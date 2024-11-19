@@ -1,8 +1,9 @@
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
+import {useNavigation} from '@react-navigation/native';
+
 import {ProfileItem, Screen, SettingsItem} from '@/components';
 import {useTypedSelector} from '@/hooks';
-import {useNavigation} from '@react-navigation/native';
 import {ChangeDataType} from '@/constants';
 
 const ProfileScreen = () => {
