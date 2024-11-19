@@ -3,14 +3,17 @@ import React from 'react';
 import {Drawer, MenuItem} from '@/components';
 import {IModalProps} from '@/types';
 import {useNavigation} from '@react-navigation/native';
-import {AuthContext} from '@/context/Auth/AuthContext';
+import {useAuthContext} from '@/context/Auth/AuthContext';
 import {useTypedSelector} from '@/hooks';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import {useTheme} from '@/context/Theme/ThemeContext';
 
 interface MenuDrawerProps extends IModalProps {}
 
 const MenuDrawer = ({onClose, visible}: MenuDrawerProps) => {
   const {navigate} = useNavigation();
-  const {logout} = React.useContext(AuthContext);
+  const {theme, colorScheme, setColorScheme} = useTheme();
+  const {logout} = useAuthContext();
   const user = useTypedSelector(state => state.user);
 
   const onRedirectHandle = (screen: string, payload?: any) => {
@@ -26,21 +29,36 @@ const MenuDrawer = ({onClose, visible}: MenuDrawerProps) => {
           flex: 1,
         }}>
         <View>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() =>
-              onRedirectHandle('Profile', {userId: null, isEditable: true})
-            }
-            style={{
-              height: 70,
-              width: 70,
-              marginVertical: 20,
-              borderRadius: 35,
-              backgroundColor: 'yellow',
-            }}
-          />
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <View>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() =>
+                  onRedirectHandle('Profile', {userId: null, isEditable: true})
+                }
+                style={{
+                  height: 70,
+                  width: 70,
+                  marginVertical: 20,
+                  borderRadius: 35,
+                  backgroundColor: 'yellow',
+                }}
+              />
 
-          <Text style={styles.userName}>{user?.name}</Text>
+              <Text style={styles.userName}>{user?.name}</Text>
+            </View>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() =>
+                setColorScheme(colorScheme === 'dark' ? 'light' : 'dark')
+              }>
+              <Icon
+                name={colorScheme === 'light' ? 'bedtime' : 'brightness-high'}
+                color={'yellow'}
+                size={32}
+              />
+            </TouchableOpacity>
+          </View>
           <View style={{marginTop: 20}}>
             <MenuItem
               iconName="person"
