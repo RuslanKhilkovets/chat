@@ -130,15 +130,17 @@ export const ChatProvider = ({children}) => {
     getUsers();
   }, [userChats]);
 
-  const {mutate: getUserChats, isLoading: isUserChatLoading} = useAuthMutation({
-    mutationFn: Api.chats.findUserChats,
-    onSuccess: response => {
-      setUserChats(response.data);
+  const {mutate: getUserChats, isLoading: isUserChatsLoading} = useAuthMutation(
+    {
+      mutationFn: Api.chats.findUserChats,
+      onSuccess: response => {
+        setUserChats(response.data);
+      },
+      onError: error => {
+        setUserChatsError(error.message);
+      },
     },
-    onError: error => {
-      setUserChatsError(error.message);
-    },
-  });
+  );
 
   useEffect(() => {
     getUserChats(user._id || 'nigga');
@@ -264,7 +266,7 @@ export const ChatProvider = ({children}) => {
     <ChatContext.Provider
       value={{
         userChats,
-        isUserChatLoading,
+        isUserChatsLoading,
         userChatsError,
         createChat,
         updateCurrentChat,

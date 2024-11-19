@@ -5,7 +5,7 @@ import {useChatContext} from '@/context/Chat/ChatContext';
 import {useNavigation} from '@react-navigation/native';
 
 export const ChatsScreen = () => {
-  const {filteredChats, filterQuery} = useChatContext();
+  const {filteredChats, filterQuery, isUserChatsLoading} = useChatContext();
   const {navigate} = useNavigation();
 
   const onFindMateRedirectHandle = () => {
@@ -22,7 +22,7 @@ export const ChatsScreen = () => {
           keyExtractor={item => item.id}
         />
       )}
-      {filteredChats?.length === 0 && !filterQuery && (
+      {filteredChats?.length === 0 && !filterQuery && !isUserChatsLoading && (
         <View style={styles.container}>
           <Text style={styles.noChatsText}>There is no chats yet!</Text>
           <Text style={[styles.noChatsText, {fontSize: 20}]}>
