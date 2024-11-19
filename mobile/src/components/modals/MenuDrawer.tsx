@@ -13,9 +13,9 @@ const MenuDrawer = ({onClose, visible}: MenuDrawerProps) => {
   const {logout} = React.useContext(AuthContext);
   const user = useTypedSelector(state => state.user);
 
-  const onRedirectHandle = (screen: string) => {
+  const onRedirectHandle = (screen: string, payload?: any) => {
     onClose();
-    navigate(screen);
+    navigate(screen, payload);
   };
 
   return (
@@ -28,7 +28,9 @@ const MenuDrawer = ({onClose, visible}: MenuDrawerProps) => {
         <View>
           <TouchableOpacity
             activeOpacity={0.7}
-            onPress={() => onRedirectHandle('Profile')}
+            onPress={() =>
+              onRedirectHandle('Profile', {userId: null, isEditable: true})
+            }
             style={{
               height: 70,
               width: 70,
@@ -42,7 +44,9 @@ const MenuDrawer = ({onClose, visible}: MenuDrawerProps) => {
           <View style={{marginTop: 20}}>
             <MenuItem
               iconName="person"
-              onPress={() => onRedirectHandle('Profile')}>
+              onPress={() =>
+                onRedirectHandle('Profile', {userId: null, isEditable: true})
+              }>
               My profile
             </MenuItem>
             <MenuItem

@@ -1,14 +1,38 @@
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
-import {useNavigation} from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 import {ProfileItem, Screen, SettingsItem} from '@/components';
-import {useTypedSelector} from '@/hooks';
+import {useAuthMutation, useTypedSelector} from '@/hooks';
 import {ChangeDataType} from '@/constants';
+import {Api} from '@/api';
+import {useChatContext} from '@/context/Chat/ChatContext';
 
 const ProfileScreen = () => {
-  const user = useTypedSelector(state => state.user);
+  const {onlineUsers} = useChatContext();
+
+  const currentUser = useTypedSelector(state => state.user);
   const {navigate} = useNavigation();
+
+  const route = useRoute();
+  const {userId, isEditable} = route.params || {};
+
+  const isOnline = onlineUsers?.some(user => {
+    return user?.userId === userId || isEditable;
+  });
+
+  const [user, setUser] = useState(!userId && currentUser);
+
+  const {mutate: getUserDataMutation, isLoading} = useAuthMutation({
+    mutationFn: Api.users.findById,
+    onSuccess: res => {
+      setUser(res.data);
+    },
+  });
+
+  useEffect(() => {
+    getUserDataMutation(userId);
+  }, []);
 
   return (
     <Screen title="Profile">
@@ -17,7 +41,7 @@ const ProfileScreen = () => {
           <View style={styles.profilePic} />
           <View style={styles.profileDescription}>
             <Text style={styles.username}>{user.name}</Text>
-            <Text style={styles.online}>Online</Text>
+            <Text style={styles.online}>{isOnline ? 'Online' : 'Offline'}</Text>
           </View>
         </View>
         <View style={styles.infoBlock}>
@@ -27,6 +51,7 @@ const ProfileScreen = () => {
             value={user.tag && `@${user.tag}`}
             title="User tag"
             onPress={() =>
+              isEditable &&
               navigate('ChangePersonalData', {type: ChangeDataType.TAG})
             }
           />
@@ -35,6 +60,7 @@ const ProfileScreen = () => {
             value={user.email}
             title="Email"
             onPress={() =>
+              isEditable &&
               navigate('ChangePersonalData', {type: ChangeDataType.EMAIL})
             }
           />
@@ -43,35 +69,38 @@ const ProfileScreen = () => {
             value={user.phone}
             title="Phone"
             onPress={() =>
+              isEditable &&
               navigate('ChangePersonalData', {type: ChangeDataType.PHONE})
             }
           />
         </View>
 
-        <View style={styles.infoBlock}>
-          <Text style={styles.infoBlockText}>Settings</Text>
-          <SettingsItem
-            iconName="language"
-            title="Language"
-            onPress={() => navigate('Language')}
-          />
-          <SettingsItem
-            iconName="light-mode"
-            title="Theme"
-            onPress={() => navigate('Theme')}
-          />
-          <SettingsItem
-            iconName="notifications"
-            title="Notifications"
-            onPress={() => navigate('Notifications')}
-          />
-          <SettingsItem
-            iconName="security"
-            title="Security"
-            onPress={() => navigate('Security')}
-          />
-        </View>
-        <Text style={styles.appVersion}>MChat v1.0</Text>
+        {isEditable && (
+          <View style={styles.infoBlock}>
+            <Text style={styles.infoBlockText}>Settings</Text>
+            <SettingsItem
+              iconName="language"
+              title="Language"
+              onPress={() => navigate('Language')}
+            />
+            <SettingsItem
+              iconName="light-mode"
+              title="Theme"
+              onPress={() => navigate('Theme')}
+            />
+            <SettingsItem
+              iconName="notifications"
+              title="Notifications"
+              onPress={() => navigate('Notifications')}
+            />
+            <SettingsItem
+              iconName="security"
+              title="Security"
+              onPress={() => navigate('Security')}
+            />
+          </View>
+        )}
+        {/* <Text style={styles.appVersion}>MChat v1.0</Text> */}
       </ScrollView>
     </Screen>
   );

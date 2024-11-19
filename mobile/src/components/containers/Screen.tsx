@@ -8,6 +8,8 @@ interface IScreen extends React.PropsWithChildren {
   title?: string;
   headerShown?: boolean;
   backColor?: string;
+  chatMode?: boolean;
+  payload?: any;
 }
 
 const Screen = ({
@@ -15,6 +17,8 @@ const Screen = ({
   title,
   headerShown = true,
   backColor = '#000000',
+  chatMode,
+  payload,
 }: IScreen) => {
   const insets = useSafeAreaInsets();
 
@@ -28,7 +32,9 @@ const Screen = ({
           paddingBottom: insets.bottom,
         },
       ]}>
-      {headerShown && <ScreenHeader>{title}</ScreenHeader>}
+      {headerShown && (
+        <ScreenHeader chatMode={chatMode} payload={payload} title={title} />
+      )}
       {children}
     </View>
   );

@@ -108,8 +108,14 @@ const loginUser = async (req, res) => {
 };
 
 const findUser = async (req, res) => {
+  const { userId } = req.params;
+
   try {
-    const user = await userModel.findById(req.params.userId);
+    if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: 'Invalid or missing user ID' });
+    }
+
+    const user = await userModel.findById(userId);
 
     if (!user) return res.status(404).json({ message: 'User not found' });
 

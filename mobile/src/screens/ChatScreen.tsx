@@ -19,6 +19,7 @@ const ChatScreen = () => {
   const route = useRoute();
   const chat = route?.params?.chat;
   const user = useTypedSelector(state => state.user);
+  const {onlineUsers} = useChatContext();
 
   const {
     currentChat,
@@ -29,6 +30,10 @@ const ChatScreen = () => {
   } = useChatContext();
   const [textMessage, setTextMessage] = useState<string>('');
   const {recipientUser} = useFetchRecipient(currentChat, user);
+
+  const isOnline = onlineUsers?.some(
+    user => user?.userId === recipientUser?._id,
+  );
 
   const flatListRef = useRef<FlatList>(null);
 
@@ -71,8 +76,14 @@ const ChatScreen = () => {
     };
   }, []);
 
+  const payload = {
+    name: recipientUser?.name,
+    userId: recipientUser?._id,
+    isOnline,
+  };
+
   return (
-    <Screen title={recipientUser?.name}>
+    <Screen chatMode payload={payload}>
       <KeyboardAvoidingView
         style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
