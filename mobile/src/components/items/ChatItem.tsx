@@ -39,7 +39,9 @@ const ChatItem = ({chat}: IChatItemProps) => {
       </View>
       <View style={styles.chatInfo}>
         <Text style={styles.userName}>{recipientUser?.name || 'N/A'}</Text>
-        <Text style={styles.lastMsg}>{latestMessage?.text}</Text>
+        <Text numberOfLines={1} style={styles.lastMsg} ellipsizeMode="tail">
+          {latestMessage?.text}
+        </Text>
       </View>
     </TouchableOpacity>
   );
@@ -69,7 +71,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'yellow',
   },
-  lastMsg: {color: 'yellow'},
+  lastMsg: {color: 'yellow', maxWidth: 250},
   onlineMark: {
     position: 'absolute',
     bottom: 0,

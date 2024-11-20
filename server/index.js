@@ -76,6 +76,22 @@ io.on('connection', socket => {
     }
   });
 
+  // socket.on('typingStart', ({ chatId, senderId, recipientId }) => {
+  //   const recipient = onlineUsers.find(user => user.userId === recipientId);
+
+  //   if (recipient) {
+  //     io.to(recipient.socketId).emit('typingStart', { chatId, senderId });
+  //   }
+  // });
+
+  // socket.on('typingStop', ({ chatId, senderId, recipientId }) => {
+  //   const recipient = onlineUsers.find(user => user.userId === recipientId);
+
+  //   if (recipient) {
+  //     io.to(recipient.socketId).emit('typingStop', { chatId, senderId });
+  //   }
+  // });
+
   socket.on('disconnect', () => {
     onlineUsers = onlineUsers.filter(user => user.socketId !== socket.id);
     console.log('User disconnected', socket.id);
