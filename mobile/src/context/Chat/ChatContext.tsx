@@ -74,9 +74,16 @@ export const ChatProvider = ({children}) => {
     socket.on('getOnlineUsers', response => {
       setOnlineUsers(response);
     });
+    socket.on('getNotification', res => {
+      const isChatOpen = currentChat?.members.some(id => id === res.senderId);
 
+      console.log(isChatOpen);
+
+      setNotifications(prev => [...prev, res]);
+    });
     return () => {
       socket.off('getOnlineUsers');
+      socket.off('getNotification');
     };
   }, [socket]);
 
@@ -103,19 +110,8 @@ export const ChatProvider = ({children}) => {
       setMessages(prev => [...prev, res]);
     });
 
-    socket.on('getNotification', res => {
-      const isChatOpen = currentChat?.members.some(id => id === res.senderId);
-
-      if (isChatOpen) {
-        setNotifications(prev => [{...res, isRead: true}, ...prev]);
-      } else {
-        setNotifications(prev => [...prev, res]);
-      }
-    });
-
     return () => {
       socket.off('getMessage');
-      socket.off('getNotification');
     };
   }, [socket, currentChat]);
 
@@ -151,7 +147,7 @@ export const ChatProvider = ({children}) => {
       }
     };
     getUserChats();
-  }, [user, notifications]);
+  }, [user]);
 
   useEffect(() => {
     const getMessages = async () => {

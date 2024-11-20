@@ -7,6 +7,7 @@ import {
   useFetchRecipient,
   useTypedSelector,
 } from '@/hooks';
+import {unreadNotifications} from '@/helpers/unreadNotifications';
 
 interface IChatItemProps {
   chat: any;
@@ -16,32 +17,60 @@ const ChatItem = ({chat}: IChatItemProps) => {
   const user = useTypedSelector(state => state.user);
   const {navigate} = useNavigation();
 
-  const navigateToChat = (id: string) => {
-    navigate('Chat', {chat});
-  };
-
-  const {recipientUser} = useFetchRecipient(chat, user);
-  const {onlineUsers} = useChatContext();
-
   const {latestMessage} = useFetchLatestMessage(chat);
+  const {recipientUser} = useFetchRecipient(chat, user);
+  const {onlineUsers, notifications, markThisUserNotificationsAsRead} =
+    useChatContext();
 
+  const unread = unreadNotifications(notifications);
+  const thisUserNotifications = unread?.filter(
+    n => n.senderId === recipientUser?._id,
+  );
   const isOnline = onlineUsers?.some(
     user => user?.userId === recipientUser?._id,
   );
+
+  const navigateToChat = () => {
+    if (thisUserNotifications.length > 0) {
+      markThisUserNotificationsAsRead(thisUserNotifications, notifications);
+    }
+    navigate('Chat', {chat});
+  };
 
   return (
     <TouchableOpacity
       activeOpacity={0.7}
       style={styles.chatItem}
-      onPress={() => navigateToChat('dumb')}>
+      onPress={() => navigateToChat()}>
       <View style={styles.profilePic}>
-        {isOnline && <View style={styles.onlineMark}></View>}
+        {isOnline && <View style={styles.onlineMark} />}
       </View>
       <View style={styles.chatInfo}>
-        <Text style={styles.userName}>{recipientUser?.name || 'N/A'}</Text>
-        <Text numberOfLines={1} style={styles.lastMsg} ellipsizeMode="tail">
-          {latestMessage?.text}
+        <Text
+          style={[
+            styles.userName,
+            thisUserNotifications?.length !== 0 && {fontWeight: 700},
+          ]}>
+          {recipientUser?.name || 'N/A'}
         </Text>
+        <View style={styles.rowBetween}>
+          <Text
+            numberOfLines={1}
+            style={[
+              styles.lastMsg,
+              thisUserNotifications?.length !== 0 && {fontWeight: 700},
+            ]}
+            ellipsizeMode="tail">
+            {latestMessage?.text}
+          </Text>
+          {thisUserNotifications?.length !== 0 && (
+            <View style={styles.notifications}>
+              <Text style={styles.notificationsText}>
+                {thisUserNotifications?.length}
+              </Text>
+            </View>
+          )}
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -50,6 +79,19 @@ const ChatItem = ({chat}: IChatItemProps) => {
 export default ChatItem;
 
 const styles = StyleSheet.create({
+  notifications: {
+    height: 20,
+    width: 20,
+    backgroundColor: 'yellow',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  notificationsText: {
+    color: '#000', // Контрастний текст для жовтого фону
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
   chatItem: {
     padding: 10,
     gap: 15,
@@ -66,12 +108,24 @@ const styles = StyleSheet.create({
     borderRadius: 35,
     backgroundColor: '#5d5d5d',
   },
-  chatInfo: {gap: 10},
+  chatInfo: {
+    gap: 10,
+    flex: 1, // Дозволяє тексту займати весь доступний простір
+  },
   userName: {
     fontSize: 20,
     color: 'yellow',
   },
-  lastMsg: {color: 'yellow', maxWidth: 250},
+  lastMsg: {
+    color: 'yellow',
+    flex: 1, // Дозволяє тексту займати максимум простору
+    marginRight: 10, // Відступ між текстом і кількістю повідомлень
+  },
+  rowBetween: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   onlineMark: {
     position: 'absolute',
     bottom: 0,
