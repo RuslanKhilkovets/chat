@@ -5,24 +5,45 @@ import {useChatContext} from '@/context/Chat/ChatContext';
 import {useNavigation} from '@react-navigation/native';
 
 export const ChatsScreen = () => {
-  const {filteredChats, filterQuery, isUserChatsLoading} = useChatContext();
+  const {filteredChats, filterQuery, isUserChatsLoading, notifications} =
+    useChatContext();
   const {navigate} = useNavigation();
+
+  const sortedChats = React.useMemo(() => {
+    return filteredChats?.sort((a, b) => {
+      const aHasUnread = notifications.some(
+        notification =>
+          a.members.includes(notification.senderId) && !notification.isRead,
+      );
+      const bHasUnread = notifications.some(
+        notification =>
+          b.members.includes(notification.senderId) && !notification.isRead,
+      );
+
+      if (aHasUnread && !bHasUnread) return -1;
+      if (!aHasUnread && bHasUnread) return 1;
+
+      return 0;
+    });
+  }, [filteredChats, notifications]);
 
   const onFindMateRedirectHandle = () => {
     navigate('FindUsers');
   };
 
+  console.log(sortedChats);
+
   return (
     <Screen headerShown={false}>
       <Header />
-      {filteredChats?.length !== 0 && (
+      {sortedChats?.length !== 0 && (
         <FlatList
-          data={filteredChats || []}
+          data={sortedChats || []}
           renderItem={({item}) => <ChatItem chat={item} />}
           keyExtractor={item => item.id}
         />
       )}
-      {filteredChats?.length === 0 && !filterQuery && !isUserChatsLoading && (
+      {sortedChats?.length === 0 && !filterQuery && !isUserChatsLoading && (
         <View style={styles.container}>
           <Text style={styles.noChatsText}>There is no chats yet!</Text>
           <Text style={[styles.noChatsText, {fontSize: 20}]}>
@@ -31,10 +52,10 @@ export const ChatsScreen = () => {
           <Button onPress={onFindMateRedirectHandle}>Find mate</Button>
         </View>
       )}
-      {filteredChats?.length === 0 && filterQuery && (
+      {sortedChats?.length === 0 && filterQuery && (
         <View style={styles.container}>
           <Text style={[styles.noChatsText, {fontSize: 20}]}>
-            Did not find any chats with given users !
+            Did not find any chats with given users!
           </Text>
           <Button onPress={onFindMateRedirectHandle}>Find mate</Button>
         </View>
