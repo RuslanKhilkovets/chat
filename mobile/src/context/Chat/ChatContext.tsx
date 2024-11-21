@@ -34,6 +34,8 @@ export const ChatProvider = ({children}) => {
   const [allUsers, setAllUsers] = useState([]);
   const [filterQuery, setFilterQuery] = useState('');
   const [filteredChats, setFilteredChats] = useState([]);
+  const [isTyping, setIsTyping] = useState(false);
+  const [isRecipientTyping, setIsRecipientTyping] = useState(false);
 
   const {mutate: findChatsByQueryString} = useAuthMutation({
     mutationFn: Api.chats.findChatsBySenderName,
@@ -86,6 +88,45 @@ export const ChatProvider = ({children}) => {
       socket.off('getNotification');
     };
   }, [socket]);
+
+  useEffect(() => {
+    if (socket === null || currentChat === null) {
+      return;
+    }
+
+    const recipientId = currentChat.members.find(id => id !== user?._id);
+
+    if (isTyping) {
+      socket.emit('typingStart', {
+        senderId: user._id,
+        recipientId,
+      });
+    } else {
+      socket.emit('typingStop', {
+        senderId: user._id,
+        recipientId,
+      });
+    }
+
+    socket.on('typingStart', res => {
+      if (res.senderId !== user._id) {
+        setIsRecipientTyping(true);
+      }
+    });
+
+    socket.on('typingStop', res => {
+      if (res.senderId !== user._id) {
+        setIsRecipientTyping(false);
+      }
+    });
+
+    return () => {
+      socket.off('typingStart');
+      socket.off('typingStop');
+    };
+  }, [socket, isTyping, currentChat, user?._id]);
+
+  console.log(isRecipientTyping);
 
   useEffect(() => {
     if (currentChat === null) {
@@ -301,6 +342,10 @@ export const ChatProvider = ({children}) => {
         filterQuery,
         setFilterQuery,
         filteredChats,
+        isTyping,
+        setIsTyping,
+        isRecipientTyping,
+        setIsRecipientTyping,
       }}>
       {children}
     </ChatContext.Provider>

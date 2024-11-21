@@ -36,7 +36,11 @@ const ScreenHeader = ({title, payload}: IScreenHeaderProps) => {
           <View>
             <Text style={styles.name}>{payload.name}</Text>
             <Text style={styles.isOnline}>
-              {payload.isOnline ? 'Online' : 'Offline'}
+              {payload.isTyping
+                ? 'Typing...'
+                : payload.isOnline
+                ? 'Online'
+                : 'Offline'}
             </Text>
           </View>
         </Pressable>

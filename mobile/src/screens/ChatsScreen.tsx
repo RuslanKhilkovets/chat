@@ -31,8 +31,6 @@ export const ChatsScreen = () => {
     navigate('FindUsers');
   };
 
-  console.log(sortedChats);
-
   return (
     <Screen headerShown={false}>
       <Header />

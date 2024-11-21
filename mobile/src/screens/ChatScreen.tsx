@@ -27,8 +27,13 @@ const ChatScreen = () => {
     isMessagesLoading,
     sendMessage,
     updateCurrentChat,
+    isTyping,
+    setIsTyping,
+    isRecipientTyping,
   } = useChatContext();
   const [textMessage, setTextMessage] = useState<string>('');
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const {recipientUser} = useFetchRecipient(currentChat, user);
 
   const isOnline = onlineUsers?.some(
@@ -60,7 +65,27 @@ const ChatScreen = () => {
   const handleSendMessage = () => {
     if (textMessage.trim()) {
       sendMessage(textMessage, user, currentChat._id, setTextMessage);
+      setIsTyping(false);
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
     }
+  };
+
+  const handleTextChange = (text: string) => {
+    setTextMessage(text);
+
+    if (!isTyping) {
+      setIsTyping(true);
+    }
+
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+
+    typingTimeoutRef.current = setTimeout(() => {
+      setIsTyping(false);
+    }, 1000);
   };
 
   useEffect(() => {
@@ -73,6 +98,9 @@ const ChatScreen = () => {
 
     return () => {
       keyboardDidShowListener.remove();
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
     };
   }, []);
 
@@ -80,6 +108,7 @@ const ChatScreen = () => {
     name: recipientUser?.name,
     userId: recipientUser?._id,
     isOnline,
+    isTyping: isRecipientTyping,
   };
 
   return (
@@ -110,7 +139,7 @@ const ChatScreen = () => {
               <View style={styles.inputContainer}>
                 <Input
                   value={textMessage}
-                  onChangeText={text => setTextMessage(text)}
+                  onChangeText={handleTextChange}
                   placeholder="Message..."
                   endAdornment={
                     textMessage ? (

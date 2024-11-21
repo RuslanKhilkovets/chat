@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   notificationsText: {
-    color: '#000', // Контрастний текст для жовтого фону
+    color: '#000',
     fontSize: 12,
     fontWeight: 'bold',
   },
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   },
   chatInfo: {
     gap: 10,
-    flex: 1, // Дозволяє тексту займати весь доступний простір
+    flex: 1,
   },
   userName: {
     fontSize: 20,
@@ -118,8 +118,8 @@ const styles = StyleSheet.create({
   },
   lastMsg: {
     color: 'yellow',
-    flex: 1, // Дозволяє тексту займати максимум простору
-    marginRight: 10, // Відступ між текстом і кількістю повідомлень
+    flex: 1,
+    marginRight: 10,
   },
   rowBetween: {
     flexDirection: 'row',
