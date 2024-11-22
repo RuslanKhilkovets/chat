@@ -76,6 +76,8 @@ io.on('connection', socket => {
   socket.on('typingStart', ({ chatId, senderId, recipientId }) => {
     const recipient = onlineUsers.get(recipientId);
 
+    console.log(chatId);
+
     if (recipient) {
       io.to(recipient.socketId).emit('typingStart', { chatId, senderId });
     }

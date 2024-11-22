@@ -175,24 +175,26 @@ export const ChatProvider = ({children}) => {
 
     if (isTyping) {
       socket.emit('typingStart', {
+        chatId: currentChat?._id,
         senderId: user._id,
         recipientId,
       });
     } else {
       socket.emit('typingStop', {
+        chatId: currentChat?._id,
         senderId: user._id,
         recipientId,
       });
     }
 
     socket.on('typingStart', res => {
-      if (res.senderId !== user._id) {
+      if (res.senderId !== user._id && res.chatId === currentChat?._id) {
         setIsRecipientTyping(true);
       }
     });
 
     socket.on('typingStop', res => {
-      if (res.senderId !== user._id) {
+      if (res.senderId !== user._id && res.chatId === currentChat?._id) {
         setIsRecipientTyping(false);
       }
     });
