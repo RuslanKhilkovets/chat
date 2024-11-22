@@ -1,3 +1,4 @@
+const chatModel = require('../models/chatModel');
 const messageModel = require('../models/messageModel');
 
 const createMessage = async (req, res) => {
@@ -26,8 +27,33 @@ const getMessages = async (req, res) => {
     res.status(200).json(messages);
   } catch (err) {
     console.log(err);
-    res.status(500).json(error);
+    res.status(500).json(err);
   }
 };
 
-module.exports = { createMessage, getMessages };
+const markMessageAsRead = async (req, res) => {
+  const { chatId, messageId } = req.body;
+
+  try {
+    const chat = await chatModel.findById(chatId);
+    if (!chat) {
+      return res.status(404).json({ error: 'Chat not found' });
+    }
+
+    const message = await messageModel.findOne({ _id: messageId, chatId });
+
+    if (!message) {
+      return res.status(404).json({ error: 'Message not found in this chat' });
+    }
+
+    message.isRead = true;
+    const updatedMessage = await message.save();
+
+    res.status(200).json(updatedMessage);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error marking message as read' });
+  }
+};
+
+module.exports = { createMessage, getMessages, markMessageAsRead };

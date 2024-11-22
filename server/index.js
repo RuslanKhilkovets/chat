@@ -45,26 +45,23 @@ const io = new Server(expressServer, {
   },
 });
 
-let onlineUsers = [];
+let onlineUsers = new Map();
 
 io.on('connection', socket => {
   console.log('New connection', socket.id);
 
-  socket.emit('getOnlineUsers', onlineUsers);
+  socket.emit('getOnlineUsers', Array.from(onlineUsers.values()));
 
   socket.on('addNewUser', userId => {
-    if (!onlineUsers.some(user => user.userId === userId) && userId !== null) {
-      onlineUsers.push({
-        userId,
-        socketId: socket.id,
-      });
+    if (!onlineUsers.has(userId) && userId !== null) {
+      onlineUsers.set(userId, { userId, socketId: socket.id });
     }
 
-    io.emit('getOnlineUsers', onlineUsers);
+    io.emit('getOnlineUsers', Array.from(onlineUsers.values()));
   });
 
   socket.on('sendMessage', message => {
-    const user = onlineUsers.find(user => user.userId === message.recipientId);
+    const user = onlineUsers.get(message.recipientId);
 
     if (user) {
       io.to(user.socketId).emit('getMessage', message);
@@ -77,7 +74,7 @@ io.on('connection', socket => {
   });
 
   socket.on('typingStart', ({ chatId, senderId, recipientId }) => {
-    const recipient = onlineUsers.find(user => user.userId === recipientId);
+    const recipient = onlineUsers.get(recipientId);
 
     if (recipient) {
       io.to(recipient.socketId).emit('typingStart', { chatId, senderId });
@@ -85,17 +82,38 @@ io.on('connection', socket => {
   });
 
   socket.on('typingStop', ({ chatId, senderId, recipientId }) => {
-    const recipient = onlineUsers.find(user => user.userId === recipientId);
+    const recipient = onlineUsers.get(recipientId);
 
     if (recipient) {
       io.to(recipient.socketId).emit('typingStop', { chatId, senderId });
     }
   });
 
+  socket.on('messageRead', async ({ chatId, messageIds, senderId, recipientId }) => {
+    messageIds.forEach(messageId => {
+      const sender = onlineUsers.get(senderId);
+
+      if (sender) {
+        io.to(sender.socketId).emit('messageRead', { chatId, messageId });
+      }
+
+      const recipient = onlineUsers.get(recipientId);
+
+      if (recipient) {
+        io.to(recipient.socketId).emit('messageRead', { chatId, messageId });
+      }
+    });
+  });
+
   socket.on('disconnect', () => {
-    onlineUsers = onlineUsers.filter(user => user.socketId !== socket.id);
+    for (let [userId, user] of onlineUsers) {
+      if (user.socketId === socket.id) {
+        onlineUsers.delete(userId);
+        break;
+      }
+    }
     console.log('User disconnected', socket.id);
 
-    io.emit('getOnlineUsers', onlineUsers);
+    io.emit('getOnlineUsers', Array.from(onlineUsers.values()));
   });
 });

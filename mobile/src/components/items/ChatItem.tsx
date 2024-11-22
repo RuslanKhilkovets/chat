@@ -18,6 +18,8 @@ const ChatItem = ({chat}: IChatItemProps) => {
   const {navigate} = useNavigation();
 
   const {latestMessage} = useFetchLatestMessage(chat);
+  const isLatestMessageMine = latestMessage?.senderId === user?._id;
+
   const {recipientUser} = useFetchRecipient(chat, user);
   const {onlineUsers, notifications, markThisUserNotificationsAsRead} =
     useChatContext();
@@ -54,15 +56,19 @@ const ChatItem = ({chat}: IChatItemProps) => {
           {recipientUser?.name || 'N/A'}
         </Text>
         <View style={styles.rowBetween}>
-          <Text
-            numberOfLines={1}
-            style={[
-              styles.lastMsg,
-              thisUserNotifications?.length !== 0 && {fontWeight: 700},
-            ]}
-            ellipsizeMode="tail">
-            {latestMessage?.text}
-          </Text>
+          {latestMessage?.text && (
+            <Text
+              numberOfLines={1}
+              style={[
+                styles.lastMsg,
+                thisUserNotifications?.length !== 0 && {fontWeight: 700},
+              ]}
+              ellipsizeMode="tail">
+              {isLatestMessageMine
+                ? 'You: ' + latestMessage?.text
+                : latestMessage?.text}
+            </Text>
+          )}
           {thisUserNotifications?.length !== 0 && (
             <View style={styles.notifications}>
               <Text style={styles.notificationsText}>

@@ -5,4 +5,7 @@ export default axios => ({
   sendMessage(payload) {
     return axios.post(`/messages/`, payload);
   },
+  read(payload) {
+    return axios.patch(`/messages/read`, payload);
+  },
 });

@@ -14,6 +14,7 @@ import {useRoute} from '@react-navigation/native';
 import {useFetchRecipient, useTypedSelector} from '@/hooks';
 import {useChatContext} from '@/context/Chat/ChatContext';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {unreadNotifications} from '@/helpers/unreadNotifications';
 
 const ChatScreen = () => {
   const route = useRoute();
@@ -22,6 +23,7 @@ const ChatScreen = () => {
   const {onlineUsers} = useChatContext();
 
   const {
+    userChats,
     currentChat,
     messages,
     isMessagesLoading,
@@ -30,12 +32,19 @@ const ChatScreen = () => {
     isTyping,
     setIsTyping,
     isRecipientTyping,
+    readMessages,
+    notifications,
+    markAsRead,
   } = useChatContext();
+
   const [textMessage, setTextMessage] = useState<string>('');
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const {recipientUser} = useFetchRecipient(currentChat, user);
-
+  const unread = unreadNotifications(notifications);
+  const thisUserNotifications = unread?.filter(
+    n => n.senderId === recipientUser?._id,
+  );
   const isOnline = onlineUsers?.some(
     user => user?.userId === recipientUser?._id,
   );
@@ -104,12 +113,25 @@ const ChatScreen = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (thisUserNotifications.length > 0) {
+      thisUserNotifications.forEach(n => {
+        markAsRead(n, userChats, user, notifications);
+      });
+    }
+  }, [thisUserNotifications]);
+
   const payload = {
     name: recipientUser?.name,
     userId: recipientUser?._id,
     isOnline,
     isTyping: isRecipientTyping,
   };
+
+  const handleViewableItemsChanged = useRef(({viewableItems}) => {
+    const visibleMessages = viewableItems.map(item => item.item);
+    readMessages(visibleMessages);
+  });
 
   return (
     <Screen chatMode payload={payload}>
@@ -135,6 +157,13 @@ const ChatScreen = () => {
                 keyExtractor={item => item._id}
                 style={{marginBottom: 20}}
                 onContentSizeChange={scrollToBottom}
+                onEndReached={() => {
+                  if (!isMessagesLoading) {
+                    //loadMoreMessages();
+                  }
+                }}
+                onEndReachedThreshold={0.5}
+                onViewableItemsChanged={handleViewableItemsChanged.current}
               />
               <View style={styles.inputContainer}>
                 <Input

@@ -58,13 +58,89 @@ export const ChatProvider = ({children}) => {
   }, [filterQuery]);
 
   useEffect(() => {
+    if (currentChat && messages) {
+      const unreadMessageIds = messages
+        .filter(message => !message?.isRead && message?.senderId !== user?._id)
+        .map(message => message._id);
+
+      if (unreadMessageIds.length) {
+        handleMessageRead(unreadMessageIds, currentChat?._id);
+      }
+    }
+  }, [currentChat, messages]);
+
+  useEffect(() => {
     const newSocket = io(SERVER_URL);
     setSocket(newSocket);
+
+    newSocket.on('messageRead', ({chatId, messageId}) => {
+      setMessages(prevMessages =>
+        prevMessages.map(message =>
+          message._id === messageId ? {...message, isRead: true} : message,
+        ),
+      );
+    });
 
     return () => {
       newSocket.disconnect();
     };
   }, [user]);
+
+  const {mutate: readMessageMutation} = useAuthMutation({
+    mutationFn: Api.messages.read,
+    onSuccess: readMessage => {
+      setMessages(prevMessages =>
+        prevMessages.map(message =>
+          message._id === readMessage._id
+            ? {...message, isRead: true}
+            : message,
+        ),
+      );
+    },
+  });
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const onMessageRead = ({chatId, messageId}) => {
+      readMessageMutation({chatId, messageId});
+    };
+
+    socket.on('messageRead', onMessageRead);
+
+    return () => {
+      socket.off('messageRead', onMessageRead);
+    };
+  }, [socket]);
+
+  const handleMessageRead = (messageIds, chatId) => {
+    const recipientId = currentChat?.members.find(id => id !== user?._id);
+    const senderId = user?._id;
+
+    if (socket && messageIds?.length) {
+      socket.emit('messageRead', {
+        messageIds,
+        chatId,
+        senderId,
+        recipientId,
+      });
+    }
+  };
+
+  const readMessages = useCallback(
+    messages => {
+      if (!currentChat || !user || !messages?.length) return;
+
+      const unreadMessageIds = messages
+        .filter(message => !message?.isRead && message?.senderId !== user?._id)
+        .map(message => message._id);
+
+      if (unreadMessageIds.length) {
+        handleMessageRead(unreadMessageIds, currentChat?._id);
+      }
+    },
+    [currentChat, user, handleMessageRead],
+  );
 
   useEffect(() => {
     if (socket === null) {
@@ -83,6 +159,7 @@ export const ChatProvider = ({children}) => {
 
       setNotifications(prev => [...prev, res]);
     });
+
     return () => {
       socket.off('getOnlineUsers');
       socket.off('getNotification');
@@ -346,6 +423,7 @@ export const ChatProvider = ({children}) => {
         setIsTyping,
         isRecipientTyping,
         setIsRecipientTyping,
+        readMessages,
       }}>
       {children}
     </ChatContext.Provider>
