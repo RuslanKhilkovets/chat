@@ -171,7 +171,7 @@ const ChatScreen = () => {
                   onChangeText={handleTextChange}
                   placeholder="Message..."
                   endAdornment={
-                    textMessage ? (
+                    textMessage && textMessage?.trim() ? (
                       <Pressable onPress={handleSendMessage}>
                         <Icon name="send" color="yellow" size={20} />
                       </Pressable>
