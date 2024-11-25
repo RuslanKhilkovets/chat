@@ -1,7 +1,7 @@
 import {Input, MenuDrawer} from '@/components';
 import {useChatContext} from '@/context/Chat/ChatContext';
 import * as React from 'react';
-import {View, TouchableOpacity, StyleSheet, Animated} from 'react-native';
+import {View, TouchableOpacity, StyleSheet, Animated, Text} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export const Header = () => {
@@ -26,18 +26,21 @@ export const Header = () => {
 
   return (
     <View style={styles.headerContainer}>
-      <TouchableOpacity
-        onPress={() => {
-          if (!isSearchOpen) setIsDrawerOpen(true);
-          else handleSearchToggle();
-        }}
-        style={styles.iconButton}>
-        <Icon
-          name={isSearchOpen ? 'arrow-back-ios' : 'menu'}
-          size={32}
-          color="yellow"
-        />
-      </TouchableOpacity>
+      <View style={{flexDirection: 'row', alignItems: 'center', gap: 20}}>
+        <TouchableOpacity
+          onPress={() => {
+            if (!isSearchOpen) setIsDrawerOpen(true);
+            else handleSearchToggle();
+          }}
+          style={styles.iconButton}>
+          <Icon
+            name={isSearchOpen ? 'arrow-back-ios' : 'menu'}
+            size={32}
+            color="yellow"
+          />
+        </TouchableOpacity>
+        <Text style={styles.textLogo}>MChat</Text>
+      </View>
 
       <Animated.View
         style={[
@@ -98,12 +101,18 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     position: 'absolute',
     left: 40,
+    backgroundColor: '#000',
   },
   searchInput: {
     fontSize: 16,
     borderRadius: 8,
     paddingVertical: 5,
     paddingHorizontal: 10,
+  },
+  textLogo: {
+    color: 'yellow',
+    fontSize: 28,
+    fontFamily: 'Jersey20-Regular',
   },
 });
 
