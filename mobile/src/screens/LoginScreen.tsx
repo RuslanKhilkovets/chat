@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Controller, useForm} from 'react-hook-form';
 import {useNavigation} from '@react-navigation/native';
 import {yupResolver} from '@hookform/resolvers/yup';
@@ -41,7 +41,7 @@ export const LoginScreen = () => {
     navigation.navigate('Chats');
   };
 
-  const onLoginError = ({errors}: any) => {
+  const onLoginError = (errors: any) => {    
     setFormErrors({
       email: errors?.errors?.email ? errors.errors.email[0] : '',
       password: errors?.errors?.password ? errors.errors.password[0] : '',
@@ -64,7 +64,7 @@ export const LoginScreen = () => {
 
   return (
     <Screen>
-      <View style={[styles.container]}>
+      <View style={[styles.container, Platform.OS === "android" && {padding: 20}]}>
         <View style={{alignItems: 'center'}}>
           <Text style={styles.screenLabel}>Sign in</Text>
         </View>

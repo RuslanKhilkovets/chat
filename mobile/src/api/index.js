@@ -29,41 +29,41 @@ client.interceptors.request.use(
   },
 );
 
-client.interceptors.response.use(
-  response => {
-    return response;
-  },
-  error => {
-    const errorStatus = error?.response?.status;
-    const errorData = error?.response?.data;
-    let reject = {
-      status: errorStatus,
-      title: 'Помилка сервера',
-      message: 'Зверніться до адміністратора',
-      errors: errorData,
-    };
+// client.interceptors.response.use(
+//   response => {
+//     return response;
+//   },
+//   error => {
+//     const errorStatus = error?.response?.status;
+//     const errorData = error?.response?.data;
+//     let reject = {
+//       status: errorStatus,
+//       title: 'Помилка сервера',
+//       message: 'Зверніться до адміністратора',
+//       errors: errorData,
+//     };
 
-    switch (errorStatus) {
-      case 401:
-        reject = {
-          status: errorStatus,
-          title: 'Помилка авторизації',
-          message: 'Логін та пароль не співпадають',
-          errors: errorData?.errors,
-        };
-        break;
-      case 400:
-        reject = {
-          status: errorStatus,
-          title: 'Помилка заповнення полів',
-          message: message,
-          errors: errorData?.message || errorData?.errors,
-        };
-        break;
-    }
-    return Promise.reject(reject);
-  },
-);
+//     switch (errorStatus) {
+//       case 401:
+//         reject = {
+//           status: errorStatus,
+//           title: 'Помилка авторизації',
+//           message: 'Логін та пароль не співпадають',
+//           errors: errorData?.errors,
+//         };
+//         break;
+//       case 400:
+//         reject = {
+//           status: errorStatus,
+//           title: 'Помилка заповнення полів',
+//           message: message,
+//           errors: errorData?.message || errorData?.errors,
+//         };
+//         break;
+//     }
+//     return Promise.reject(reject);
+//   },
+// );
 
 export const Api = {
   auth: apiAuth(client),
