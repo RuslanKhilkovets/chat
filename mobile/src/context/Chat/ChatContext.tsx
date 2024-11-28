@@ -51,8 +51,11 @@ export const ChatProvider = ({children}) => {
 
   const audioRecorderPlayer = new AudioRecorderPlayer();
 
+  let audioDurationLocal = 0;
+
   const startRecording = useCallback(async () => {
     setIsRecording(true);
+    audioDurationLocal = 0;
     if (Platform.OS === 'android') {
       try {
         const grants = await PermissionsAndroid.requestMultiple([
@@ -78,6 +81,7 @@ export const ChatProvider = ({children}) => {
         return;
       }
     }
+
     const audioSet: AudioSet = {
       AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
       AudioSourceAndroid: AudioSourceAndroidType.MIC,
@@ -89,18 +93,21 @@ export const ChatProvider = ({children}) => {
 
     setFile(uri);
 
-    audioRecorderPlayer.addRecordBackListener((e: RecordBackType) => {});
+    audioRecorderPlayer.addRecordBackListener((e: RecordBackType) => {
+      audioDurationLocal = e.currentPosition / 1000;
+    });
   }, []);
 
-  const stopRecording = React.useCallback(async () => {
+  const stopRecording = useCallback(async () => {
     const result = await audioRecorderPlayer.stopRecorder();
     audioRecorderPlayer.removeRecordBackListener();
     setIsRecording(false);
 
-    uploadAudio(result);
+    console.log('Final audio duration:', audioDurationLocal);
+    uploadAudio(result, audioDurationLocal);
   }, []);
 
-  const uploadAudio = React.useCallback(async filePath => {
+  const uploadAudio = useCallback(async (filePath, duration) => {
     const formData = new FormData();
     formData.append('audio', {
       uri: filePath,
@@ -110,6 +117,7 @@ export const ChatProvider = ({children}) => {
 
     formData.append('chatId', '673737d3732bff8fa0e51240');
     formData.append('senderId', '6735ba79ed6c19d6851bcc80');
+    formData.append('duration', duration.toFixed(2));
 
     try {
       const response = await axios.post(`${baseUrl}/media/upload`, formData, {

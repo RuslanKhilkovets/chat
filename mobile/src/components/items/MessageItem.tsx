@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {StyleSheet, Text, View, TouchableOpacity, Animated} from 'react-native';
 import {useTypedSelector} from '@/hooks';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -16,24 +16,41 @@ const MessageItem = ({message}: IMessageItemProps) => {
 
   const isMessageMine = message?.senderId === user?._id;
   const [isPlaying, setIsPlaying] = useState(false);
+  const [currentPosition, setCurrentPosition] = useState(0);
+  const [equalizerHeights, setEqualizerHeights] = useState<number[]>([
+    1,
+    2,
+    15,
+    10,
+    5,
+    7,
+    1,
+    7,
+    ,
+    8,
+    0,
+    10,
+    2,
+    5,
+    15,
+    12,
+  ]);
 
   const playAudio = async () => {
     if (!message.audioPath) return;
 
     try {
       if (isPlaying) {
-        console.log('Stopping audio...');
         await audioPlayer.stopPlayer();
         setIsPlaying(false);
         return;
       }
 
-      console.log('Playing audio from:', message.audioPath);
       setIsPlaying(true);
       await audioPlayer.startPlayer(message.audioPath);
 
       audioPlayer.addPlayBackListener(e => {
-        console.log('Playback status:', e);
+        setCurrentPosition(e.currentPosition / 1000);
 
         if (e.currentPosition === e.duration) {
           audioPlayer.stopPlayer();
@@ -46,6 +63,20 @@ const MessageItem = ({message}: IMessageItemProps) => {
       setIsPlaying(false);
     }
   };
+
+  useEffect(() => {
+    if (isPlaying) {
+      const interval = setInterval(() => {
+        const newHeights = Array.from(
+          {length: 15},
+          () => Math.floor(Math.random() * 30) + 5,
+        );
+        setEqualizerHeights(newHeights);
+      }, 200);
+
+      return () => clearInterval(interval);
+    }
+  }, [isPlaying]);
 
   return (
     <View
@@ -62,10 +93,25 @@ const MessageItem = ({message}: IMessageItemProps) => {
             size={30}
             color="yellow"
           />
-          <Text style={styles.audioText}>Audio Message</Text>
+          <View style={styles.equalizer}>
+            {equalizerHeights.map((height, index) => (
+              <Animated.View
+                key={index}
+                style={[styles.equalizerBar, {height}]}
+              />
+            ))}
+          </View>
         </TouchableOpacity>
       ) : (
         <Text style={styles.messageText}>{message?.text}</Text>
+      )}
+
+      {message?.duration && (
+        <Text style={styles.audioDuration}>
+          {`${moment.utc(currentPosition * 1000).format('mm:ss')} / ${moment
+            .utc(message?.duration * 1000)
+            .format('mm:ss')}`}
+        </Text>
       )}
 
       <View style={{flexDirection: 'row', alignItems: 'flex-end', gap: 10}}>
@@ -106,10 +152,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 10,
   },
-  audioText: {
-    color: 'yellow',
-    fontSize: 16,
+  equalizer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginLeft: 10,
+    gap: 3,
+  },
+  equalizerBar: {
+    width: 5,
+    backgroundColor: 'yellow',
+    borderRadius: 2,
+  },
+  audioDuration: {
+    color: 'yellow',
+    fontSize: 14,
+    marginTop: 5,
   },
   date: {
     color: 'yellow',

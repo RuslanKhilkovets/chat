@@ -29,6 +29,10 @@ const messageSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    duration: {
+      type: Number,
+      required: false,
+    },
   },
   {
     timestamps: true,

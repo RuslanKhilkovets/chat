@@ -1,4 +1,4 @@
-const bucket = require('../firebase'); 
+const bucket = require('../firebase');
 const messageModel = require('../models/messageModel');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
@@ -24,6 +24,7 @@ const uploadAudio = async (req, res) => {
     const message = new messageModel({
       senderId: req.body.senderId,
       chatId: req.body.chatId,
+      duration: req.body.duration,
       audioPath: publicUrl,
       messageType: 'audio',
       isRead: false,
