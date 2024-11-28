@@ -38,7 +38,6 @@ const ChatItem = ({chat}: IChatItemProps) => {
     }
     navigate('Chat', {chat});
   };
-
   return (
     <TouchableOpacity
       activeOpacity={0.7}
@@ -67,6 +66,13 @@ const ChatItem = ({chat}: IChatItemProps) => {
               {isLatestMessageMine
                 ? 'You: ' + latestMessage?.text
                 : latestMessage?.text}
+            </Text>
+          )}
+          {latestMessage?.messageType === 'audio' && (
+            <Text numberOfLines={1} style={[styles.lastMsg]}>
+              {isLatestMessageMine
+                ? 'You: ' + 'Voice message'
+                : 'Voice message'}
             </Text>
           )}
           {thisUserNotifications?.length !== 0 && (
