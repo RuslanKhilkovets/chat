@@ -14,7 +14,16 @@ const messageSchema = new mongoose.Schema(
     },
     text: {
       type: String,
-      required: true,
+      required: false,
+    },
+    audioPath: {
+      type: String,
+      required: false,
+    },
+    messageType: {
+      type: String,
+      enum: ['text', 'audio'],
+      required: false,
     },
     isRead: {
       type: Boolean,
@@ -26,6 +35,6 @@ const messageSchema = new mongoose.Schema(
   },
 );
 
-const messageModel = new mongoose.model('Message', messageSchema);
+const messageModel = mongoose.model('Message', messageSchema);
 
 module.exports = messageModel;

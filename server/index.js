@@ -8,6 +8,7 @@ const adminRoute = require('./routes/adminRoute');
 const tokenRoute = require('./routes/tokenRoute');
 const messageRoute = require('./routes/messageRoute');
 const logRoute = require('./routes/logRoute');
+const mediaRoute = require('./routes/mediaRoute');
 
 const app = express();
 require('dotenv').config();
@@ -21,6 +22,7 @@ app.use('/api/chats', chatRoute);
 app.use('/api/messages', messageRoute);
 app.use('/api/token', tokenRoute);
 app.use('/api/logs', logRoute);
+app.use('/api/media', mediaRoute);
 
 const port = process.env.PORT || 5000;
 const uri = process.env.ATLAS_URI;

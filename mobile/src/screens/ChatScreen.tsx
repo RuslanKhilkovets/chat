@@ -15,6 +15,7 @@ import {useFetchRecipient, useTypedSelector} from '@/hooks';
 import {useChatContext} from '@/context/Chat/ChatContext';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {unreadNotifications} from '@/helpers/unreadNotifications';
+import AudioMessageSender from '@/components/base/AudioSender';
 
 const ChatScreen = () => {
   const route = useRoute();
@@ -167,6 +168,7 @@ const ChatScreen = () => {
               />
               <View style={styles.inputContainer}>
                 <Input
+                  style={{flex: 1}}
                   value={textMessage}
                   onChangeText={handleTextChange}
                   placeholder="Message..."
@@ -178,6 +180,9 @@ const ChatScreen = () => {
                     ) : null
                   }
                 />
+                {!textMessage.trim() && (
+                  <AudioMessageSender chatId={currentChat?._id} />
+                )}
               </View>
             </>
           )}
@@ -194,5 +199,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
     padding: 5,
     paddingHorizontal: 10,
+    flexDirection: 'row',
+    gap: 20,
   },
 });

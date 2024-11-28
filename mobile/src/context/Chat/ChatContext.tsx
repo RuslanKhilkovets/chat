@@ -1,4 +1,4 @@
-import {
+import React, {
   createContext,
   useCallback,
   useContext,
@@ -10,6 +10,16 @@ import {io} from 'socket.io-client';
 import {SERVER_URL} from '@env';
 import {useAuthMutation, useTypedSelector} from '@/hooks';
 import {Api} from '@/api';
+import AudioRecorderPlayer, {
+  AudioEncoderAndroidType,
+  AudioSet,
+  AudioSourceAndroidType,
+  AVEncoderAudioQualityIOSType,
+  AVEncodingOption,
+  RecordBackType,
+} from 'react-native-audio-recorder-player';
+import axios from 'axios';
+import {Alert, PermissionsAndroid, Platform} from 'react-native';
 
 export const ChatContext = createContext();
 
@@ -36,6 +46,83 @@ export const ChatProvider = ({children}) => {
   const [filteredChats, setFilteredChats] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const [isRecipientTyping, setIsRecipientTyping] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [file, setFile] = useState(false);
+
+  const audioRecorderPlayer = new AudioRecorderPlayer();
+
+  const startRecording = useCallback(async () => {
+    setIsRecording(true);
+    if (Platform.OS === 'android') {
+      try {
+        const grants = await PermissionsAndroid.requestMultiple([
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+          PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+        ]);
+        if (
+          grants['android.permission.WRITE_EXTERNAL_STORAGE'] ===
+            PermissionsAndroid.RESULTS.GRANTED &&
+          grants['android.permission.READ_EXTERNAL_STORAGE'] ===
+            PermissionsAndroid.RESULTS.GRANTED &&
+          grants['android.permission.RECORD_AUDIO'] ===
+            PermissionsAndroid.RESULTS.GRANTED
+        ) {
+          console.log('permissions granted');
+        } else {
+          console.log('All required permissions not granted');
+          return;
+        }
+      } catch (err) {
+        console.warn(err);
+        return;
+      }
+    }
+    const audioSet: AudioSet = {
+      AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
+      AudioSourceAndroid: AudioSourceAndroidType.MIC,
+      AVEncoderAudioQualityKeyIOS: AVEncoderAudioQualityIOSType.high,
+      AVNumberOfChannelsKeyIOS: 2,
+      AVFormatIDKeyIOS: AVEncodingOption.aac,
+    };
+    const uri = await audioRecorderPlayer.startRecorder(undefined, audioSet);
+
+    setFile(uri);
+
+    audioRecorderPlayer.addRecordBackListener((e: RecordBackType) => {});
+  }, []);
+
+  const stopRecording = React.useCallback(async () => {
+    const result = await audioRecorderPlayer.stopRecorder();
+    audioRecorderPlayer.removeRecordBackListener();
+    setIsRecording(false);
+
+    uploadAudio(result);
+  }, []);
+
+  const uploadAudio = React.useCallback(async filePath => {
+    const formData = new FormData();
+    formData.append('audio', {
+      uri: filePath,
+      type: 'audio/m4a',
+      name: 'sound.m4a',
+    });
+
+    formData.append('chatId', '673737d3732bff8fa0e51240');
+    formData.append('senderId', '6735ba79ed6c19d6851bcc80');
+
+    try {
+      const response = await axios.post(`${baseUrl}/media/upload`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      setMessages(prev => [...prev, response.data.data]);
+    } catch (error) {
+      console.error('Error uploading audio:', error);
+    }
+  }, []);
 
   const {mutate: findChatsByQueryString} = useAuthMutation({
     mutationFn: Api.chats.findChatsBySenderName,
@@ -113,16 +200,26 @@ export const ChatProvider = ({children}) => {
     };
   }, [socket]);
 
-  const handleMessageRead = (messageIds, chatId) => {
+  const handleMessageRead = async (messageIds, chatId) => {
     const recipientId = currentChat?.members.find(id => id !== user?._id);
     const senderId = user?._id;
 
     if (socket && messageIds?.length) {
-      socket.emit('messageRead', {
+      await socket.emit('messageRead', {
         messageIds,
         chatId,
         senderId,
         recipientId,
+      });
+
+      setMessages(prev => {
+        const updatedMessages = prev.map(message =>
+          messageIds.includes(message?._id)
+            ? {...message, isRead: true}
+            : message,
+        );
+
+        return updatedMessages;
       });
     }
   };
@@ -139,7 +236,7 @@ export const ChatProvider = ({children}) => {
         handleMessageRead(unreadMessageIds, currentChat?._id);
       }
     },
-    [currentChat, user, handleMessageRead],
+    [currentChat, user],
   );
 
   useEffect(() => {
@@ -426,6 +523,11 @@ export const ChatProvider = ({children}) => {
         isRecipientTyping,
         setIsRecipientTyping,
         readMessages,
+        startRecording,
+        stopRecording,
+        uploadAudio,
+        isRecording,
+        setIsRecording,
       }}>
       {children}
     </ChatContext.Provider>

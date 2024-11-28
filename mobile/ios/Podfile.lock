@@ -1059,9 +1059,15 @@ PODS:
     - React-jsi (= 0.73.10)
     - React-logger (= 0.73.10)
     - React-perflogger (= 0.73.10)
+  - RNAudio (4.3.0):
+    - React
+  - RNAudioRecorderPlayer (3.6.12):
+    - React-Core
   - RNCAsyncStorage (1.24.0):
     - React-Core
   - RNDateTimePicker (8.2.0):
+    - React-Core
+  - RNFS (2.20.0):
     - React-Core
   - RNScreens (3.35.0):
     - glog
@@ -1131,8 +1137,11 @@ DEPENDENCIES:
   - React-runtimescheduler (from `../node_modules/react-native/ReactCommon/react/renderer/runtimescheduler`)
   - React-utils (from `../node_modules/react-native/ReactCommon/react/utils`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - RNAudio (from `../node_modules/react-native-audio`)
+  - RNAudioRecorderPlayer (from `../node_modules/react-native-audio-recorder-player`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
+  - RNFS (from `../node_modules/react-native-fs`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
@@ -1246,10 +1255,16 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/react/utils"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNAudio:
+    :path: "../node_modules/react-native-audio"
+  RNAudioRecorderPlayer:
+    :path: "../node_modules/react-native-audio-recorder-player"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNDateTimePicker:
     :path: "../node_modules/@react-native-community/datetimepicker"
+  RNFS:
+    :path: "../node_modules/react-native-fs"
   RNScreens:
     :path: "../node_modules/react-native-screens"
   RNSVG:
@@ -1312,8 +1327,11 @@ SPEC CHECKSUMS:
   React-runtimescheduler: 639000d08f94ee18017fad4c691c572bb6dfbe50
   React-utils: c3a9bede4e9aa5c0a8184958cd4c09ff461fd60f
   ReactCommon: 92194c3d756b82bff5b75450544b2863b4df0d5f
+  RNAudio: cae2991f2dccb75163f260b60da8051717b959fa
+  RNAudioRecorderPlayer: 224c7de87722938aedce04000d09baa633148f5b
   RNCAsyncStorage: ec53e44dc3e75b44aa2a9f37618a49c3bc080a7a
   RNDateTimePicker: 40ffda97d071a98a10fdca4fa97e3977102ccd14
+  RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNScreens: 69850d4519d95b9359cec15a67bb5f9d0bd75262
   RNSVG: 8b1a777d54096b8c2a0fd38fc9d5a454332bbb4d
   RNVectorIcons: 04d49881dab53fb3397b1129085271d9d21885c1

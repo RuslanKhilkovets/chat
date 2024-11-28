@@ -8,6 +8,7 @@ const createMessage = async (req, res) => {
     chatId,
     senderId,
     text,
+    messageType: 'text',
   });
 
   try {
