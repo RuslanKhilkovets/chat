@@ -99,7 +99,13 @@ const MessageItem = ({message}: IMessageItemProps) => {
         </Text>
       ) : null}
 
-      <View style={{flexDirection: 'row', alignItems: 'flex-end', gap: 10}}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'flex-end',
+          gap: 10,
+          justifyContent: 'flex-end',
+        }}>
         <Text style={styles.date}>{moment(message?.createdAt).calendar()}</Text>
 
         {isMessageMine && (

@@ -78,8 +78,6 @@ io.on('connection', socket => {
   socket.on('typingStart', ({ chatId, senderId, recipientId }) => {
     const recipient = onlineUsers.get(recipientId);
 
-    console.log(chatId);
-
     if (recipient) {
       io.to(recipient.socketId).emit('typingStart', { chatId, senderId });
     }
@@ -90,6 +88,22 @@ io.on('connection', socket => {
 
     if (recipient) {
       io.to(recipient.socketId).emit('typingStop', { chatId, senderId });
+    }
+  });
+
+  socket.on('recordingStart', ({ chatId, senderId, recipientId }) => {
+    const recipient = onlineUsers.get(recipientId);
+
+    if (recipient) {
+      io.to(recipient.socketId).emit('recordingStart', { chatId, senderId });
+    }
+  });
+
+  socket.on('recordingStop', ({ chatId, senderId, recipientId }) => {
+    const recipient = onlineUsers.get(recipientId);
+
+    if (recipient) {
+      io.to(recipient.socketId).emit('recordingStop', { chatId, senderId });
     }
   });
 
