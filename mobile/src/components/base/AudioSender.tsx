@@ -2,7 +2,7 @@ import {TouchableOpacity} from 'react-native';
 import {useChatContext} from '@/context/Chat/ChatContext';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const AudioMessageSender = ({chatId}) => {
+const SendAudioButton = () => {
   const {isRecording, stopRecording, startRecording} = useChatContext();
 
   return (
@@ -32,4 +32,4 @@ const AudioMessageSender = ({chatId}) => {
   );
 };
 
-export default AudioMessageSender;
+export default SendAudioButton;

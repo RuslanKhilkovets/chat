@@ -9,6 +9,7 @@ export {default as AppIcon} from './base/AppIcon';
 export {default as GoBack} from './base/GoBack';
 export {default as Header} from './base/Header';
 export {default as Drawer} from './base/Drawer';
+export {default as SendAudioButton} from './base/AudioSender';
 
 export {default as MenuItem} from './items/MenuItem';
 export {default as ChatItem} from './items/ChatItem';

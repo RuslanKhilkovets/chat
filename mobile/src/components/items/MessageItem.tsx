@@ -18,22 +18,7 @@ const MessageItem = ({message}: IMessageItemProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentPosition, setCurrentPosition] = useState(0);
   const [equalizerHeights, setEqualizerHeights] = useState<number[]>([
-    1,
-    2,
-    15,
-    10,
-    5,
-    7,
-    1,
-    7,
-    ,
-    8,
-    0,
-    10,
-    2,
-    5,
-    15,
-    12,
+    1, 2, 15, 10, 5, 7, 1, 7, 8, 8, 0, 10, 2, 5, 15, 12,
   ]);
 
   const playAudio = async () => {
@@ -106,13 +91,13 @@ const MessageItem = ({message}: IMessageItemProps) => {
         <Text style={styles.messageText}>{message?.text}</Text>
       )}
 
-      {message?.duration && (
+      {message?.duration ? (
         <Text style={styles.audioDuration}>
           {`${moment.utc(currentPosition * 1000).format('mm:ss')} / ${moment
             .utc(message?.duration * 1000)
             .format('mm:ss')}`}
         </Text>
-      )}
+      ) : null}
 
       <View style={{flexDirection: 'row', alignItems: 'flex-end', gap: 10}}>
         <Text style={styles.date}>{moment(message?.createdAt).calendar()}</Text>

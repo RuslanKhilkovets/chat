@@ -9,13 +9,12 @@ import {
   Keyboard,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
-import {Input, MessageItem, Screen} from '@/components';
+import {Input, MessageItem, Screen, SendAudioButton} from '@/components';
 import {useRoute} from '@react-navigation/native';
 import {useFetchRecipient, useTypedSelector} from '@/hooks';
 import {useChatContext} from '@/context/Chat/ChatContext';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {unreadNotifications} from '@/helpers/unreadNotifications';
-import AudioMessageSender from '@/components/base/AudioSender';
 
 const ChatScreen = () => {
   const route = useRoute();
@@ -180,9 +179,7 @@ const ChatScreen = () => {
                     ) : null
                   }
                 />
-                {!textMessage.trim() && (
-                  <AudioMessageSender chatId={currentChat?._id} />
-                )}
+                {!textMessage.trim() && <SendAudioButton />}
               </View>
             </>
           )}
