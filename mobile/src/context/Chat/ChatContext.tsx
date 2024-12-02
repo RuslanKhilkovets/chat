@@ -402,6 +402,8 @@ export const ChatProvider = ({children}) => {
   }, [user]);
 
   useEffect(() => {
+    if (!currentChat) return;
+
     const getMessages = async () => {
       setIsMessagesLoading(true);
       setMessagesError(null);
