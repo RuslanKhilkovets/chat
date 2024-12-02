@@ -42,7 +42,7 @@ const ChatScreen = () => {
     notifications,
     markAsRead,
     isRecording,
-    stopRecording,
+    discardRecording,
   } = useChatContext();
 
   const [textMessage, setTextMessage] = useState<string>('');
@@ -66,7 +66,7 @@ const ChatScreen = () => {
   useEffect(() => {
     return () => {
       updateCurrentChat(null);
-      stopRecording();
+      discardRecording();
     };
   }, []);
 
