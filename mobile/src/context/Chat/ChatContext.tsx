@@ -49,6 +49,7 @@ export const ChatProvider = ({children}) => {
   const [isRecording, setIsRecording] = useState(false);
   const [isRecordingFinished, setIsRecordingFinished] = useState(false);
   const [file, setFile] = useState(false);
+  const [isDiscardingRecording, setIsDiscardingRecording] = useState(false);
 
   const audioRecorderPlayer = new AudioRecorderPlayer();
 
@@ -133,6 +134,7 @@ export const ChatProvider = ({children}) => {
   const startRecording = useCallback(async () => {
     setIsRecording(true);
     setIsRecordingFinished(false);
+    setIsDiscardingRecording(false);
 
     audioDurationLocal = 0;
     if (Platform.OS === 'android') {
@@ -186,8 +188,23 @@ export const ChatProvider = ({children}) => {
     console.log('Final audio duration:', audioDurationLocal);
   }, []);
 
+  const discardRecording = useCallback(async () => {
+    await audioRecorderPlayer.stopRecorder();
+    audioRecorderPlayer.removeRecordBackListener();
+    setIsRecording(false);
+    setIsRecordingFinished(false);
+    setIsDiscardingRecording(true);
+    setFile(null);
+  }, []);
+
   useEffect(() => {
-    if (!socket || !file || !isRecordingFinished || !currentChat) return;
+    if (
+      !socket ||
+      !file ||
+      !isRecordingFinished ||
+      (!currentChat && !isDiscardingRecording)
+    )
+      return;
 
     const recipientId = currentChat.members.find(id => id !== user?._id);
 
@@ -545,6 +562,7 @@ export const ChatProvider = ({children}) => {
         stopRecording,
         isRecording,
         setIsRecording,
+        discardRecording,
       }}>
       {children}
     </ChatContext.Provider>

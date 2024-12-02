@@ -195,8 +195,9 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   disabled: {
-    backgroundColor: '#f0f0f0',
-    borderColor: '#e0e0e0',
+    backgroundColor: '#333',
+    borderColor: '#888',
+    color: 'grey',
   },
   disabledInput: {
     color: '#757575',

@@ -9,7 +9,13 @@ import {
   Keyboard,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
-import {Input, MessageItem, Screen, SendAudioButton} from '@/components';
+import {
+  AudioStopper,
+  Input,
+  MessageItem,
+  Screen,
+  SendAudioButton,
+} from '@/components';
 import {useRoute} from '@react-navigation/native';
 import {useFetchRecipient, useTypedSelector} from '@/hooks';
 import {useChatContext} from '@/context/Chat/ChatContext';
@@ -35,6 +41,7 @@ const ChatScreen = () => {
     readMessages,
     notifications,
     markAsRead,
+    isRecording,
   } = useChatContext();
 
   const [textMessage, setTextMessage] = useState<string>('');
@@ -167,6 +174,7 @@ const ChatScreen = () => {
               />
               <View style={styles.inputContainer}>
                 <Input
+                  disabled={isRecording}
                   style={{flex: 1}}
                   value={textMessage}
                   onChangeText={handleTextChange}
@@ -179,6 +187,7 @@ const ChatScreen = () => {
                     ) : null
                   }
                 />
+                {isRecording && <AudioStopper />}
                 {!textMessage.trim() && <SendAudioButton />}
               </View>
             </>
@@ -197,6 +206,7 @@ const styles = StyleSheet.create({
     padding: 5,
     paddingHorizontal: 10,
     flexDirection: 'row',
+    alignItems: 'center',
     gap: 20,
   },
 });

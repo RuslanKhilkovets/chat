@@ -2,7 +2,7 @@ import {TouchableOpacity} from 'react-native';
 import {useChatContext} from '@/context/Chat/ChatContext';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const SendAudioButton = () => {
+const AudioStopper = () => {
   const {isRecording, stopRecording, startRecording} = useChatContext();
 
   return (
@@ -10,7 +10,7 @@ const SendAudioButton = () => {
       activeOpacity={0.7}
       onPress={isRecording ? stopRecording : startRecording}
       style={{
-        backgroundColor: isRecording ? '#FF4081' : '#FFD700',
+        backgroundColor: '#FFD700',
         padding: 5,
         paddingHorizontal: 15,
         borderRadius: 50,
@@ -21,15 +21,17 @@ const SendAudioButton = () => {
         shadowRadius: 8,
         shadowOffset: {width: 0, height: 4},
         elevation: 6,
+        height: 60,
+        width: 60,
         transition: 'background-color 0.3s ease, color 0.3s ease',
       }}>
       <Icon
         size={32}
-        name="keyboard-voice"
-        color={isRecording ? 'white' : 'black'}
+        name={isRecording ? 'send' : 'keyboard-voice'}
+        color={'black'}
       />
     </TouchableOpacity>
   );
 };
 
-export default SendAudioButton;
+export default AudioStopper;

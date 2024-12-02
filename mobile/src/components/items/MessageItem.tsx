@@ -18,7 +18,7 @@ const MessageItem = ({message}: IMessageItemProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentPosition, setCurrentPosition] = useState(0);
   const [equalizerHeights, setEqualizerHeights] = useState<number[]>([
-    1, 2, 15, 10, 5, 7, 1, 7, 8, 8, 0, 10, 2, 5, 15, 12,
+    7, 8, 15, 10, 5, 7, 10, 7, 8, 8, 15, 10, 15, 5, 15, 12,
   ]);
 
   const playAudio = async () => {
