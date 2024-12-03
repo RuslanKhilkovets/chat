@@ -20,13 +20,11 @@ export const useChatContext = () => {
 export const ChatProvider = ({children}) => {
   const user = useTypedSelector(state => state.user);
   const [userChats, setUserChats] = useState([]);
-  const [isUserChatLoading, setIsUserChatLoading] = useState(false);
-  const [userChatsError, setUserChatsError] = useState(null);
+  const [isUserChatsLoading, setIsUserChatsLoading] = useState(false);
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const [isMessagesLoading, setIsMessagesLoading] = useState(false);
   const [messagesError, setMessagesError] = useState(null);
-  const [sendTextMessageError, setSendTextMessageError] = useState(null);
   const [newMessage, setNewMessage] = useState(null);
   const [socket, setSocket] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
@@ -53,6 +51,19 @@ export const ChatProvider = ({children}) => {
         chat => chat?._id !== res.data.chat._id,
       );
       setUserChats(existChats);
+    },
+  });
+
+  const {mutate: readMessageMutation} = useAuthMutation({
+    mutationFn: Api.messages.read,
+    onSuccess: readMessage => {
+      setMessages(prevMessages =>
+        prevMessages.map(message =>
+          message._id === readMessage._id
+            ? {...message, isRead: true}
+            : message,
+        ),
+      );
     },
   });
 
@@ -142,7 +153,6 @@ export const ChatProvider = ({children}) => {
       );
 
       if (response.error) {
-        setSendTextMessageError(response);
         return;
       }
 
@@ -175,19 +185,6 @@ export const ChatProvider = ({children}) => {
       });
     }
   };
-
-  const {mutate: readMessageMutation} = useAuthMutation({
-    mutationFn: Api.messages.read,
-    onSuccess: readMessage => {
-      setMessages(prevMessages =>
-        prevMessages.map(message =>
-          message._id === readMessage._id
-            ? {...message, isRead: true}
-            : message,
-        ),
-      );
-    },
-  });
 
   const readMessages = useCallback(
     messages => {
@@ -236,15 +233,6 @@ export const ChatProvider = ({children}) => {
       setNotifications(prev => [...prev, res]);
     });
 
-    return () => {
-      socket.off('getOnlineUsers');
-      socket.off('getNotification');
-    };
-  }, [socket]);
-
-  useEffect(() => {
-    if (!socket) return;
-
     const onMessageRead = ({chatId, messageId}) => {
       readMessageMutation({chatId, messageId});
     };
@@ -252,6 +240,8 @@ export const ChatProvider = ({children}) => {
     socket.on('messageRead', onMessageRead);
 
     return () => {
+      socket.off('getOnlineUsers');
+      socket.off('getNotification');
       socket.off('messageRead', onMessageRead);
     };
   }, [socket]);
@@ -344,7 +334,6 @@ export const ChatProvider = ({children}) => {
     const getUsers = async () => {
       const response = await getRequest(`${baseUrl}/users`);
       if (response.error) {
-        setUserChatsError(response.message);
         return;
       }
 
@@ -355,8 +344,7 @@ export const ChatProvider = ({children}) => {
 
   useEffect(() => {
     const getUserChats = async () => {
-      setIsUserChatLoading(true);
-      setUserChatsError(null);
+      setIsUserChatsLoading(true);
 
       try {
         if (user._id) {
@@ -366,9 +354,9 @@ export const ChatProvider = ({children}) => {
           setUserChats(data);
         }
       } catch (error) {
-        setUserChatsError(error.message);
+        console.log(error.message);
       } finally {
-        setIsUserChatLoading(false);
+        setIsUserChatsLoading(false);
       }
     };
     getUserChats();
@@ -424,8 +412,7 @@ export const ChatProvider = ({children}) => {
     <ChatContext.Provider
       value={{
         userChats,
-        isUserChatLoading,
-        userChatsError,
+        isUserChatsLoading,
         createChat,
         updateCurrentChat,
         messages,
@@ -433,7 +420,6 @@ export const ChatProvider = ({children}) => {
         messagesError,
         currentChat,
         sendMessage,
-        sendTextMessageError,
         newMessage,
         setNewMessage,
         onlineUsers,
