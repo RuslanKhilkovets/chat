@@ -9,8 +9,7 @@ import {
 import {GoBack, SmallModal} from '@/components';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {useAuthMutation} from '@/hooks';
-import {Api} from '@/api';
+import {useChatContext} from '@/context/Chat/ChatContext';
 
 interface IScreenHeaderProps {
   chatMode?: boolean;
@@ -21,13 +20,7 @@ interface IScreenHeaderProps {
 const ScreenHeader = ({title, payload, chatMode}: IScreenHeaderProps) => {
   const {navigate} = useNavigation();
   const [isModalVisible, setModalVisible] = useState(false);
-
-  const {mutate: deleteChat} = useAuthMutation({
-    mutationFn: Api.chats.delete,
-    onSuccess: () => {
-      console.log('Chat deleted');
-    },
-  });
+  const {deleteChat} = useChatContext();
 
   const handleDelete = () => {
     deleteChat(payload?.chatId);

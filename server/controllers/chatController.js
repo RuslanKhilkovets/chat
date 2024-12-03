@@ -1,4 +1,5 @@
 const chatModel = require('../models/chatModel');
+const messageModel = require('../models/messageModel');
 const userModel = require('../models/userModel');
 const logger = require('../utils/logger');
 
@@ -97,12 +98,18 @@ const deleteChat = async (req, res) => {
       return res.status(404).json({ message: 'Chat not found' });
     }
 
-    logger.info(`Deleted chat with ID: ${chatId}`);
+    await messageModel.deleteMany({ chatId });
 
-    res.status(200).json({ message: 'Chat deleted successfully', chat: deletedChat });
+    logger.info(`Deleted chat with ID: ${chatId} and all associated messages`);
+
+    res
+      .status(200)
+      .json({ message: 'Chat and associated messages deleted successfully', chat: deletedChat });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'An error occurred while deleting the chat', error });
+    res
+      .status(500)
+      .json({ message: 'An error occurred while deleting the chat and messages', error });
   }
 };
 

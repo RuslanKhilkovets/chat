@@ -19,7 +19,7 @@ import AudioRecorderPlayer, {
   RecordBackType,
 } from 'react-native-audio-recorder-player';
 import axios from 'axios';
-import {Alert, PermissionsAndroid, Platform} from 'react-native';
+import {PermissionsAndroid, Platform} from 'react-native';
 
 export const ChatContext = createContext();
 
@@ -75,6 +75,16 @@ export const ChatProvider = ({children}) => {
 
     findChatsByQueryString(payload);
   }, [filterQuery]);
+
+  const {mutate: deleteChat} = useAuthMutation({
+    mutationFn: Api.chats.delete,
+    onSuccess: res => {
+      const existChats = userChats.filter(
+        chat => chat?._id !== res.data.chat._id,
+      );
+      setUserChats(existChats);
+    },
+  });
 
   useEffect(() => {
     if (currentChat && messages) {
@@ -587,6 +597,7 @@ export const ChatProvider = ({children}) => {
         loadMoreMessages,
         page,
         setPage,
+        deleteChat,
       }}>
       {children}
     </ChatContext.Provider>
