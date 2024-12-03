@@ -11,4 +11,7 @@ export default axios => ({
   findChatsBySenderName(payload) {
     return axios.post(`/chats/findChatsBySenderName/`, payload);
   },
+  delete(chatId) {
+    return axios.delete(`/chats/${chatId}/delete`);
+  },
 });

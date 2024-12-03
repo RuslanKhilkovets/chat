@@ -143,6 +143,7 @@ const ChatScreen = () => {
     userId: recipientUser?._id,
     isOnline,
     isTyping: isRecipientTyping,
+    chatId: currentChat?._id,
   };
 
   const handleViewableItemsChanged = useRef(({viewableItems}) => {

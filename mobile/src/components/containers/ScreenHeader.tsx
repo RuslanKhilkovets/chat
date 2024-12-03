@@ -1,8 +1,16 @@
-import React from 'react';
-import {Platform, Pressable, StyleSheet, Text, View} from 'react-native';
-
-import {GoBack} from '@/components';
+import React, {useState} from 'react';
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import {GoBack, SmallModal} from '@/components';
 import {useNavigation} from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import {useAuthMutation} from '@/hooks';
+import {Api} from '@/api';
 
 interface IScreenHeaderProps {
   chatMode?: boolean;
@@ -10,51 +18,81 @@ interface IScreenHeaderProps {
   title?: string;
 }
 
-const ScreenHeader = ({title, payload}: IScreenHeaderProps) => {
+const ScreenHeader = ({title, payload, chatMode}: IScreenHeaderProps) => {
   const {navigate} = useNavigation();
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const {mutate: deleteChat} = useAuthMutation({
+    mutationFn: Api.chats.delete,
+    onSuccess: () => {
+      console.log('Chat deleted');
+    },
+  });
+
+  const handleDelete = () => {
+    deleteChat(payload?.chatId);
+    setModalVisible(false);
+  };
 
   return (
-    <View
-      style={[
-        styles.header,
-        {justifyContent: !!title ? 'center' : 'flex-start'},
-      ]}>
-      <View
-        style={[
-          styles.icon,
-          {top: !title ? 5 : Platform.OS === 'android' ? 3 : 0},
-        ]}>
-        <GoBack />
+    <>
+      <View style={styles.header}>
+        <View style={styles.icon}>
+          <GoBack />
+        </View>
+
+        {title && <Text style={styles.headerTitle}>{title}</Text>}
+
+        {payload && (
+          <Pressable
+            style={styles.userInfo}
+            onPress={() => navigate('Profile', {userId: payload.userId})}>
+            <View style={styles.profilePic} />
+            <View>
+              <Text style={styles.name}>{payload.name}</Text>
+              <Text style={styles.isOnline}>
+                {payload.isTyping
+                  ? 'Typing...'
+                  : payload.isOnline
+                  ? 'Online'
+                  : 'Offline'}
+              </Text>
+            </View>
+          </Pressable>
+        )}
+
+        {chatMode && (
+          <TouchableOpacity
+            style={styles.deleteIcon}
+            activeOpacity={0.7}
+            onPress={() => setModalVisible(true)}>
+            <Icon name="delete" color="yellow" size={32} />
+          </TouchableOpacity>
+        )}
       </View>
 
-      {title && <Text style={[styles.headerTitle]}>{title}</Text>}
-      {payload && (
-        <Pressable
-          style={styles.userInfo}
-          onPress={() => navigate('Profile', {userId: payload.userId})}>
-          <View style={styles.profilePic} />
-          <View>
-            <Text style={styles.name}>{payload.name}</Text>
-            <Text style={styles.isOnline}>
-              {payload.isTyping
-                ? 'Typing...'
-                : payload.isOnline
-                ? 'Online'
-                : 'Offline'}
-            </Text>
-          </View>
-        </Pressable>
-      )}
-    </View>
+      <SmallModal
+        visible={isModalVisible}
+        onClose={() => setModalVisible(false)}
+        onConfirm={handleDelete}
+        text="Are you sure you want to delete this chat?"
+        confirmText="Delete"
+        cancelText="Cancel"
+      />
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
-    position: 'relative',
-    paddingVertical: 10,
     alignItems: 'center',
+    paddingVertical: 10,
+    position: 'relative',
+  },
+  icon: {
+    position: 'absolute',
+    left: 0,
   },
   profilePic: {
     height: 40,
@@ -72,6 +110,8 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontFamily: 'Jersey20-Regular',
     textTransform: 'capitalize',
+    flex: 1,
+    textAlign: 'center',
   },
   name: {
     color: 'yellow',
@@ -83,9 +123,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Jersey20-Regular',
   },
-  icon: {
-    position: 'absolute',
-    left: 0,
+  deleteIcon: {
+    marginLeft: 'auto',
+    position: 'relative',
+    right: 10,
   },
 });
 

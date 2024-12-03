@@ -45,5 +45,6 @@ export default Screen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    overflow: 'visible',
   },
 });
