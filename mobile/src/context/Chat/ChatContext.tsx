@@ -50,6 +50,7 @@ export const ChatProvider = ({children}) => {
   const [isRecordingFinished, setIsRecordingFinished] = useState(false);
   const [file, setFile] = useState(false);
   const [isDiscardingRecording, setIsDiscardingRecording] = useState(false);
+  const [page, setPage] = useState(1);
 
   const audioRecorderPlayer = new AudioRecorderPlayer();
 
@@ -415,7 +416,7 @@ export const ChatProvider = ({children}) => {
           );
           const data = await response.json();
 
-          setMessages(data);
+          setMessages(data?.reverse());
         }
       } catch (error) {
         setMessagesError(error.message);
@@ -425,6 +426,24 @@ export const ChatProvider = ({children}) => {
     };
     getMessages();
   }, [currentChat]);
+
+  const loadMoreMessages = async () => {
+    if (!currentChat || !user._id) return;
+
+    try {
+      const response = await fetch(
+        `${baseUrl}/messages/${currentChat?._id}?page=${page + 1}&limit=15`,
+      );
+      const data = await response.json();
+
+      if (data.length > 0) {
+        setMessages(prevMessages => [...data?.reverse(), ...prevMessages]);
+        setPage(prev => ++prev);
+      }
+    } catch (error) {
+      setMessagesError(error.message);
+    }
+  };
 
   const sendMessage = useCallback(
     async (textMessage, sender, currentChatId, setTextMessage) => {
@@ -565,6 +584,9 @@ export const ChatProvider = ({children}) => {
         isRecording,
         setIsRecording,
         discardRecording,
+        loadMoreMessages,
+        page,
+        setPage,
       }}>
       {children}
     </ChatContext.Provider>

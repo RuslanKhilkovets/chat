@@ -22,9 +22,15 @@ const createMessage = async (req, res) => {
 
 const getMessages = async (req, res) => {
   const { chatId } = req.params;
+  const { page = 1, limit = 15 } = req.query;
 
   try {
-    const messages = await messageModel.find({ chatId });
+    const messages = await messageModel
+      .find({ chatId })
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(parseInt(limit));
+
     res.status(200).json(messages);
   } catch (err) {
     console.log(err);

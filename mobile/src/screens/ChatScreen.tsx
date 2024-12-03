@@ -43,6 +43,9 @@ const ChatScreen = () => {
     markAsRead,
     isRecording,
     discardRecording,
+    loadMoreMessages,
+    page,
+    setPage,
   } = useChatContext();
 
   const [textMessage, setTextMessage] = useState<string>('');
@@ -60,6 +63,14 @@ const ChatScreen = () => {
   const flatListRef = useRef<FlatList>(null);
 
   useEffect(() => {
+    console.log(page);
+
+    if (!isMessagesLoading && page === 1) {
+      scrollToBottom();
+    }
+  }, [isMessagesLoading, messages]);
+
+  useEffect(() => {
     updateCurrentChat(chat);
   }, [chat]);
 
@@ -67,18 +78,15 @@ const ChatScreen = () => {
     return () => {
       updateCurrentChat(null);
       discardRecording();
+      setPage(1);
     };
   }, []);
 
   const scrollToBottom = () => {
-    flatListRef.current?.scrollToEnd({animated: true});
+    setTimeout(() => {
+      flatListRef.current?.scrollToEnd({animated: true});
+    }, 200);
   };
-
-  useEffect(() => {
-    if (messages.length > 0) {
-      scrollToBottom();
-    }
-  }, [messages]);
 
   const handleSendMessage = () => {
     if (textMessage.trim()) {
@@ -142,6 +150,14 @@ const ChatScreen = () => {
     readMessages(visibleMessages);
   });
 
+  const handleScroll = event => {
+    const {contentOffset} = event.nativeEvent;
+
+    if (contentOffset.y === 0) {
+      loadMoreMessages();
+    }
+  };
+
   return (
     <Screen chatMode payload={payload}>
       <KeyboardAvoidingView
@@ -165,14 +181,10 @@ const ChatScreen = () => {
                 renderItem={({item}) => <MessageItem message={item} />}
                 keyExtractor={item => item._id}
                 style={{marginBottom: 20}}
-                onContentSizeChange={scrollToBottom}
-                onEndReached={() => {
-                  if (!isMessagesLoading) {
-                    //loadMoreMessages();
-                  }
-                }}
                 onEndReachedThreshold={0.5}
                 onViewableItemsChanged={handleViewableItemsChanged.current}
+                onScroll={handleScroll}
+                scrollEventThrottle={16}
               />
               <View style={styles.inputContainer}>
                 <Input
