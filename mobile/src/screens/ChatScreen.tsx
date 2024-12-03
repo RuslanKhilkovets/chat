@@ -17,7 +17,7 @@ import {
   SendAudioButton,
 } from '@/components';
 import {useRoute} from '@react-navigation/native';
-import {useFetchRecipient, useTypedSelector} from '@/hooks';
+import {useAudioRecorder, useFetchRecipient, useTypedSelector} from '@/hooks';
 import {useChatContext} from '@/context/Chat/ChatContext';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {unreadNotifications} from '@/helpers/unreadNotifications';
@@ -26,8 +26,6 @@ const ChatScreen = () => {
   const route = useRoute();
   const chat = route?.params?.chat;
   const user = useTypedSelector(state => state.user);
-  const {onlineUsers} = useChatContext();
-
   const {
     userChats,
     currentChat,
@@ -41,12 +39,13 @@ const ChatScreen = () => {
     readMessages,
     notifications,
     markAsRead,
-    isRecording,
-    discardRecording,
     loadMoreMessages,
     page,
     setPage,
+    onlineUsers,
   } = useChatContext();
+
+  const {isRecording, discardRecording} = useAudioRecorder();
 
   const [textMessage, setTextMessage] = useState<string>('');
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);

@@ -6,6 +6,7 @@ import apiAuth from './auth';
 import apiChats from './chats';
 import apiUsers from './users';
 import apiMessages from './messages';
+import apiMedia from './media';
 
 const client = axios.create({
   baseURL: `${SERVER_URL}/api`,
@@ -70,4 +71,5 @@ export const Api = {
   chats: apiChats(client),
   users: apiUsers(client),
   messages: apiMessages(client),
+  media: apiMedia(client),
 };

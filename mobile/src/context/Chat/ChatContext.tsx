@@ -10,16 +10,6 @@ import {io} from 'socket.io-client';
 import {SERVER_URL} from '@env';
 import {useAuthMutation, useTypedSelector} from '@/hooks';
 import {Api} from '@/api';
-import AudioRecorderPlayer, {
-  AudioEncoderAndroidType,
-  AudioSet,
-  AudioSourceAndroidType,
-  AVEncoderAudioQualityIOSType,
-  AVEncodingOption,
-  RecordBackType,
-} from 'react-native-audio-recorder-player';
-import axios from 'axios';
-import {PermissionsAndroid, Platform} from 'react-native';
 
 export const ChatContext = createContext();
 
@@ -46,15 +36,8 @@ export const ChatProvider = ({children}) => {
   const [filteredChats, setFilteredChats] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const [isRecipientTyping, setIsRecipientTyping] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
-  const [isRecordingFinished, setIsRecordingFinished] = useState(false);
-  const [file, setFile] = useState(false);
-  const [isDiscardingRecording, setIsDiscardingRecording] = useState(false);
   const [page, setPage] = useState(1);
-
-  const audioRecorderPlayer = new AudioRecorderPlayer();
-
-  let audioDurationLocal = 0;
+  const recipientId = currentChat?.members?.find(id => id !== user?._id);
 
   const {mutate: findChatsByQueryString} = useAuthMutation({
     mutationFn: Api.chats.findChatsBySenderName,
@@ -141,116 +124,6 @@ export const ChatProvider = ({children}) => {
       socket.off('messageRead', onMessageRead);
     };
   }, [socket]);
-
-  const startRecording = useCallback(async () => {
-    setIsRecording(true);
-    setIsRecordingFinished(false);
-    setIsDiscardingRecording(false);
-
-    audioDurationLocal = 0;
-    if (Platform.OS === 'android') {
-      try {
-        const grants = await PermissionsAndroid.requestMultiple([
-          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-          PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-        ]);
-        if (
-          grants['android.permission.WRITE_EXTERNAL_STORAGE'] ===
-            PermissionsAndroid.RESULTS.GRANTED &&
-          grants['android.permission.READ_EXTERNAL_STORAGE'] ===
-            PermissionsAndroid.RESULTS.GRANTED &&
-          grants['android.permission.RECORD_AUDIO'] ===
-            PermissionsAndroid.RESULTS.GRANTED
-        ) {
-          console.log('permissions granted');
-        } else {
-          console.log('All required permissions not granted');
-          return;
-        }
-      } catch (err) {
-        console.warn(err);
-        return;
-      }
-    }
-
-    const audioSet: AudioSet = {
-      AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
-      AudioSourceAndroid: AudioSourceAndroidType.MIC,
-      AVEncoderAudioQualityKeyIOS: AVEncoderAudioQualityIOSType.high,
-      AVNumberOfChannelsKeyIOS: 2,
-      AVFormatIDKeyIOS: AVEncodingOption.aac,
-    };
-    const uri = await audioRecorderPlayer.startRecorder(undefined, audioSet);
-
-    setFile(uri);
-
-    audioRecorderPlayer.addRecordBackListener((e: RecordBackType) => {
-      audioDurationLocal = e.currentPosition / 1000;
-    });
-  }, []);
-
-  const stopRecording = useCallback(async () => {
-    await audioRecorderPlayer.stopRecorder();
-    audioRecorderPlayer.removeRecordBackListener();
-    setIsRecording(false);
-    setIsRecordingFinished(true);
-
-    console.log('Final audio duration:', audioDurationLocal);
-  }, []);
-
-  const discardRecording = useCallback(async () => {
-    await audioRecorderPlayer.stopRecorder();
-    audioRecorderPlayer.removeRecordBackListener();
-    setIsRecording(false);
-    setIsRecordingFinished(false);
-    setIsDiscardingRecording(true);
-    setFile(null);
-  }, []);
-
-  useEffect(() => {
-    if (
-      !socket ||
-      !file ||
-      !isRecordingFinished ||
-      (!currentChat && !isDiscardingRecording)
-    )
-      return;
-
-    const recipientId = currentChat.members.find(id => id !== user?._id);
-
-    const sendAudioMessage = async () => {
-      try {
-        const formData = new FormData();
-        formData.append('audio', {
-          uri: file,
-          type: 'audio/m4a',
-          name: 'sound.m4a',
-        });
-
-        formData.append('chatId', currentChat?._id);
-        formData.append('senderId', user?._id);
-        formData.append('duration', audioDurationLocal.toFixed(2));
-
-        const response = await axios.post(`${baseUrl}/media/upload`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-
-        socket.emit('sendMessage', {
-          ...response.data.data,
-          recipientId,
-        });
-
-        setMessages(prevMessages => [...prevMessages, response.data.data]);
-      } catch (error) {
-        console.error('Error uploading audio:', error);
-      }
-    };
-
-    sendAudioMessage();
-  }, [socket, file, currentChat, isRecordingFinished]);
 
   const handleMessageRead = async (messageIds, chatId) => {
     const recipientId = currentChat?.members.find(id => id !== user?._id);
@@ -503,14 +376,6 @@ export const ChatProvider = ({children}) => {
     return response;
   }, []);
 
-  const {mutate: createChatMutation} = useAuthMutation({
-    mutationFn: Api.chats.createChat,
-    onSuccess: res => {
-      console.log(res);
-    },
-    onError: () => {},
-  });
-
   const markAllAsRead = useCallback(notifications => {
     const mNotifications = notifications.map(notification => ({
       ...notification,
@@ -590,15 +455,13 @@ export const ChatProvider = ({children}) => {
         isRecipientTyping,
         setIsRecipientTyping,
         readMessages,
-        startRecording,
-        stopRecording,
-        isRecording,
-        setIsRecording,
-        discardRecording,
         loadMoreMessages,
         page,
         setPage,
         deleteChat,
+        recipientId,
+        setMessages,
+        socket,
       }}>
       {children}
     </ChatContext.Provider>

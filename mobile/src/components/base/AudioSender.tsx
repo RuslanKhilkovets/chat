@@ -1,9 +1,9 @@
 import {TouchableOpacity} from 'react-native';
-import {useChatContext} from '@/context/Chat/ChatContext';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {useAudioRecorder} from '@/hooks';
 
 const AudioStopper = () => {
-  const {isRecording, stopRecording, startRecording} = useChatContext();
+  const {isRecording, stopRecording, startRecording} = useAudioRecorder();
 
   return (
     <TouchableOpacity
