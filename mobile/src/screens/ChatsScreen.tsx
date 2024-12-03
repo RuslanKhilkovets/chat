@@ -9,7 +9,7 @@ export const ChatsScreen = () => {
     useChatContext();
   const {navigate} = useNavigation();
 
-  const sortedChats = React.useMemo(() => {
+  const sortedChats = React.useCallback(() => {
     return filteredChats?.sort((a, b) => {
       const aHasUnread = notifications.some(
         notification =>
@@ -25,7 +25,7 @@ export const ChatsScreen = () => {
 
       return 0;
     });
-  }, [filteredChats, notifications]);
+  }, [filteredChats]);
 
   const onFindMateRedirectHandle = () => {
     navigate('FindUsers');
@@ -34,14 +34,14 @@ export const ChatsScreen = () => {
   return (
     <Screen headerShown={false}>
       <Header />
-      {sortedChats?.length !== 0 && (
+      {filteredChats?.length !== 0 && (
         <FlatList
-          data={sortedChats || []}
+          data={sortedChats?.() || []}
           renderItem={({item}) => <ChatItem chat={item} />}
           keyExtractor={item => item.id}
         />
       )}
-      {sortedChats?.length === 0 && !filterQuery && !isUserChatsLoading && (
+      {filteredChats?.length === 0 && !filterQuery && !isUserChatsLoading && (
         <View style={styles.container}>
           <Text style={styles.noChatsText}>There is no chats yet!</Text>
           <Text style={[styles.noChatsText, {fontSize: 20}]}>
@@ -50,7 +50,7 @@ export const ChatsScreen = () => {
           <Button onPress={onFindMateRedirectHandle}>Find mate</Button>
         </View>
       )}
-      {sortedChats?.length === 0 && filterQuery && (
+      {filteredChats?.length === 0 && filterQuery && (
         <View style={styles.container}>
           <Text style={[styles.noChatsText, {fontSize: 20}]}>
             Did not find any chats with given users!

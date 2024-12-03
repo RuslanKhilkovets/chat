@@ -79,7 +79,7 @@ export const ChatProvider = ({children}) => {
   const {mutate: deleteChat} = useAuthMutation({
     mutationFn: Api.chats.delete,
     onSuccess: res => {
-      const existChats = userChats.filter(
+      const existChats = filteredChats.filter(
         chat => chat?._id !== res.data.chat._id,
       );
       setUserChats(existChats);
@@ -495,9 +495,10 @@ export const ChatProvider = ({children}) => {
     }
 
     const checkIfChatExists = (id: string) =>
-      userChats?.find(chat => chat._id === response?._id);
+      userChats?.find(chat => chat._id === id);
 
-    if (!checkIfChatExists) setUserChats(prev => [...prev, response]);
+    if (!checkIfChatExists(response?._id))
+      setUserChats(prev => [...prev, response]);
 
     return response;
   }, []);
