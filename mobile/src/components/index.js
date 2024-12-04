@@ -27,7 +27,6 @@ export {default as KeyboardScroll} from './containers/KeyboardScroll';
 export {default as AboutModal} from './modals/AboutModal';
 export {default as PrivacyPolicyModal} from './modals/PrivacyPolicyModal';
 export {default as MenuDrawer} from './modals/MenuDrawer';
-export {default as NotificationDrawer} from './modals/NotificationDrawer';
 
 export {default as CheckPasswordForm} from './forms/CheckPasswordForm';
 export {default as ChangeDataForm} from './forms/ChangeDataForm';

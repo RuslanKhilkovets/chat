@@ -18,7 +18,6 @@ export const useChatContext = () => {
 };
 
 export const ChatProvider = ({children}) => {
-  const user = useTypedSelector(state => state.user);
   const [userChats, setUserChats] = useState([]);
   const [isUserChatsLoading, setIsUserChatsLoading] = useState(false);
   const [currentChat, setCurrentChat] = useState(null);
@@ -29,12 +28,12 @@ export const ChatProvider = ({children}) => {
   const [socket, setSocket] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [notifications, setNotifications] = useState([]);
-  const [allUsers, setAllUsers] = useState([]);
   const [filterQuery, setFilterQuery] = useState('');
   const [filteredChats, setFilteredChats] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const [isRecipientTyping, setIsRecipientTyping] = useState(false);
   const [page, setPage] = useState(1);
+  const user = useTypedSelector(state => state.user);
   const recipientId = currentChat?.members?.find(id => id !== user?._id);
 
   const {mutate: findChatsByQueryString} = useAuthMutation({
@@ -108,15 +107,6 @@ export const ChatProvider = ({children}) => {
       setUserChats(prev => [...prev, response]);
 
     return response;
-  }, []);
-
-  const markAllAsRead = useCallback(notifications => {
-    const mNotifications = notifications.map(notification => ({
-      ...notification,
-      id: notification.id,
-      isRead: true,
-    }));
-    setNotifications(mNotifications);
   }, []);
 
   const markThisUserNotificationsAsRead = useCallback(
@@ -336,8 +326,6 @@ export const ChatProvider = ({children}) => {
       if (response.error) {
         return;
       }
-
-      setAllUsers(response.users);
     };
     getUsers();
   }, [userChats]);
@@ -424,8 +412,6 @@ export const ChatProvider = ({children}) => {
         setNewMessage,
         onlineUsers,
         notifications,
-        allUsers,
-        markAllAsRead,
         markAsRead,
         markThisUserNotificationsAsRead,
         filterQuery,
