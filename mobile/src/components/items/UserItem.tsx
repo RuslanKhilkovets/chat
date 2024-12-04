@@ -1,8 +1,9 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
+import {useNavigation} from '@react-navigation/native';
+
 import {useChatContext} from '@/context/Chat/ChatContext';
 import {useTypedSelector} from '@/hooks';
-import {useNavigation} from '@react-navigation/native';
 
 interface IUserItemProps {
   user: any;
