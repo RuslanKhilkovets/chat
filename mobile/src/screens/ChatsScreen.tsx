@@ -9,6 +9,8 @@ export const ChatsScreen = () => {
     useChatContext();
   const {navigate} = useNavigation();
 
+  console.log(filteredChats);
+
   const sortedChats = React.useCallback(() => {
     return filteredChats?.sort((a, b) => {
       const aHasUnread = notifications.some(

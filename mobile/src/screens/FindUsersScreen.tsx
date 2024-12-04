@@ -19,22 +19,24 @@ const FindUsersScreen = () => {
   const {mutate: findUsersMutation, isLoading} = useAuthMutation({
     mutationFn: Api.users.findByNameOrTag,
     onSuccess: res => {
-      const receivedUsers = res.data.users;
-      if (receivedUsers) {
-        const otherUsers = receivedUsers.filter(
-          receivedUser => receivedUser?._id !== currentUserId,
-        );
+      const receivedUsers = res.data.users || [];
+      const otherUsers = receivedUsers.filter(
+        receivedUser => receivedUser?._id !== currentUserId,
+      );
 
-        setUsers(otherUsers);
-      }
+      setUsers(otherUsers);
     },
     onError: ({errors}) => {
-      setUsers(errors.users);
+      setUsers([]);
     },
   });
 
   useEffect(() => {
-    filterQuery && findUsersMutation(filterQuery);
+    if (filterQuery.trim()) {
+      findUsersMutation(filterQuery);
+    } else {
+      setUsers([]);
+    }
   }, [filterQuery]);
 
   return (
@@ -47,28 +49,23 @@ const FindUsersScreen = () => {
         />
       </View>
       {isLoading ? (
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
+        <View style={styles.centered}>
           <ActivityIndicator size={'large'} />
         </View>
       ) : users?.length !== 0 && filterQuery ? (
         <FlatList
           data={users}
           renderItem={({item}) => <UserItem user={item} />}
-          keyExtractor={({item}) => String(item?._id)}
+          keyExtractor={item => String(item?._id)}
         />
       ) : filterQuery ? (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <View style={styles.centered}>
           <Text style={styles.noChatsText}>
             There are no users with given data!
           </Text>
         </View>
       ) : (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <View style={styles.centered}>
           <Text style={styles.noChatsText}>Type something...</Text>
         </View>
       )}
@@ -81,6 +78,11 @@ export default FindUsersScreen;
 const styles = StyleSheet.create({
   inputContainer: {
     paddingVertical: 20,
+  },
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   noChatsText: {
     fontSize: 24,
