@@ -45,7 +45,8 @@ const ChatScreen = () => {
     onlineUsers,
   } = useChatContext();
 
-  const {isRecording, discardRecording} = useAudioRecorder();
+  const {isRecording, discardRecording, startRecording, stopRecording} =
+    useAudioRecorder();
 
   const [textMessage, setTextMessage] = useState<string>('');
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -62,8 +63,6 @@ const ChatScreen = () => {
   const flatListRef = useRef<FlatList>(null);
 
   useEffect(() => {
-    console.log(page);
-
     if (!isMessagesLoading && page === 1) {
       scrollToBottom();
     }
@@ -201,8 +200,16 @@ const ChatScreen = () => {
                     ) : null
                   }
                 />
-                {isRecording && <AudioStopper />}
-                {!textMessage.trim() && <SendAudioButton />}
+                {isRecording && (
+                  <AudioStopper discardRecording={discardRecording} />
+                )}
+                {!textMessage.trim() && (
+                  <SendAudioButton
+                    startRecording={startRecording}
+                    stopRecording={stopRecording}
+                    isRecording={isRecording}
+                  />
+                )}
               </View>
             </>
           )}

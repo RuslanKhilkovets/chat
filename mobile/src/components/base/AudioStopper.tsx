@@ -1,11 +1,8 @@
 import {TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {useAudioRecorder} from '@/hooks';
 
-const SendAudioButton = () => {
-  const {isRecording, discardRecording} = useAudioRecorder();
-
-  return isRecording ? (
+const SendAudioButton = ({discardRecording}) => {
+  return (
     <TouchableOpacity
       activeOpacity={0.7}
       onPress={discardRecording}
@@ -25,7 +22,7 @@ const SendAudioButton = () => {
       }}>
       <Icon size={30} name={'stop'} color={'black'} />
     </TouchableOpacity>
-  ) : null;
+  );
 };
 
 export default SendAudioButton;

@@ -1,10 +1,7 @@
 import {TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {useAudioRecorder} from '@/hooks';
 
-const AudioStopper = () => {
-  const {isRecording, stopRecording, startRecording} = useAudioRecorder();
-
+const AudioStopper = ({isRecording, stopRecording, startRecording}) => {
   return (
     <TouchableOpacity
       activeOpacity={0.7}
