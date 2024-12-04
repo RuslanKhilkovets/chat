@@ -46,10 +46,12 @@ export const ChatProvider = ({children}) => {
   const {mutate: deleteChat} = useAuthMutation({
     mutationFn: Api.chats.delete,
     onSuccess: res => {
-      const existChats = filteredChats.filter(
-        chat => chat?._id !== res.data.chat._id,
+      const chatId = res.data.chat._id;
+
+      setUserChats(prevChats => prevChats.filter(chat => chat?._id !== chatId));
+      setFilteredChats(prevFilteredChats =>
+        prevFilteredChats.filter(chat => chat?._id !== chatId),
       );
-      setUserChats(existChats);
     },
   });
 
@@ -307,7 +309,7 @@ export const ChatProvider = ({children}) => {
     const newSocket = io(SERVER_URL);
     setSocket(newSocket);
 
-    newSocket.on('messageRead', ({chatId, messageId}) => {
+    newSocket.on('messageRead', ({messageId}) => {
       setMessages(prevMessages =>
         prevMessages.map(message =>
           message._id === messageId ? {...message, isRead: true} : message,

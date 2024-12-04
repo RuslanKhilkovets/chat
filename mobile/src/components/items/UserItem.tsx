@@ -28,7 +28,9 @@ const UserItem = ({user}: IUserItemProps) => {
       <View style={styles.pic}></View>
       <View style={styles.info}>
         <Text style={styles.text}>{user.name}</Text>
-        <Text style={[styles.text, {fontSize: 16}]}>{user?.tag}</Text>
+        <Text style={[styles.text, {fontSize: 16}]}>
+          {user?.tag && `@${user?.tag}`}
+        </Text>
       </View>
     </TouchableOpacity>
   );
@@ -48,7 +50,7 @@ const styles = StyleSheet.create({
   },
   info: {
     marginVertical: 5,
-    gap: 20,
+    gap: 10,
   },
   pic: {
     height: 70,
