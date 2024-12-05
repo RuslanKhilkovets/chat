@@ -46,8 +46,6 @@ export const ThemeProvider = ({children}: React.PropsWithChildren) => {
         keychainService: 'keychainService',
       });
 
-      console.log(themeFromStorage, 'themeFromStorage');
-
       if (themeFromStorage === 'light' || themeFromStorage === 'dark') {
         setColorScheme(themeFromStorage);
       }

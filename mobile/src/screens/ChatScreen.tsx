@@ -80,9 +80,7 @@ const ChatScreen = () => {
   }, []);
 
   const scrollToBottom = () => {
-    setTimeout(() => {
-      flatListRef.current?.scrollToEnd({animated: true});
-    }, 200);
+    flatListRef.current?.scrollToEnd({animated: true});
   };
 
   const handleSendMessage = async () => {

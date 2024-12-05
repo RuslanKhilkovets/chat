@@ -90,7 +90,7 @@ export const ChatProvider = ({children}) => {
   }, []);
 
   const updateCurrentChat = useCallback(chat => {
-    setMessages([]);
+    chat === null && setMessages([]);
     setCurrentChat(chat);
   }, []);
 
@@ -292,7 +292,6 @@ export const ChatProvider = ({children}) => {
       if (currentChat?._id !== res.chatId) {
         return;
       }
-
       setMessages(prev => [...prev, res]);
     });
 

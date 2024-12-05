@@ -33,15 +33,12 @@ export const LoginScreen = () => {
   });
 
   const onLoginSuccess = async (res: any) => {
-    // TODO: add logic
-    console.log('Logged', res.data);
-
     login(res.data);
     reset();
     navigation.navigate('Chats');
   };
 
-  const onLoginError = (errors: any) => {    
+  const onLoginError = (errors: any) => {
     setFormErrors({
       email: errors?.errors?.email ? errors.errors.email[0] : '',
       password: errors?.errors?.password ? errors.errors.password[0] : '',
@@ -64,7 +61,8 @@ export const LoginScreen = () => {
 
   return (
     <Screen>
-      <View style={[styles.container, Platform.OS === "android" && {padding: 20}]}>
+      <View
+        style={[styles.container, Platform.OS === 'android' && {padding: 20}]}>
         <View style={{alignItems: 'center'}}>
           <Text style={styles.screenLabel}>Sign in</Text>
         </View>
