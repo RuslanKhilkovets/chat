@@ -22,19 +22,34 @@ const createMessage = async (req, res) => {
 
 const getMessages = async (req, res) => {
   const { chatId } = req.params;
-  const { page = 1, limit = 15 } = req.query;
+  let { page = 1, limit = 8 } = req.query;
 
   try {
+    const totalMessages = await messageModel.countDocuments({ chatId });
+
     const messages = await messageModel
       .find({ chatId })
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(parseInt(limit));
 
-    res.status(200).json(messages);
+    const hasMore = page * limit < totalMessages;
+
+    res.status(200).json({
+      messages,
+      metadata: {
+        totalMessages,
+        currentPage: page,
+        limit,
+        hasMore,
+      },
+    });
   } catch (err) {
-    console.log(err);
-    res.status(500).json(err);
+    console.error(`Error fetching messages for chat ${chatId}:`, err);
+    res.status(500).json({
+      message: 'Failed to fetch messages.',
+      error: err.message,
+    });
   }
 };
 

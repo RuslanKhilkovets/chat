@@ -1,5 +1,4 @@
 import {
-  ActivityIndicator,
   FlatList,
   Pressable,
   StyleSheet,
@@ -30,7 +29,6 @@ const ChatScreen = () => {
     userChats,
     currentChat,
     messages,
-    isMessagesLoading,
     sendMessage,
     updateCurrentChat,
     isTyping,
@@ -40,11 +38,11 @@ const ChatScreen = () => {
     notifications,
     markAsRead,
     loadMoreMessages,
-    page,
     setPage,
     onlineUsers,
+    isMessagesLoading,
+    page,
   } = useChatContext();
-
   const {isRecording, discardRecording, startRecording, stopRecording} =
     useAudioRecorder();
 
@@ -59,6 +57,7 @@ const ChatScreen = () => {
   const isOnline = onlineUsers?.some(
     user => user?.userId === recipientUser?._id,
   );
+  let debounceTimeout: NodeJS.Timeout;
 
   const flatListRef = useRef<FlatList>(null);
 
@@ -66,7 +65,7 @@ const ChatScreen = () => {
     if (!isMessagesLoading && page === 1) {
       scrollToBottom();
     }
-  }, [isMessagesLoading, messages]);
+  }, [isMessagesLoading]);
 
   useEffect(() => {
     updateCurrentChat(chat);
@@ -86,16 +85,24 @@ const ChatScreen = () => {
     }, 200);
   };
 
-  const handleSendMessage = () => {
-    if (textMessage.trim()) {
-      sendMessage(textMessage, user, currentChat._id, setTextMessage);
-      setIsTyping(false);
-      if (typingTimeoutRef.current) {
-        clearTimeout(typingTimeoutRef.current);
+  const handleSendMessage = async () => {
+    try {
+      if (textMessage.trim()) {
+        await sendMessage(textMessage, user, currentChat._id);
+        setIsTyping(false);
+        if (typingTimeoutRef.current) {
+          clearTimeout(typingTimeoutRef.current);
+        }
+        setTextMessage('');
+
+        setTimeout(() => {
+          scrollToBottom();
+        }, 100);
       }
+    } catch (e) {
+      console.log(e);
     }
   };
-
   const handleTextChange = (text: string) => {
     setTextMessage(text);
 
@@ -150,11 +157,21 @@ const ChatScreen = () => {
   });
 
   const handleScroll = event => {
-    const {contentOffset} = event.nativeEvent;
+    event.persist();
 
-    if (contentOffset.y === 0) {
-      loadMoreMessages();
+    if (debounceTimeout) {
+      clearTimeout(debounceTimeout);
     }
+
+    debounceTimeout = setTimeout(() => {
+      const {contentOffset} = event.nativeEvent;
+
+      const isAtTop = contentOffset.y <= 0;
+
+      if (isAtTop && !isMessagesLoading) {
+        loadMoreMessages();
+      }
+    }, 300);
   };
 
   return (
@@ -163,56 +180,48 @@ const ChatScreen = () => {
         style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <View style={{flex: 1}}>
-          {isMessagesLoading ? (
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <ActivityIndicator size={'large'} color={'yellow'} />
-            </View>
-          ) : (
-            <>
-              <FlatList
-                ref={flatListRef}
-                data={messages}
-                renderItem={({item}) => <MessageItem message={item} />}
-                keyExtractor={item => item._id}
-                style={{marginBottom: 20}}
-                onEndReachedThreshold={0.5}
-                onViewableItemsChanged={handleViewableItemsChanged.current}
-                onScroll={handleScroll}
-                scrollEventThrottle={16}
+          <>
+            <FlatList
+              ref={flatListRef}
+              data={messages}
+              renderItem={({item}) => <MessageItem message={item} />}
+              keyExtractor={item => item._id}
+              style={{marginBottom: 20}}
+              onEndReachedThreshold={0.5}
+              onViewableItemsChanged={handleViewableItemsChanged.current}
+              onScroll={handleScroll}
+              scrollEventThrottle={100}
+            />
+            <View style={styles.inputContainer}>
+              <Input
+                disabled={isRecording}
+                style={{flex: 1}}
+                value={textMessage}
+                onChangeText={handleTextChange}
+                placeholder="Message..."
+                endAdornment={
+                  textMessage && textMessage?.trim() ? (
+                    <Pressable onPress={handleSendMessage}>
+                      <Icon name="send" color="yellow" size={20} />
+                    </Pressable>
+                  ) : null
+                }
               />
-              <View style={styles.inputContainer}>
-                <Input
-                  disabled={isRecording}
-                  style={{flex: 1}}
-                  value={textMessage}
-                  onChangeText={handleTextChange}
-                  placeholder="Message..."
-                  endAdornment={
-                    textMessage && textMessage?.trim() ? (
-                      <Pressable onPress={handleSendMessage}>
-                        <Icon name="send" color="yellow" size={20} />
-                      </Pressable>
-                    ) : null
-                  }
+              {isRecording && (
+                <AudioStopper discardRecording={discardRecording} />
+              )}
+              {!textMessage.trim() && (
+                <SendAudioButton
+                  startRecording={startRecording}
+                  stopRecording={async () => {
+                    await stopRecording();
+                    scrollToBottom();
+                  }}
+                  isRecording={isRecording}
                 />
-                {isRecording && (
-                  <AudioStopper discardRecording={discardRecording} />
-                )}
-                {!textMessage.trim() && (
-                  <SendAudioButton
-                    startRecording={startRecording}
-                    stopRecording={stopRecording}
-                    isRecording={isRecording}
-                  />
-                )}
-              </View>
-            </>
-          )}
+              )}
+            </View>
+          </>
         </View>
       </KeyboardAvoidingView>
     </Screen>

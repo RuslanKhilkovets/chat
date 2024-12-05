@@ -22,7 +22,6 @@ export const ChatProvider = ({children}) => {
   const [isUserChatsLoading, setIsUserChatsLoading] = useState(false);
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [isMessagesLoading, setIsMessagesLoading] = useState(false);
   const [messagesError, setMessagesError] = useState(null);
   const [newMessage, setNewMessage] = useState(null);
   const [socket, setSocket] = useState(null);
@@ -33,6 +32,7 @@ export const ChatProvider = ({children}) => {
   const [isTyping, setIsTyping] = useState(false);
   const [isRecipientTyping, setIsRecipientTyping] = useState(false);
   const [page, setPage] = useState(1);
+  const [hasMoreMessages, setHasMoreMessages] = useState(true);
   const user = useTypedSelector(state => state.user);
   const recipientId = currentChat?.members?.find(id => id !== user?._id);
 
@@ -90,6 +90,7 @@ export const ChatProvider = ({children}) => {
   }, []);
 
   const updateCurrentChat = useCallback(chat => {
+    setMessages([]);
     setCurrentChat(chat);
   }, []);
 
@@ -131,7 +132,7 @@ export const ChatProvider = ({children}) => {
   );
 
   const sendMessage = useCallback(
-    async (textMessage, sender, currentChatId, setTextMessage) => {
+    async (textMessage, sender, currentChatId) => {
       if (!textMessage) {
         throw new Error(`${currentChat} type smth`);
       }
@@ -150,7 +151,6 @@ export const ChatProvider = ({children}) => {
 
       setNewMessage(response);
       setMessages(prev => [...prev, response]);
-      setTextMessage('');
     },
     [],
   );
@@ -193,22 +193,30 @@ export const ChatProvider = ({children}) => {
     [currentChat, user],
   );
 
+  const {mutate: loadMessagesMutate, isLoading: isMessagesLoading} =
+    useAuthMutation({
+      mutationFn: Api.messages.getMessages,
+      onSuccess: res => {
+        const responseMessages = res?.data?.messages;
+        if (responseMessages?.length > 0) {
+          setMessages(prevMessages => [
+            ...responseMessages.reverse(),
+            ...prevMessages,
+          ]);
+          setPage(prev => ++prev);
+        } else {
+          setHasMoreMessages(false);
+        }
+      },
+      onError: error => {
+        setMessagesError(error?.message);
+      },
+    });
+
   const loadMoreMessages = async () => {
     if (!currentChat || !user._id) return;
 
-    try {
-      const response = await fetch(
-        `${baseUrl}/messages/${currentChat?._id}?page=${page + 1}&limit=15`,
-      );
-      const data = await response.json();
-
-      if (data.length > 0) {
-        setMessages(prevMessages => [...data?.reverse(), ...prevMessages]);
-        setPage(prev => ++prev);
-      }
-    } catch (error) {
-      setMessagesError(error.message);
-    }
+    await loadMessagesMutate({chatId: currentChat?._id, page});
   };
 
   useEffect(() => {
@@ -355,26 +363,7 @@ export const ChatProvider = ({children}) => {
   useEffect(() => {
     if (!currentChat) return;
 
-    const getMessages = async () => {
-      setIsMessagesLoading(true);
-      setMessagesError(null);
-
-      try {
-        if (user._id) {
-          const response = await fetch(
-            `${baseUrl}/messages/${currentChat?._id}`,
-          );
-          const data = await response.json();
-
-          setMessages(data?.reverse());
-        }
-      } catch (error) {
-        setMessagesError(error.message);
-      } finally {
-        setIsMessagesLoading(false);
-      }
-    };
-    getMessages();
+    loadMessagesMutate({chatId: currentChat?._id, page: 1});
   }, [currentChat]);
 
   useEffect(() => {
@@ -431,6 +420,7 @@ export const ChatProvider = ({children}) => {
         recipientId,
         setMessages,
         socket,
+        hasMoreMessages,
       }}>
       {children}
     </ChatContext.Provider>
