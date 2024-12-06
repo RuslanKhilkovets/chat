@@ -62,10 +62,10 @@ const ChatScreen = () => {
   const flatListRef = useRef<FlatList>(null);
 
   useEffect(() => {
-    if (!isMessagesLoading && page === 1) {
+    if (page === 1) {
       scrollToBottom();
     }
-  }, [isMessagesLoading]);
+  }, [isMessagesLoading, messages]);
 
   useEffect(() => {
     updateCurrentChat(chat);
@@ -184,7 +184,7 @@ const ChatScreen = () => {
               data={messages}
               renderItem={({item}) => <MessageItem message={item} />}
               keyExtractor={item => item._id}
-              style={{marginBottom: 20}}
+              style={{paddingBottom: 10}}
               onEndReachedThreshold={0.5}
               onViewableItemsChanged={handleViewableItemsChanged.current}
               onScroll={handleScroll}
@@ -231,8 +231,8 @@ export default ChatScreen;
 const styles = StyleSheet.create({
   inputContainer: {
     backgroundColor: '#000',
-    padding: 5,
     paddingHorizontal: 10,
+    padding: 10,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 20,

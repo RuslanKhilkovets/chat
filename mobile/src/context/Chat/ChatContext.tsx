@@ -198,15 +198,13 @@ export const ChatProvider = ({children}) => {
       mutationFn: Api.messages.getMessages,
       onSuccess: res => {
         const responseMessages = res?.data?.messages;
-        if (responseMessages?.length > 0) {
-          setMessages(prevMessages => [
-            ...responseMessages.reverse(),
-            ...prevMessages,
-          ]);
-          setPage(prev => ++prev);
-        } else {
-          setHasMoreMessages(false);
-        }
+
+        setMessages(prevMessages => [
+          ...responseMessages.reverse(),
+          ...prevMessages,
+        ]);
+        setPage(prev => ++prev);
+        setHasMoreMessages(res?.data?.metadata?.hasMore);
       },
       onError: error => {
         setMessagesError(error?.message);
@@ -216,7 +214,7 @@ export const ChatProvider = ({children}) => {
   const loadMoreMessages = async () => {
     if (!currentChat || !user._id) return;
 
-    await loadMessagesMutate({chatId: currentChat?._id, page});
+    return await loadMessagesMutate({chatId: currentChat?._id, page});
   };
 
   useEffect(() => {
