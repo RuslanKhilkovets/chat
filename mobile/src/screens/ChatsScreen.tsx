@@ -10,7 +10,11 @@ export const ChatsScreen = () => {
   const {navigate} = useNavigation();
 
   const sortedChats = React.useCallback(() => {
-    return filteredChats?.sort((a, b) => {
+    const uniqueChats = filteredChats?.filter(
+      (chat, index, self) => self.findIndex(c => c._id === chat._id) === index,
+    );
+
+    return uniqueChats?.sort((a, b) => {
       const aHasUnread = notifications.some(
         notification =>
           a.members.includes(notification.senderId) && !notification.isRead,
@@ -25,7 +29,7 @@ export const ChatsScreen = () => {
 
       return 0;
     });
-  }, [filteredChats]);
+  }, [filteredChats, notifications]);
 
   const onFindMateRedirectHandle = () => {
     navigate('FindUsers');

@@ -103,11 +103,7 @@ export const ChatProvider = ({children}) => {
       throw new Error(response.message);
     }
 
-    const checkIfChatExists = (id: string) =>
-      userChats?.find(chat => chat._id === id);
-
-    if (!checkIfChatExists(response?._id))
-      setUserChats(prev => [...prev, response]);
+    setUserChats(prev => [...prev, response]);
 
     return response;
   }, []);
