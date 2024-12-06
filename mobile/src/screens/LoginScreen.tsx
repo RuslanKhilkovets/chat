@@ -91,9 +91,9 @@ export const LoginScreen = () => {
             />
           )}
         />
-        <TouchableOpacity onPress={onForgotPassword}>
+        {/* <TouchableOpacity onPress={onForgotPassword}>
           <Text style={styles.text}>Forget password?</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <Button onPress={handleSubmit(onSubmit)} type="primary" fullWidth>
           Sign in
         </Button>
