@@ -47,6 +47,7 @@ const ChatScreen = () => {
     useAudioRecorder();
 
   const [textMessage, setTextMessage] = useState<string>('');
+  const [lastMessageId, setLastMessageId] = useState<string>();
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const {recipientUser} = useFetchRecipient(currentChat, user);
@@ -60,6 +61,14 @@ const ChatScreen = () => {
   let debounceTimeout: NodeJS.Timeout;
 
   const flatListRef = useRef<FlatList>(null);
+
+  useEffect(() => {
+    setTimeout(() => scrollToBottom(), 300);
+  }, [lastMessageId]);
+
+  useEffect(() => {
+    setLastMessageId(messages?.[messages.length - 1]?._id);
+  }, [messages]);
 
   useEffect(() => {
     if (page === 1) {
@@ -185,7 +194,6 @@ const ChatScreen = () => {
               renderItem={({item}) => <MessageItem message={item} />}
               keyExtractor={item => item._id}
               style={{paddingBottom: 10}}
-              onEndReachedThreshold={0.5}
               onViewableItemsChanged={handleViewableItemsChanged.current}
               onScroll={handleScroll}
               scrollEventThrottle={100}
