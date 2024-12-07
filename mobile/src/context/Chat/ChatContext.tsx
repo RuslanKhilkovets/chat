@@ -100,7 +100,7 @@ export const ChatProvider = ({children}) => {
       JSON.stringify({firstId, secondId}),
     );
     if (response.error) {
-      throw new Error(response.message);
+      throw new Error(response);
     }
 
     setUserChats(prev => [...prev, response]);

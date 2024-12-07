@@ -1,4 +1,4 @@
-import {ScrollView, StyleSheet, Text} from 'react-native';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {Button, Screen} from '@/components';
 import {useAnimatedTyping, useGoBack} from '@/hooks';
@@ -26,11 +26,13 @@ const PrivacyPoliciesScreen = () => {
           {cursorVisible && <Text style={styles.cursor}>|</Text>}
         </Text>
       </ScrollView>
-      <Button
-        before={<Icon name="arrow-back-ios" color={'yellow'} size={16} />}
-        onPress={goBack}>
-        Go back
-      </Button>
+      <View style={{marginHorizontal: 20}}>
+        <Button
+          before={<Icon name="arrow-back-ios" color={'yellow'} size={16} />}
+          onPress={goBack}>
+          Go back
+        </Button>
+      </View>
     </Screen>
   );
 };

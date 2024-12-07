@@ -1,4 +1,4 @@
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Platform, ScrollView, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
 
@@ -36,7 +36,9 @@ const ProfileScreen = () => {
 
   return (
     <Screen title="Profile">
-      <ScrollView>
+      <ScrollView style={{
+          paddingHorizontal: Platform.OS === "android" ? 20 : 0,
+        }}>
         <View style={styles.profileHeader}>
           <View style={styles.profilePic} />
           <View style={styles.profileDescription}>
@@ -114,15 +116,16 @@ const styles = StyleSheet.create({
     width: 80,
     borderRadius: 40,
     backgroundColor: 'yellow',
-    margin: 15,
   },
   profileHeader: {
     flexDirection: 'row',
     gap: 10,
+    marginVertical: 15,
   },
   profileDescription: {
     justifyContent: 'center',
     gap: 5,
+    marginLeft: 20
   },
   username: {
     fontSize: 30,

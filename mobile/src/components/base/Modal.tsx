@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontFamily: 'Jersey20-Regular',
     textAlign: 'center',
-    lineHeight: 26,
+    lineHeight: 34,
     color: '#E1FF00',
   },
   closeIcon: {

@@ -29,7 +29,7 @@ const ScreenHeader = ({title, payload, chatMode}: IScreenHeaderProps) => {
 
   return (
     <>
-      <View style={styles.header}>
+      <View style={[styles.header, !chatMode && {justifyContent: "center"}]}>
         <View style={styles.icon}>
           <GoBack />
         </View>
@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
   icon: {
     position: 'absolute',
     left: 0,
+    zIndex: 9999,
   },
   profilePic: {
     height: 40,
@@ -99,12 +100,11 @@ const styles = StyleSheet.create({
     gap: 15,
   },
   headerTitle: {
+    zIndex: 1,
     color: 'yellow',
     fontSize: 26,
     fontFamily: 'Jersey20-Regular',
     textTransform: 'capitalize',
-    flex: 1,
-    textAlign: 'center',
   },
   name: {
     color: 'yellow',

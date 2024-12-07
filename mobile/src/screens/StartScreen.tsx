@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {AboutModal, Logo} from '@/components';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 
@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 100,
     flex: 1,
+    paddingHorizontal: Platform.OS === 'android' ? 20 : 0,
   },
   text: {
     marginVertical: 10,

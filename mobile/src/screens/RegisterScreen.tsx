@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Controller, useForm} from 'react-hook-form';
 import {useNavigation} from '@react-navigation/native';
 import {yupResolver} from '@hookform/resolvers/yup';
@@ -184,6 +184,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     gap: 20,
+    paddingHorizontal: Platform.OS === 'android' ? 20 : 0,
   },
   text: {
     fontSize: 20,

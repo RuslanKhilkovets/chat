@@ -89,7 +89,7 @@ const Input: React.FC<IInputProps> = ({
         ]}>
         {mask ? (
           <TextInputMask
-            placeholderTextColor={theme[colorScheme].dark}
+            placeholderTextColor="yellow"
             type={'custom'}
             options={{
               mask,
@@ -115,7 +115,7 @@ const Input: React.FC<IInputProps> = ({
         ) : (
           <TextInput
             autoFocus={autoFocus}
-            placeholderTextColor={theme[colorScheme].dark}
+            placeholderTextColor={"yellow"}
             ref={ref}
             textAlignVertical="top"
             value={value}
@@ -133,6 +133,7 @@ const Input: React.FC<IInputProps> = ({
               styles.input,
               inputStyle,
               multiline && {height: numberOfLines * 20},
+              {color: "yellow"}
             ]}
           />
         )}

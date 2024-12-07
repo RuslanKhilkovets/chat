@@ -1,15 +1,15 @@
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 
 interface IUseAnimatedTypingProps {
   fullText: string;
-  typingSpeed?: number;
-  cursorBlinkSpeed?: number;
+  typingSpeed?: number; // В мілісекундах
+  cursorBlinkSpeed?: number; // В мілісекундах
   visible?: boolean;
 }
 
 const useAnimatedTyping = ({
   fullText,
-  typingSpeed = 1,
+  typingSpeed = 10, // Більш реалістична швидкість
   cursorBlinkSpeed = 500,
   visible = true,
 }: IUseAnimatedTypingProps) => {
@@ -17,31 +17,35 @@ const useAnimatedTyping = ({
   const [cursorVisible, setCursorVisible] = useState(true);
 
   useEffect(() => {
-    if (visible) {
+    if (!visible) {
       setDisplayedText('');
-      let charIndex = 0;
-
-      const typingInterval = setInterval(() => {
-        if (charIndex < fullText.length) {
-          setDisplayedText(prev => prev + fullText[charIndex]);
-          charIndex++;
-        } else {
-          clearInterval(typingInterval);
-        }
-      }, typingSpeed);
-
-      const cursorInterval = setInterval(() => {
-        setCursorVisible(prev => !prev);
-      }, cursorBlinkSpeed);
-
-      return () => {
-        clearInterval(typingInterval);
-        clearInterval(cursorInterval);
-      };
+      return;
     }
-  }, [fullText, typingSpeed, cursorBlinkSpeed]);
 
-  return {displayedText, cursorVisible};
+    let charIndex = 0;
+    let animationFrame: number;
+
+    const typeText = () => {
+      if (charIndex < fullText.length) {
+        setDisplayedText(prev => prev + fullText[charIndex]);
+        charIndex++;
+        animationFrame = setTimeout(typeText, typingSpeed);
+      }
+    };
+
+    typeText();
+
+    const cursorInterval = setInterval(() => {
+      setCursorVisible(prev => !prev);
+    }, cursorBlinkSpeed);
+
+    return () => {
+      clearTimeout(animationFrame);
+      clearInterval(cursorInterval);
+    };
+  }, [fullText, typingSpeed, cursorBlinkSpeed, visible]);
+
+  return { displayedText, cursorVisible };
 };
 
 export default useAnimatedTyping;
