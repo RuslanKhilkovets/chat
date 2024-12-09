@@ -148,25 +148,22 @@ export const LoginScreen = () => {
             Register
           </Button>
         </KeyboardScroll>
-      </View>
-      <View
-        style={{
-          position: 'absolute',
-          bottom: insets.bottom,
-          alignItems: 'center',
-          justifyContent: 'center',
-          flex: 1,
-          width: '100%',
-          left: 15,
-        }}>
-        <Text style={styles.text}>By registering, you accepting our </Text>
-        <TouchableOpacity
-          onPress={() => {
-            setIsPrivacyModalOpen(true);
-          }}
-          activeOpacity={0.7}>
-          <Text style={[styles.text, {color: 'blue'}]}>Privacy policy</Text>
-        </TouchableOpacity>
+        {/* <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+            left: 15,
+          }}>
+          <Text style={styles.text}>By registering, you accepting our </Text>
+          <TouchableOpacity
+            onPress={() => {
+              setIsPrivacyModalOpen(true);
+            }}
+            activeOpacity={0.7}>
+            <Text style={[styles.text, {color: 'blue'}]}>Privacy policy</Text>
+          </TouchableOpacity>
+        </View> */}
       </View>
       <PrivacyPolicyModal
         title="Privacy policy"

@@ -115,7 +115,7 @@ const Input: React.FC<IInputProps> = ({
         ) : (
           <TextInput
             autoFocus={autoFocus}
-            placeholderTextColor={"yellow"}
+            placeholderTextColor={'yellow'}
             ref={ref}
             textAlignVertical="top"
             value={value}
@@ -133,7 +133,7 @@ const Input: React.FC<IInputProps> = ({
               styles.input,
               inputStyle,
               multiline && {height: numberOfLines * 20},
-              {color: "yellow"}
+              {color: 'yellow'},
             ]}
           />
         )}
@@ -144,7 +144,7 @@ const Input: React.FC<IInputProps> = ({
           <TouchableOpacity
             style={styles.endAdornment}
             onPress={handleTogglePasswordVisibility}>
-            <AppIcon name={!showPassword ? 'hide' : 'see'} />
+            <AppIcon name={!showPassword ? 'hide' : 'see'} color={'yellow'} />
           </TouchableOpacity>
         )}
         {searchMode && (
