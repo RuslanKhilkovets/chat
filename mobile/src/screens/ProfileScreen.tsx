@@ -7,6 +7,7 @@ import {useAuthMutation, useTypedSelector} from '@/hooks';
 import {ChangeDataType} from '@/constants';
 import {Api} from '@/api';
 import {useChatContext} from '@/context/Chat/ChatContext';
+import {getAvatarColor, getInitials} from '@/helpers';
 
 const ProfileScreen = () => {
   const {onlineUsers} = useChatContext();
@@ -36,11 +37,20 @@ const ProfileScreen = () => {
 
   return (
     <Screen title="Profile">
-      <ScrollView style={{
-          paddingHorizontal: Platform.OS === "android" ? 20 : 0,
+      <ScrollView
+        style={{
+          paddingHorizontal: Platform.OS === 'android' ? 20 : 0,
         }}>
         <View style={styles.profileHeader}>
-          <View style={styles.profilePic} />
+          <View
+            style={[
+              styles.profilePic,
+              {backgroundColor: getAvatarColor(user._id)},
+            ]}>
+            <Text style={styles.profileInitials}>
+              {getInitials(user?.name)}
+            </Text>
+          </View>
           <View style={styles.profileDescription}>
             <Text style={styles.username}>{user.name}</Text>
             <Text style={styles.online}>{isOnline ? 'Online' : 'Offline'}</Text>
@@ -111,11 +121,18 @@ const ProfileScreen = () => {
 export default ProfileScreen;
 
 const styles = StyleSheet.create({
+  profileInitials: {
+    color: 'yellow',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
   profilePic: {
     height: 80,
     width: 80,
     borderRadius: 40,
     backgroundColor: 'yellow',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   profileHeader: {
     flexDirection: 'row',
@@ -125,7 +142,7 @@ const styles = StyleSheet.create({
   profileDescription: {
     justifyContent: 'center',
     gap: 5,
-    marginLeft: 20
+    marginLeft: 20,
   },
   username: {
     fontSize: 30,

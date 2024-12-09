@@ -4,20 +4,30 @@ import {useNavigation} from '@react-navigation/native';
 
 import {useChatContext} from '@/context/Chat/ChatContext';
 import {useTypedSelector} from '@/hooks';
+import {getAvatarColor} from '@/helpers';
+
+interface IUser {
+  _id: string;
+  name: string;
+  tag?: string;
+}
 
 interface IUserItemProps {
-  user: any;
+  user: IUser;
 }
 
 const UserItem = ({user}: IUserItemProps) => {
   const {createChat} = useChatContext();
   const currentUser = useTypedSelector(state => state.user);
-
   const {navigate} = useNavigation();
 
   const redirectToChat = async () => {
-    const newChat = await createChat(user._id, currentUser._id);
-    navigate('Chat', {chat: newChat});
+    try {
+      const newChat = await createChat(user._id, currentUser._id);
+      navigate('Chat', {chat: newChat});
+    } catch (error) {
+      console.error('Failed to create chat:', error);
+    }
   };
 
   return (
@@ -25,12 +35,14 @@ const UserItem = ({user}: IUserItemProps) => {
       style={styles.container}
       onPress={redirectToChat}
       activeOpacity={0.7}>
-      <View style={styles.pic}></View>
+      <View style={[styles.pic, {backgroundColor: getAvatarColor(user._id)}]}>
+        <Text style={styles.picText}>{user.name[0]?.toUpperCase()}</Text>
+      </View>
       <View style={styles.info}>
         <Text style={styles.text}>{user.name}</Text>
-        <Text style={[styles.text, {fontSize: 16}]}>
-          {user?.tag && `@${user?.tag}`}
-        </Text>
+        {user.tag && (
+          <Text style={[styles.text, {fontSize: 16}]}>@{user.tag}</Text>
+        )}
       </View>
     </TouchableOpacity>
   );
@@ -57,6 +69,12 @@ const styles = StyleSheet.create({
     height: 70,
     width: 70,
     borderRadius: 35,
-    backgroundColor: '#5d5d5d',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  picText: {
+    color: 'white',
+    fontSize: 26,
+    fontWeight: 'bold',
   },
 });

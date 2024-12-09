@@ -10,6 +10,7 @@ import {GoBack, SmallModal} from '@/components';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useChatContext} from '@/context/Chat/ChatContext';
+import {getAvatarColor} from '@/helpers';
 
 interface IScreenHeaderProps {
   chatMode?: boolean;
@@ -40,7 +41,15 @@ const ScreenHeader = ({title, payload, chatMode}: IScreenHeaderProps) => {
           <Pressable
             style={styles.userInfo}
             onPress={() => navigate('Profile', {userId: payload.userId})}>
-            <View style={styles.profilePic} />
+            <View
+              style={[
+                styles.profilePic,
+                {backgroundColor: getAvatarColor(payload.userId)},
+              ]}>
+              <Text style={styles.profilePicText}>
+                {payload?.name?.[0]?.toUpperCase() || ''}
+              </Text>
+            </View>
             <View>
               <Text style={styles.name}>{payload.name}</Text>
               <Text style={styles.isOnline}>
@@ -92,7 +101,14 @@ const styles = StyleSheet.create({
     height: 40,
     width: 40,
     borderRadius: 20,
-    backgroundColor: 'yellow',
+    backgroundColor: '#5d5d5d',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  profilePicText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'yellow',
   },
   userInfo: {
     marginLeft: 70,

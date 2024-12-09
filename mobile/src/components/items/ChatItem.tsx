@@ -8,6 +8,7 @@ import {
   useTypedSelector,
 } from '@/hooks';
 import {unreadNotifications} from '@/helpers/unreadNotifications';
+import {getAvatarColor} from '@/helpers';
 
 interface IChatItemProps {
   chat: any;
@@ -38,19 +39,32 @@ const ChatItem = ({chat}: IChatItemProps) => {
     }
     navigate('Chat', {chat});
   };
+
+  const getInitials = (name: string | undefined) => {
+    if (!name) return 'N/A';
+    return name.charAt(0).toUpperCase();
+  };
+
   return (
     <TouchableOpacity
       activeOpacity={0.7}
       style={styles.chatItem}
       onPress={() => navigateToChat()}>
-      <View style={styles.profilePic}>
+      <View
+        style={[
+          styles.profilePic,
+          {backgroundColor: getAvatarColor(recipientUser?._id)},
+        ]}>
+        <Text style={styles.profileInitials}>
+          {getInitials(recipientUser?.name)}
+        </Text>
         {isOnline && <View style={styles.onlineMark} />}
       </View>
       <View style={styles.chatInfo}>
         <Text
           style={[
             styles.userName,
-            thisUserNotifications?.length !== 0 && {fontWeight: 700},
+            thisUserNotifications?.length !== 0 && {fontWeight: '700'},
           ]}>
           {recipientUser?.name || 'N/A'}
         </Text>
@@ -60,7 +74,7 @@ const ChatItem = ({chat}: IChatItemProps) => {
               numberOfLines={1}
               style={[
                 styles.lastMsg,
-                thisUserNotifications?.length !== 0 && {fontWeight: 700},
+                thisUserNotifications?.length !== 0 && {fontWeight: '700'},
               ]}
               ellipsizeMode="tail">
               {isLatestMessageMine
@@ -118,7 +132,14 @@ const styles = StyleSheet.create({
     height: 70,
     width: 70,
     borderRadius: 35,
-    backgroundColor: '#5d5d5d',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  profileInitials: {
+    color: 'yellow',
+    fontSize: 24,
+    fontWeight: 'bold',
   },
   chatInfo: {
     gap: 10,
@@ -140,8 +161,8 @@ const styles = StyleSheet.create({
   },
   onlineMark: {
     position: 'absolute',
-    bottom: 0,
-    right: 0,
+    bottom: 5,
+    right: 5,
     height: 15,
     width: 15,
     borderRadius: 7.5,

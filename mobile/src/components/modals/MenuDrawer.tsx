@@ -7,6 +7,7 @@ import {useAuthContext} from '@/context/Auth/AuthContext';
 import {useTypedSelector} from '@/hooks';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useTheme} from '@/context/Theme/ThemeContext';
+import {getAvatarColor} from '@/helpers';
 
 interface MenuDrawerProps extends IModalProps {}
 
@@ -24,32 +25,28 @@ const MenuDrawer = ({onClose, visible}: MenuDrawerProps) => {
 
   const handleLogout = () => {
     logout();
+    onClose();
   };
 
   return (
     <Drawer visible={visible} onClose={onClose} openFrom="left">
-      <View
-        style={{
-          justifyContent: 'space-between',
-          flex: 1,
-        }}>
+      <View style={styles.drawerContainer}>
         <View>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <View style={styles.header}>
             <View>
               <TouchableOpacity
                 activeOpacity={0.7}
                 onPress={() =>
                   onRedirectHandle('Profile', {userId: null, isEditable: true})
                 }
-                style={{
-                  height: 70,
-                  width: 70,
-                  marginVertical: 20,
-                  borderRadius: 35,
-                  backgroundColor: 'yellow',
-                }}
-              />
-
+                style={[
+                  styles.avatar,
+                  {backgroundColor: getAvatarColor(user?._id)},
+                ]}>
+                <Text style={styles.picText}>
+                  {user.name[0]?.toUpperCase()}
+                </Text>
+              </TouchableOpacity>
               <Text style={styles.userName}>{user?.name}</Text>
             </View>
             <TouchableOpacity
@@ -64,7 +61,7 @@ const MenuDrawer = ({onClose, visible}: MenuDrawerProps) => {
               />
             </TouchableOpacity>
           </View>
-          <View style={{marginTop: 20}}>
+          <View style={styles.menuItemsContainer}>
             <MenuItem
               iconName="person"
               onPress={() =>
@@ -118,9 +115,33 @@ const MenuDrawer = ({onClose, visible}: MenuDrawerProps) => {
 export default MenuDrawer;
 
 const styles = StyleSheet.create({
+  picText: {
+    color: 'white',
+    fontSize: 26,
+    fontWeight: 'bold',
+  },
+  drawerContainer: {
+    justifyContent: 'space-between',
+    flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  avatar: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 70,
+    width: 70,
+    marginVertical: 20,
+    borderRadius: 35,
+  },
   userName: {
     color: 'yellow',
     fontFamily: 'Jersey20-Regular',
     fontSize: 24,
+  },
+  menuItemsContainer: {
+    marginTop: 20,
   },
 });
