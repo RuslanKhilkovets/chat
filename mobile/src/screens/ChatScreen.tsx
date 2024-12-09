@@ -187,47 +187,45 @@ const ChatScreen = () => {
         style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <View style={{flex: 1}}>
-          <>
-            <FlatList
-              ref={flatListRef}
-              data={messages}
-              renderItem={({item}) => <MessageItem message={item} />}
-              keyExtractor={item => item._id}
-              style={{paddingBottom: 10}}
-              onViewableItemsChanged={handleViewableItemsChanged.current}
-              onScroll={handleScroll}
-              scrollEventThrottle={100}
+          <FlatList
+            ref={flatListRef}
+            data={messages}
+            renderItem={({item}) => <MessageItem message={item} />}
+            keyExtractor={item => item._id}
+            style={{paddingBottom: 20}}
+            onViewableItemsChanged={handleViewableItemsChanged.current}
+            onScroll={handleScroll}
+            scrollEventThrottle={100}
+          />
+          <View style={styles.inputContainer}>
+            <Input
+              disabled={isRecording}
+              style={{flex: 1}}
+              value={textMessage}
+              onChangeText={handleTextChange}
+              placeholder="Message..."
+              endAdornment={
+                textMessage && textMessage?.trim() ? (
+                  <Pressable onPress={handleSendMessage}>
+                    <Icon name="send" color="yellow" size={20} />
+                  </Pressable>
+                ) : null
+              }
             />
-            <View style={styles.inputContainer}>
-              <Input
-                disabled={isRecording}
-                style={{flex: 1}}
-                value={textMessage}
-                onChangeText={handleTextChange}
-                placeholder="Message..."
-                endAdornment={
-                  textMessage && textMessage?.trim() ? (
-                    <Pressable onPress={handleSendMessage}>
-                      <Icon name="send" color="yellow" size={20} />
-                    </Pressable>
-                  ) : null
-                }
+            {isRecording && (
+              <AudioStopper discardRecording={discardRecording} />
+            )}
+            {!textMessage.trim() && (
+              <SendAudioButton
+                startRecording={startRecording}
+                stopRecording={async () => {
+                  await stopRecording();
+                  scrollToBottom();
+                }}
+                isRecording={isRecording}
               />
-              {isRecording && (
-                <AudioStopper discardRecording={discardRecording} />
-              )}
-              {!textMessage.trim() && (
-                <SendAudioButton
-                  startRecording={startRecording}
-                  stopRecording={async () => {
-                    await stopRecording();
-                    scrollToBottom();
-                  }}
-                  isRecording={isRecording}
-                />
-              )}
-            </View>
-          </>
+            )}
+          </View>
         </View>
       </KeyboardAvoidingView>
     </Screen>

@@ -97,6 +97,7 @@ const styles = StyleSheet.create({
   userInfo: {
     marginLeft: 70,
     flexDirection: 'row',
+    alignItems: 'center',
     gap: 15,
   },
   headerTitle: {

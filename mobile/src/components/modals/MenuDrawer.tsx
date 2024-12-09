@@ -1,6 +1,6 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
-import {Drawer, MenuItem} from '@/components';
+import React, {useState} from 'react';
+import {Drawer, MenuItem, SmallModal} from '@/components';
 import {IModalProps} from '@/types';
 import {useNavigation} from '@react-navigation/native';
 import {useAuthContext} from '@/context/Auth/AuthContext';
@@ -11,6 +11,7 @@ import {useTheme} from '@/context/Theme/ThemeContext';
 interface MenuDrawerProps extends IModalProps {}
 
 const MenuDrawer = ({onClose, visible}: MenuDrawerProps) => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const {navigate} = useNavigation();
   const {theme, colorScheme, setColorScheme} = useTheme();
   const {logout} = useAuthContext();
@@ -19,6 +20,10 @@ const MenuDrawer = ({onClose, visible}: MenuDrawerProps) => {
   const onRedirectHandle = (screen: string, payload?: any) => {
     onClose();
     navigate(screen, payload);
+  };
+
+  const handleLogout = () => {
+    logout();
   };
 
   return (
@@ -91,10 +96,21 @@ const MenuDrawer = ({onClose, visible}: MenuDrawerProps) => {
           </View>
         </View>
 
-        <MenuItem iconName="logout" onPress={logout} noBorder>
+        <MenuItem
+          iconName="logout"
+          onPress={() => setIsModalVisible(true)}
+          noBorder>
           Log out
         </MenuItem>
       </View>
+      <SmallModal
+        visible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+        onConfirm={handleLogout}
+        text="Are you sure you want to log out?"
+        confirmText="Log out"
+        cancelText="Cancel"
+      />
     </Drawer>
   );
 };

@@ -81,7 +81,7 @@ const Modal = ({
               {
                 backgroundColor: headerBgColor,
                 paddingTop:
-                  Platform.OS === 'android' ? insets.top + 30 : insets.top + 10,
+                  Platform.OS === 'android' ? insets.top - 25 : insets.top + 10,
               },
             ]}>
             <View

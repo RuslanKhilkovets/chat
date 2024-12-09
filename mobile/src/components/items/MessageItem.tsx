@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   container: {
     maxWidth: '80%',
     backgroundColor: '#333',
-    margin: 20,
+    margin: 10,
     marginBottom: 0,
     padding: 10,
     borderRadius: 10,
