@@ -1,5 +1,5 @@
 import {useState, useCallback, useEffect} from 'react';
-import {PermissionsAndroid, Platform} from 'react-native';
+import {Platform, PermissionsAndroid} from 'react-native';
 import AudioRecorderPlayer, {
   AudioSet,
   AudioEncoderAndroidType,
@@ -12,6 +12,7 @@ import {useChatContext} from '@/context/Chat/ChatContext';
 import useTypedSelector from '@/hooks/useTypedSelector';
 import useAuthMutation from '@/hooks/useAuthMutation';
 import {Api} from '@/api';
+import RNFS from 'react-native-fs';
 
 const audioRecorderPlayer = new AudioRecorderPlayer();
 
@@ -26,38 +27,42 @@ export const useAudioRecorder = () => {
 
   let audioDurationLocal = 0;
 
+  const checkAndRequestPermissions = async () => {
+    if (Platform.OS === 'ios') return true;
+    const permissions = [PermissionsAndroid.PERMISSIONS.RECORD_AUDIO];
+
+    if (Platform.OS === 'android' && Platform.Version >= 30) {
+      return true;
+    }
+
+    try {
+      const granted = await PermissionsAndroid.requestMultiple(permissions);
+      const allGranted = Object.values(granted).every(
+        result => result === PermissionsAndroid.RESULTS.GRANTED,
+      );
+
+      if (!allGranted) {
+        console.log('Permissions not granted');
+        return false;
+      }
+
+      console.log('All permissions granted');
+      return true;
+    } catch (error) {
+      console.error('Error requesting permissions:', error);
+      return false;
+    }
+  };
+
   const startRecording = useCallback(async () => {
+    const permissionsGranted = await checkAndRequestPermissions();
+    if (!permissionsGranted) return;
+
     setIsRecording(true);
     setIsRecordingFinished(false);
     setIsDiscardingRecording(false);
 
     audioDurationLocal = 0;
-
-    if (Platform.OS === 'android') {
-      try {
-        const grants = await PermissionsAndroid.requestMultiple([
-          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-          PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-        ]);
-        if (
-          grants['android.permission.WRITE_EXTERNAL_STORAGE'] !==
-            PermissionsAndroid.RESULTS.GRANTED ||
-          grants['android.permission.READ_EXTERNAL_STORAGE'] !==
-            PermissionsAndroid.RESULTS.GRANTED ||
-          grants['android.permission.RECORD_AUDIO'] !==
-            PermissionsAndroid.RESULTS.GRANTED
-        ) {
-          console.log('All required permissions not granted');
-          setIsRecording(false);
-          return;
-        }
-      } catch (err) {
-        console.warn(err);
-        setIsRecording(false);
-        return;
-      }
-    }
 
     const audioSet: AudioSet = {
       AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
@@ -68,7 +73,13 @@ export const useAudioRecorder = () => {
     };
 
     try {
-      const uri = await audioRecorderPlayer.startRecorder(undefined, audioSet);
+      let uri;
+      if (Platform.OS === 'android') {
+        const path = RNFS.DocumentDirectoryPath + '/sound.m4a';
+        uri = await audioRecorderPlayer.startRecorder(path, audioSet);
+      } else {
+        uri = await audioRecorderPlayer.startRecorder(undefined, audioSet);
+      }
       setFile(uri);
 
       audioRecorderPlayer.addRecordBackListener((e: RecordBackType) => {
@@ -145,7 +156,7 @@ export const useAudioRecorder = () => {
 
         formData.append('chatId', currentChat?._id);
         formData.append('senderId', user?._id);
-        formData.append('duration', audioDurationLocal.toFixed(2));
+        formData.append('duration', audioDurationLocal);
 
         sendAudio(formData);
       } catch (error) {

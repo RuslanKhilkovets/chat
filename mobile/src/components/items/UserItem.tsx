@@ -36,10 +36,10 @@ const UserItem = ({user}: IUserItemProps) => {
       onPress={redirectToChat}
       activeOpacity={0.7}>
       <View style={[styles.pic, {backgroundColor: getAvatarColor(user._id)}]}>
-        <Text style={styles.picText}>{user.name[0]?.toUpperCase()}</Text>
+        <Text style={styles.picText}>{user?.name[0]?.toUpperCase()}</Text>
       </View>
       <View style={styles.info}>
-        <Text style={styles.text}>{user.name}</Text>
+        <Text style={styles.text}>{user?.name}</Text>
         {user.tag && (
           <Text style={[styles.text, {fontSize: 16}]}>@{user.tag}</Text>
         )}

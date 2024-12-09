@@ -3,7 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>We need access to the microphone to play audio</string>
+	<string>Program needs access to the microphone to play audio</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Need access to media</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>

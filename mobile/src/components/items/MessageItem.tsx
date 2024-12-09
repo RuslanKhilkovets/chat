@@ -57,7 +57,7 @@ const MessageItem = ({message}: IMessageItemProps) => {
           () => Math.floor(Math.random() * 30) + 5,
         );
         setEqualizerHeights(newHeights);
-      }, 200);
+      }, 500);
 
       return () => clearInterval(interval);
     }
