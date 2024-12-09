@@ -1,4 +1,4 @@
-import {Dimensions, StyleSheet, View} from 'react-native';
+import {Dimensions, Platform, StyleSheet, View} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {useRoute} from '@react-navigation/native';
 import Carousel from 'react-native-snap-carousel';
@@ -38,6 +38,7 @@ const ChangePersonalDataScreen = () => {
           inactiveSlideScale={1}
           inactiveSlideOpacity={1}
           scrollEnabled={false}
+          slideStyle={Platform.OS === 'android' && {paddingHorizontal: 20}}
         />
       </View>
     </Screen>

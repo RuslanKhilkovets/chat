@@ -77,7 +77,7 @@ export default FindUsersScreen;
 
 const styles = StyleSheet.create({
   inputContainer: {
-    paddingVertical: 20,
+    padding: 20,
   },
   centered: {
     flex: 1,

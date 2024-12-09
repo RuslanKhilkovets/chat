@@ -1,4 +1,4 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 
@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
     gap: 20,
     flexDirection: 'row',
     marginBottom: 20,
+    paddingHorizontal: Platform.OS === 'android' ? 20 : 0,
   },
   text: {
     fontSize: 20,

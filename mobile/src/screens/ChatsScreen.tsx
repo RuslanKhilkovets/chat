@@ -45,6 +45,7 @@ export const ChatsScreen = () => {
           keyExtractor={item => item.id}
         />
       )}
+
       {filteredChats?.length === 0 && !filterQuery && !isUserChatsLoading && (
         <View style={styles.container}>
           <Text style={styles.noChatsText}>There is no chats yet!</Text>
@@ -73,6 +74,7 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 10,
     justifyContent: 'center',
+    paddingHorizontal: 20,
   },
   noChatsText: {
     fontSize: 24,
