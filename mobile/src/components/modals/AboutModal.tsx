@@ -4,6 +4,7 @@ import React from 'react';
 import {Modal} from '@/components';
 import {IModalProps} from '@/types';
 import {useAnimatedTyping} from '@/hooks';
+import {useTranslation} from 'react-i18next';
 
 const AboutModal = ({visible, onClose, openFrom}: IModalProps) => {
   const fullText =
@@ -19,11 +20,13 @@ const AboutModal = ({visible, onClose, openFrom}: IModalProps) => {
     visible,
   });
 
+  const {t} = useTranslation();
+
   return (
     <Modal
       visible={visible}
       onClose={onClose}
-      title="About"
+      title={t('modals.About')}
       openFrom={openFrom}>
       <ScrollView style={styles.container}>
         <Text style={styles.text}>

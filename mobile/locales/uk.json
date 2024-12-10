@@ -1,0 +1,77 @@
+{
+	"warnings": {
+		"NoChats": "Ще немає чатів!",
+		"NoChatsAdvice": "Ви можете знайти співрозмовника прямо зараз ;)",
+		"DidNotFindChats": "Не знайдено жодного чату з вказаними користувачами!",
+		"NoChatsWithGivenData": "Немає користувачів з такими даними!"
+	},
+	"chats": {
+		"Search": "Пошук...",
+		"You": "Ви",
+		"VoiceMessage": "Голосове повідомлення",
+		"Message": "Повідомлення..."
+	},
+	"input": {
+		"Phone": "Телефон",
+		"Password": "Пароль",
+		"AccessToken": "Токен доступу",
+		"Name": "Ім'я"
+	},
+	"actions": {
+		"Typing": "Набирає текст...",
+		"Online": "Онлайн",
+		"Offline": "Офлайн",
+		"Delete": "Видалити",
+		"Cancel": "Скасувати",
+		"CheckPassword": "Перевірити пароль",
+		"DeleteChatAgreementTitle": "Ви впевнені, що хочете видалити цей чат?",
+		"LogOutAgreementTitle": "Ви впевнені, що хочете вийти?",
+		"LogOut": "Вийти",
+		"GoBack": "Назад",
+		"FindMate": "Знайти співрозмовника",
+		"TypeSomething": "Напишіть щось...",
+		"SignIn": "Увійти",
+		"Register": "Зареєструватися",
+		"Login": "Логін",
+		"Or": "Або",
+		"AboutApp": "Про додаток"
+	},
+	"errors": {
+		"IncorrectPassword": "Невірний пароль",
+		"AudioPlayingError": "Помилка відтворення аудіо"
+	},
+	"modals": {
+		"About": "Про додаток",
+		"PrivacyPolicy": "Політика конфіденційності"
+	},
+	"long": {
+		"About": ""
+	},
+	"menu": {
+		"Profile": "Мій профіль",
+		"Theme": "Тема",
+		"FindUsers": "Знайти користувачів",
+		"Saved": "Збережене",
+		"PrivacyPolicies": "Політика конфіденційності",
+		"AboutApp": "Про додаток"
+	},
+	"screens": {
+		"About": "Про додаток",
+		"Search": "Пошук",
+		"Language": "Мова",
+		"Notifications": "Сповіщення",
+		"Profile": "Профіль",
+		"Saved": "Збережене",
+		"Security": "Безпека",
+		"Theme": "Тема"
+	},
+	"items": {
+		"UserTag": "Тег користувача",
+		"Phone": "Телефон",
+		"Language": "Мова",
+		"Theme": "Тема",
+		"Notifications": "Сповіщення",
+		"Security": "Безпека",
+		"Saved": "Збережене"
+	}
+}

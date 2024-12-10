@@ -1,11 +1,14 @@
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import {useTranslation} from 'react-i18next';
+
 import {Button, Screen} from '@/components';
 import {useAnimatedTyping, useGoBack} from '@/hooks';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const PrivacyPoliciesScreen = () => {
   const goBack = useGoBack();
+  const {t} = useTranslation();
 
   const fullText =
     '    MChat is committed to protecting your privacy. Our app uses end-to-end encryption to ensure that your messages, calls, and shared media remain secure and accessible only to you and your intended recipients. ' +
@@ -30,7 +33,7 @@ const PrivacyPoliciesScreen = () => {
         <Button
           before={<Icon name="arrow-back-ios" color={'yellow'} size={16} />}
           onPress={goBack}>
-          Go back
+          {t('actions.GoBack')}
         </Button>
       </View>
     </Screen>

@@ -1,6 +1,7 @@
 import {Platform, ScrollView, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
+import {useTranslation} from 'react-i18next';
 
 import {ProfileItem, Screen, SettingsItem} from '@/components';
 import {useAuthMutation, useTypedSelector} from '@/hooks';
@@ -11,6 +12,7 @@ import {getAvatarColor, getInitials} from '@/helpers';
 
 const ProfileScreen = () => {
   const {onlineUsers} = useChatContext();
+  const {t} = useTranslation();
 
   const currentUser = useTypedSelector(state => state.user);
   const {navigate} = useNavigation();
@@ -36,7 +38,7 @@ const ProfileScreen = () => {
   }, []);
 
   return (
-    <Screen title="Profile">
+    <Screen title={t('screens.Profile')}>
       <ScrollView
         style={{
           paddingHorizontal: Platform.OS === 'android' ? 20 : 0,
@@ -53,7 +55,9 @@ const ProfileScreen = () => {
           </View>
           <View style={styles.profileDescription}>
             <Text style={styles.username}>{user.name}</Text>
-            <Text style={styles.online}>{isOnline ? 'Online' : 'Offline'}</Text>
+            <Text style={styles.online}>
+              {isOnline ? t('actions.Online') : t('actions.Offline')}
+            </Text>
           </View>
         </View>
         <View style={styles.infoBlock}>

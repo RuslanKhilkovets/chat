@@ -1,5 +1,7 @@
 import {StyleSheet, View} from 'react-native';
 import React, {useState} from 'react';
+import {useTranslation} from 'react-i18next';
+
 import {Button, Input} from '@/components';
 import {useAuthMutation, useTypedSelector} from '@/hooks';
 import {Api} from '@/api';
@@ -11,22 +13,24 @@ interface ICheckPasswordFormProps {
 const CheckPasswordForm = ({setIsPasswordChecked}: ICheckPasswordFormProps) => {
   const {_id: userId} = useTypedSelector(state => state.user);
 
+  const {t} = useTranslation();
+
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const {mutate: checkPasswordMutation, isLoading} = useAuthMutation({
     mutationFn: Api.users.checkPassword,
-    onSuccess: res => {
+    onSuccess: () => {
       setIsPasswordChecked(true);
     },
-    onError: error => {
-      setError('Incorrect password');
+    onError: () => {
+      setError(t('errors.IncorrectPassword'));
     },
   });
 
   const checkPassword = (id, password) => {
     if (!password) {
-      setError('Field must be filled');
+      setError(t('errors.FieldMustBeFilled'));
       return;
     }
     const payload = {
@@ -42,7 +46,7 @@ const CheckPasswordForm = ({setIsPasswordChecked}: ICheckPasswordFormProps) => {
       <Input
         value={password}
         onChangeText={setPassword}
-        placeholder="Password"
+        placeholder={t('inputs.Password')}
         error={error}
         disabled={isLoading}
         secureTextEntry
@@ -50,7 +54,7 @@ const CheckPasswordForm = ({setIsPasswordChecked}: ICheckPasswordFormProps) => {
       <Button
         onPress={() => checkPassword(userId, password)}
         isLoading={isLoading}>
-        Check password
+        {t('actions.CheckPassword')}
       </Button>
     </View>
   );

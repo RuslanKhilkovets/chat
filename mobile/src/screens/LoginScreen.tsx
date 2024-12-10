@@ -3,6 +3,7 @@ import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Controller, useForm} from 'react-hook-form';
 import {useNavigation} from '@react-navigation/native';
 import {yupResolver} from '@hookform/resolvers/yup';
+import {useTranslation} from 'react-i18next';
 
 import {Input, Screen} from '@/components';
 import {Button} from '@/components';
@@ -17,6 +18,7 @@ export const LoginScreen = () => {
     email: '',
   });
   const {login} = React.useContext(AuthContext);
+  const {t} = useTranslation();
 
   const navigation = useNavigation();
   const {
@@ -83,7 +85,7 @@ export const LoginScreen = () => {
           name="password"
           render={({field: {onChange, value}}) => (
             <Input
-              placeholder="Password"
+              placeholder={t('inputs.Password')}
               value={value}
               onChangeText={onChange}
               error={errors?.password?.message || formErrors?.password}
@@ -95,7 +97,7 @@ export const LoginScreen = () => {
           <Text style={styles.text}>Forget password?</Text>
         </TouchableOpacity> */}
         <Button onPress={handleSubmit(onSubmit)} type="primary" fullWidth>
-          Sign in
+          {t('actions.SignIn')}
         </Button>
       </View>
     </Screen>

@@ -1,6 +1,8 @@
 import {StyleSheet, View, TouchableOpacity, Text} from 'react-native';
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
+import {useTranslation} from 'react-i18next';
+
 import {useChatContext} from '@/context/Chat/ChatContext';
 import {
   useFetchLatestMessage,
@@ -18,6 +20,7 @@ const ChatItem = ({chat}: IChatItemProps) => {
   const user = useTypedSelector(state => state.user);
   const {navigate} = useNavigation();
 
+  const {t} = useTranslation();
   const {latestMessage} = useFetchLatestMessage(chat);
   const isLatestMessageMine = latestMessage?.senderId === user?._id;
 
@@ -78,15 +81,15 @@ const ChatItem = ({chat}: IChatItemProps) => {
               ]}
               ellipsizeMode="tail">
               {isLatestMessageMine
-                ? 'You: ' + latestMessage?.text
+                ? t('chats.You') + ': ' + latestMessage?.text
                 : latestMessage?.text}
             </Text>
           )}
           {latestMessage?.messageType === 'audio' && (
             <Text numberOfLines={1} style={[styles.lastMsg]}>
               {isLatestMessageMine
-                ? 'You: ' + 'Voice message'
-                : 'Voice message'}
+                ? t('chats.You') + ': ' + t('chats.VoiceMessage')
+                : t('chats.VoiceMessage')}
             </Text>
           )}
           {thisUserNotifications?.length !== 0 && (

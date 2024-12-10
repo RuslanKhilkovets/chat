@@ -8,6 +8,10 @@ import {
   Keyboard,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
+import {useRoute} from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import {useTranslation} from 'react-i18next';
+
 import {
   AudioStopper,
   Input,
@@ -15,10 +19,8 @@ import {
   Screen,
   SendAudioButton,
 } from '@/components';
-import {useRoute} from '@react-navigation/native';
 import {useAudioRecorder, useFetchRecipient, useTypedSelector} from '@/hooks';
 import {useChatContext} from '@/context/Chat/ChatContext';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import {unreadNotifications} from '@/helpers/unreadNotifications';
 
 const ChatScreen = () => {
@@ -45,6 +47,7 @@ const ChatScreen = () => {
   } = useChatContext();
   const {isRecording, discardRecording, startRecording, stopRecording} =
     useAudioRecorder();
+  const {t} = useTranslation();
 
   const [textMessage, setTextMessage] = useState<string>('');
   const [lastMessageId, setLastMessageId] = useState<string>();
@@ -203,7 +206,7 @@ const ChatScreen = () => {
               style={{flex: 1}}
               value={textMessage}
               onChangeText={handleTextChange}
-              placeholder="Message..."
+              placeholder={t('chats.Message')}
               endAdornment={
                 textMessage && textMessage?.trim() ? (
                   <Pressable onPress={handleSendMessage}>

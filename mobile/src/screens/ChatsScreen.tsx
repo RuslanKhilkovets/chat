@@ -1,13 +1,16 @@
 import * as React from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {useTranslation} from 'react-i18next';
+
 import {Button, ChatItem, Header, Screen} from '@/components';
 import {useChatContext} from '@/context/Chat/ChatContext';
-import {useNavigation} from '@react-navigation/native';
 
 export const ChatsScreen = () => {
   const {filteredChats, filterQuery, isUserChatsLoading, notifications} =
     useChatContext();
   const {navigate} = useNavigation();
+  const {t} = useTranslation();
 
   const sortedChats = React.useCallback(() => {
     const uniqueChats = filteredChats?.filter(
@@ -48,19 +51,23 @@ export const ChatsScreen = () => {
 
       {filteredChats?.length === 0 && !filterQuery && !isUserChatsLoading && (
         <View style={styles.container}>
-          <Text style={styles.noChatsText}>There is no chats yet!</Text>
+          <Text style={styles.noChatsText}>{t('warnings.NoChats')}</Text>
           <Text style={[styles.noChatsText, {fontSize: 20}]}>
-            You can find person for chating now ;)
+            {t('warnings.NoChatsAdvice')}
           </Text>
-          <Button onPress={onFindMateRedirectHandle}>Find mate</Button>
+          <Button onPress={onFindMateRedirectHandle}>
+            {t('actions.FindMate')}
+          </Button>
         </View>
       )}
       {filteredChats?.length === 0 && filterQuery && (
         <View style={styles.container}>
           <Text style={[styles.noChatsText, {fontSize: 20}]}>
-            Did not find any chats with given users!
+            {t('warnings.DidNotFindChats')}
           </Text>
-          <Button onPress={onFindMateRedirectHandle}>Find mate</Button>
+          <Button onPress={onFindMateRedirectHandle}>
+            {t('actions.FindMate')}
+          </Button>
         </View>
       )}
     </Screen>

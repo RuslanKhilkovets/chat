@@ -1,9 +1,12 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 import React from 'react';
+import {useTranslation} from 'react-i18next';
+
 import {Screen} from '@/components';
 
 const ThemeScreen = () => {
-  return <Screen title="Theme"></Screen>;
+  const {t} = useTranslation();
+  return <Screen title={t('screens.Theme')}></Screen>;
 };
 
 export default ThemeScreen;

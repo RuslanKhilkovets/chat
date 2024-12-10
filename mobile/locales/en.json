@@ -1,0 +1,77 @@
+{
+	"warnings": {
+		"NoChats": "There is no chats yet!",
+		"NoChatsAdvice": "You can find person for chatting now ;)",
+		"DidNotFindChats": "Did not find any chats with given users!",
+		"NoChatsWithGivenData": "There are no users with given data!"
+	},
+	"chats": {
+		"Search": "Search...",
+		"You": "You",
+		"VoiceMessage": "Voice message",
+		"Message": "Message..."
+	},
+	"input": {
+		"Phone": "Phone",
+		"Password": "Password",
+		"AccessToken": "Access token",
+		"Name": "Name"
+	},
+	"actions": {
+		"Typing": "Typing...",
+		"Online": "Online",
+		"Offline": "Offline",
+		"Delete": "Delete",
+		"Cancel": "Cancel",
+		"CheckPassword": "Check password",
+		"DeleteChatAgreementTitle": "Are you sure you want to delete this chat?",
+		"LogOutAgreementTitle": "Are you sure you want to log out?",
+		"LogOut": "Log out",
+		"GoBack": "Go back",
+		"FindMate": "Find mate",
+		"TypeSomething": "Type something...",
+		"SignIn": "Sign in",
+		"Register": "Register",
+		"Login": "Login",
+		"Or": "Or",
+		"AboutApp": "About app"
+	},
+	"errors": {
+		"IncorrectPassword": "Incorrect password",
+		"AudioPlayingError": "Error playing audio"
+	},
+	"modals": {
+		"About": "About",
+		"PrivacyPolicy": "Privacy policy"
+	},
+	"long": {
+		"About": ""
+	},
+	"menu": {
+		"Profile": "My profile",
+		"Theme": "Theme",
+		"FindUsers": "Find users",
+		"Saved": "Saved",
+		"PrivacyPolicies": "Privacy policies",
+		"AboutApp": "About app"
+	},
+	"screens": {
+		"About": "About",
+		"Search": "Search",
+		"Language": "Language",
+		"Notifications": "Notifications",
+		"Profile": "Profile",
+		"Saved": "Saved",
+		"Security": "Security",
+		"Theme": "Theme"
+	},
+	"items": {
+		"UserTag": "User tag",
+		"Phone": "Phone",
+		"Language": "Language",
+		"Theme": "Theme",
+		"Notifications": "Notifications",
+		"Security": "Security",
+		"Saved": "Saved"
+	}
+}

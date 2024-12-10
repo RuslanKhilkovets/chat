@@ -1,9 +1,13 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 import React from 'react';
+import {useTranslation} from 'react-i18next';
+
 import {Screen} from '@/components';
 
 const SavedScreen = () => {
-  return <Screen title="Saved"></Screen>;
+  const {t} = useTranslation();
+
+  return <Screen title={t('screens.Saved')}></Screen>;
 };
 
 export default SavedScreen;

@@ -1,4 +1,5 @@
 import React from 'react';
+import {useTranslation} from 'react-i18next';
 
 import {regex} from '@/constants';
 import {Input} from '@/components';
@@ -18,10 +19,12 @@ const PhoneInput = ({
   error,
   label,
 }: IPhoneInput) => {
+  const {t} = useTranslation();
+
   return (
     <Input
       label={label}
-      placeholder={placeholder || 'Телефон'}
+      placeholder={placeholder || t('input.Phone')}
       value={value}
       onChangeText={onChange}
       error={error}

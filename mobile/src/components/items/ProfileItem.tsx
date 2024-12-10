@@ -19,7 +19,7 @@ const ProfileItem = ({iconName, title, value, onPress}: IProfileItemProps) => {
         <Icon color="yellow" name={iconName} size={24} />
       </View>
       <View>
-        <Text style={styles.title}>{value || 'N / A'}</Text>
+        <Text style={styles.title}>{value || 'N/A'}</Text>
         <Text style={styles.description}>{title}</Text>
       </View>
     </TouchableOpacity>

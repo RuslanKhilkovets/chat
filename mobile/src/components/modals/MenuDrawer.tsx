@@ -1,11 +1,13 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
+import {useNavigation} from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import {useTranslation} from 'react-i18next';
+
 import {Drawer, MenuItem, SmallModal} from '@/components';
 import {IModalProps} from '@/types';
-import {useNavigation} from '@react-navigation/native';
 import {useAuthContext} from '@/context/Auth/AuthContext';
 import {useTypedSelector} from '@/hooks';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useTheme} from '@/context/Theme/ThemeContext';
 import {getAvatarColor} from '@/helpers';
 
@@ -17,6 +19,7 @@ const MenuDrawer = ({onClose, visible}: MenuDrawerProps) => {
   const {theme, colorScheme, setColorScheme} = useTheme();
   const {logout} = useAuthContext();
   const user = useTypedSelector(state => state.user);
+  const {t} = useTranslation();
 
   const onRedirectHandle = (screen: string, payload?: any) => {
     onClose();
@@ -67,28 +70,28 @@ const MenuDrawer = ({onClose, visible}: MenuDrawerProps) => {
               onPress={() =>
                 onRedirectHandle('Profile', {userId: null, isEditable: true})
               }>
-              My profile
+              {t('menu.Profile')}
             </MenuItem>
             <MenuItem
               iconName="texture"
               onPress={() => onRedirectHandle('Theme')}>
-              Theme
+              {t('menu.Theme')}
             </MenuItem>
             <MenuItem
               iconName="search"
               onPress={() => onRedirectHandle('FindUsers')}>
-              Find users
+              {t('menu.FindUsers')}
             </MenuItem>
             <MenuItem iconName="save" onPress={() => onRedirectHandle('Saved')}>
-              Saved
+              {t('menu.Saved')}
             </MenuItem>
             <MenuItem
               iconName="shield"
               onPress={() => onRedirectHandle('PrivacyPolicies')}>
-              Privacy policies
+              {t('menu.PrivacyPolicies')}
             </MenuItem>
             <MenuItem iconName="info" onPress={() => onRedirectHandle('About')}>
-              About app
+              {t('menu.AboutApp')}
             </MenuItem>
           </View>
         </View>
@@ -97,16 +100,16 @@ const MenuDrawer = ({onClose, visible}: MenuDrawerProps) => {
           iconName="logout"
           onPress={() => setIsModalVisible(true)}
           noBorder>
-          Log out
+          {t('actions.LogOut')}
         </MenuItem>
       </View>
       <SmallModal
         visible={isModalVisible}
         onClose={() => setIsModalVisible(false)}
         onConfirm={handleLogout}
-        text="Are you sure you want to log out?"
-        confirmText="Log out"
-        cancelText="Cancel"
+        text={t('actions.LogOutAgreementTitle')}
+        confirmText={t('actions.LogOut')}
+        cancelText={t('actions.Cancel')}
       />
     </Drawer>
   );

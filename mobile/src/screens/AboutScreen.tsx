@@ -1,9 +1,10 @@
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import {Button, Screen} from '@/components';
-import {useGoBack} from '@/hooks';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import useAnimatedTyping from '@/hooks/useAnimatedTyping';
+import {useTranslation} from 'react-i18next';
+
+import {Button, Screen} from '@/components';
+import {useGoBack, useAnimatedTyping} from '@/hooks';
 
 const AboutScreen = () => {
   const fullText =
@@ -18,9 +19,10 @@ const AboutScreen = () => {
     fullText,
   });
   const goBack = useGoBack();
+  const {t} = useTranslation();
 
   return (
-    <Screen title="About">
+    <Screen title={t('screens.About')}>
       <ScrollView style={styles.container}>
         <Text style={styles.text}>
           {displayedText}
@@ -31,7 +33,7 @@ const AboutScreen = () => {
         <Button
           before={<Icon name="arrow-back-ios" color={'yellow'} size={16} />}
           onPress={goBack}>
-          Go back
+          {t('actions.GoBack')}
         </Button>
       </View>
     </Screen>

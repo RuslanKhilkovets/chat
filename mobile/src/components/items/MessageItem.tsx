@@ -1,9 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, Text, View, TouchableOpacity, Animated} from 'react-native';
 import {useTypedSelector} from '@/hooks';
+import {useTranslation} from 'react-i18next';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
+import i18n from 'i18next';
+import 'moment/locale/uk';
+import 'moment/locale/uk';
 
 interface IMessageItemProps {
   message: any;
@@ -12,6 +16,7 @@ interface IMessageItemProps {
 const audioPlayer = new AudioRecorderPlayer();
 
 const MessageItem = ({message}: IMessageItemProps) => {
+  const currentLanguage = i18n.language;
   const user = useTypedSelector(state => state.user);
 
   const isMessageMine = message?.senderId === user?._id;
@@ -20,6 +25,8 @@ const MessageItem = ({message}: IMessageItemProps) => {
   const [equalizerHeights, setEqualizerHeights] = useState<number[]>([
     7, 8, 15, 10, 5, 7, 10, 7, 8, 8, 15, 10, 15, 5, 15, 12,
   ]);
+
+  const {t} = useTranslation();
 
   const playAudio = async () => {
     if (!message.audioPath) return;
@@ -44,7 +51,7 @@ const MessageItem = ({message}: IMessageItemProps) => {
         }
       });
     } catch (error) {
-      console.error('Error playing audio:', error);
+      console.error(`${t('errors.AudioPlayingError')}:`, error);
       setIsPlaying(false);
     }
   };
@@ -106,7 +113,9 @@ const MessageItem = ({message}: IMessageItemProps) => {
           gap: 10,
           justifyContent: 'flex-end',
         }}>
-        <Text style={styles.date}>{moment(message?.createdAt).calendar()}</Text>
+        <Text style={styles.date}>
+          {moment(message?.createdAt).locale(currentLanguage).calendar()}
+        </Text>
 
         {isMessageMine && (
           <View style={styles.statusContainer}>

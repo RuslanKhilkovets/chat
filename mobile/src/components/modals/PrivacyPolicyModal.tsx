@@ -1,5 +1,6 @@
 import {ScrollView, StyleSheet, Text} from 'react-native';
 import React from 'react';
+import {useTranslation} from 'react-i18next';
 
 import {Modal} from '@/components';
 import {IModalProps} from '@/types';
@@ -12,6 +13,8 @@ const PrivacyPoliceModal = ({visible, onClose, openFrom}: IModalProps) => {
     'Our policies ensure that no data is shared with third parties without your consent, and we give you full control over your personal information. For added protection, MChat offers features like self-destructing messages and screen lock options to safeguard your conversations. ' +
     'Your security is our priority, and we are committed to maintaining a safe environment for your personal and professional communications.';
 
+  const {t} = useTranslation();
+
   const {displayedText, cursorVisible} = useAnimatedTyping({
     fullText,
     visible,
@@ -21,7 +24,7 @@ const PrivacyPoliceModal = ({visible, onClose, openFrom}: IModalProps) => {
     <Modal
       visible={visible}
       onClose={onClose}
-      title="Privacy policy"
+      title={t('modals.PrivacyPolicy')}
       openFrom={openFrom}>
       <ScrollView style={styles.container}>
         <Text style={styles.text}>

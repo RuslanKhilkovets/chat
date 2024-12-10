@@ -4,6 +4,7 @@ import {Controller, useForm} from 'react-hook-form';
 import {useNavigation} from '@react-navigation/native';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useTranslation} from 'react-i18next';
 
 import {
   Input,
@@ -31,6 +32,7 @@ export const LoginScreen = () => {
   const {register} = React.useContext(AuthContext);
   const {theme, colorScheme} = useTheme();
   const insets = useSafeAreaInsets();
+  const {t} = useTranslation();
 
   const navigation = useNavigation();
   const {
@@ -86,7 +88,7 @@ export const LoginScreen = () => {
               name="token"
               render={({field: {onChange, value}}) => (
                 <Input
-                  placeholder="Access token"
+                  placeholder={t('inputs.AccessToken')}
                   value={value}
                   onChangeText={onChange}
                   error={errors?.token?.message || formErrors?.token}
@@ -98,7 +100,7 @@ export const LoginScreen = () => {
               name="name"
               render={({field: {onChange, value}}) => (
                 <Input
-                  placeholder="Name"
+                  placeholder={t('inputs.Name')}
                   value={value}
                   onChangeText={onChange}
                   error={errors?.password?.message || formErrors?.password}
@@ -110,7 +112,7 @@ export const LoginScreen = () => {
               name="phone"
               render={({field: {onChange, value}}) => (
                 <PhoneInput
-                  placeholder="Phone"
+                  placeholder={t('inputs.Phone')}
                   value={value}
                   onChange={onChange}
                   error={errors?.password?.message || formErrors?.password}
@@ -134,7 +136,7 @@ export const LoginScreen = () => {
               name="password"
               render={({field: {onChange, value}}) => (
                 <Input
-                  placeholder="Password"
+                  placeholder={t('inputs.NPasswordame')}
                   value={value}
                   onChangeText={onChange}
                   error={errors?.password?.message || formErrors?.password}
@@ -145,7 +147,7 @@ export const LoginScreen = () => {
           </View>
 
           <Button onPress={handleSubmit(onSubmit)} type="primary" fullWidth>
-            Register
+            placeholder={t('actions.Register')}
           </Button>
         </KeyboardScroll>
         {/* <View
@@ -166,7 +168,7 @@ export const LoginScreen = () => {
         </View> */}
       </View>
       <PrivacyPolicyModal
-        title="Privacy policy"
+        title={t('modals.PrivacyPolicy')}
         openFrom="bottom"
         visible={isPrivacyModalOpen}
         onClose={() => setIsPrivacyModalOpen(false)}

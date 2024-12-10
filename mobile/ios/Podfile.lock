@@ -1067,6 +1067,8 @@ PODS:
     - React-Core
   - RNFS (2.20.0):
     - React-Core
+  - RNLocalize (3.3.0):
+    - React-Core
   - RNPermissions (5.2.1):
     - React-Core
   - RNScreens (3.35.0):
@@ -1141,6 +1143,7 @@ DEPENDENCIES:
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNFS (from `../node_modules/react-native-fs`)
+  - RNLocalize (from `../node_modules/react-native-localize`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -1263,6 +1266,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/datetimepicker"
   RNFS:
     :path: "../node_modules/react-native-fs"
+  RNLocalize:
+    :path: "../node_modules/react-native-localize"
   RNPermissions:
     :path: "../node_modules/react-native-permissions"
   RNScreens:
@@ -1331,6 +1336,7 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: ec53e44dc3e75b44aa2a9f37618a49c3bc080a7a
   RNDateTimePicker: 40ffda97d071a98a10fdca4fa97e3977102ccd14
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
+  RNLocalize: 298e85ce16540a11de40c1a588ead39fc5e9a072
   RNPermissions: bd4e8932db57d658a7fd0395bc0ea8a344e28405
   RNScreens: 69850d4519d95b9359cec15a67bb5f9d0bd75262
   RNSVG: 8b1a777d54096b8c2a0fd38fc9d5a454332bbb4d

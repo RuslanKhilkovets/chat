@@ -3,6 +3,7 @@ import {AboutModal, Logo} from '@/components';
 import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
+import {useTranslation} from 'react-i18next';
 
 import GoogleIcon from '@icons/GoogleIcon.svg';
 import {useTheme} from '@/context/Theme/ThemeContext';
@@ -11,6 +12,7 @@ import {Button} from '@/components';
 export const StartScreen = () => {
   const [isAboutModalOpen, setIsAboutModalOpen] = React.useState(false);
 
+  const {t} = useTranslation();
   const {navigate} = useNavigation();
   const {theme, colorScheme} = useTheme();
   const insets = useSafeAreaInsets();
@@ -26,10 +28,10 @@ export const StartScreen = () => {
         }}
         type="primary"
         fullWidth>
-        Login
+        {t('actions.Login')}
       </Button>
       <Text style={[styles.text, {color: theme[colorScheme].textPrimary}]}>
-        Or
+        {t('actions.Or')}
       </Text>
       <Button
         onPress={() => {
@@ -37,7 +39,7 @@ export const StartScreen = () => {
         }}
         type="primary"
         fullWidth>
-        Register
+        {t('actions.Register')}
       </Button>
       {/* <Button
         onPress={() => {}}

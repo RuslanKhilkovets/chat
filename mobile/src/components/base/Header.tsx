@@ -1,13 +1,16 @@
-import {Input, MenuDrawer} from '@/components';
-import {useChatContext} from '@/context/Chat/ChatContext';
 import * as React from 'react';
 import {View, TouchableOpacity, StyleSheet, Animated, Text} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {useTranslation} from 'react-i18next';
+
+import {Input, MenuDrawer} from '@/components';
+import {useChatContext} from '@/context/Chat/ChatContext';
 
 export const Header = () => {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
   const [isSearchOpen, setIsSearchOpen] = React.useState(false);
   const {filterQuery, setFilterQuery} = useChatContext();
+  const {t} = useTranslation();
 
   const searchWidth = React.useRef(
     new Animated.Value(isSearchOpen ? 1 : 0),
@@ -57,7 +60,7 @@ export const Header = () => {
             transparent
             autoFocus
             style={styles.searchInput}
-            placeholder="Search..."
+            placeholder={t('chats.Search')}
             value={filterQuery}
             onChangeText={setFilterQuery}
           />

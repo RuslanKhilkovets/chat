@@ -6,12 +6,15 @@ import {
   View,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+
 import {Input, Screen, UserItem} from '@/components';
 import {useAuthMutation, useTypedSelector} from '@/hooks';
 import {Api} from '@/api';
 
 const FindUsersScreen = () => {
   const {_id: currentUserId} = useTypedSelector(state => state.user);
+  const {t} = useTranslation();
 
   const [filterQuery, setFilterQuery] = useState('');
   const [users, setUsers] = useState([]);
@@ -40,10 +43,10 @@ const FindUsersScreen = () => {
   }, [filterQuery]);
 
   return (
-    <Screen title="Search">
+    <Screen title={t('screens.Search')}>
       <View style={styles.inputContainer}>
         <Input
-          placeholder="Search..."
+          placeholder={t('chats.Search')}
           value={filterQuery}
           onChangeText={text => setFilterQuery(text)}
         />
@@ -61,12 +64,12 @@ const FindUsersScreen = () => {
       ) : filterQuery ? (
         <View style={styles.centered}>
           <Text style={styles.noChatsText}>
-            There are no users with given data!
+            {t('warnings.NoChatsWithGivenData')}
           </Text>
         </View>
       ) : (
         <View style={styles.centered}>
-          <Text style={styles.noChatsText}>Type something...</Text>
+          <Text style={styles.noChatsText}>{t('actions.TypeSomething')}</Text>
         </View>
       )}
     </Screen>

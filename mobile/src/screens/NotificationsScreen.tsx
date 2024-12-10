@@ -1,9 +1,12 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 import React from 'react';
+import {useTranslation} from 'react-i18next';
+
 import {Screen} from '@/components';
 
 const NotificationsScreen = () => {
-  return <Screen title="Notifications"></Screen>;
+  const {t} = useTranslation();
+  return <Screen title={t('screens.Notifications')}></Screen>;
 };
 
 export default NotificationsScreen;

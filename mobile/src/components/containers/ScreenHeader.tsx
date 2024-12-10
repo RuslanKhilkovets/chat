@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {useTranslation} from 'react-i18next';
+
 import {GoBack, SmallModal} from '@/components';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -22,6 +24,7 @@ const ScreenHeader = ({title, payload, chatMode}: IScreenHeaderProps) => {
   const {navigate} = useNavigation();
   const [isModalVisible, setModalVisible] = useState(false);
   const {deleteChat} = useChatContext();
+  const {t} = useTranslation();
 
   const handleDelete = () => {
     deleteChat(payload?.chatId);
@@ -54,10 +57,10 @@ const ScreenHeader = ({title, payload, chatMode}: IScreenHeaderProps) => {
               <Text style={styles.name}>{payload.name}</Text>
               <Text style={styles.isOnline}>
                 {payload.isTyping
-                  ? 'Typing...'
+                  ? t('actions.Typing')
                   : payload.isOnline
-                  ? 'Online'
-                  : 'Offline'}
+                  ? t('actions.Online')
+                  : t('actions.Offline')}
               </Text>
             </View>
           </Pressable>
@@ -77,9 +80,9 @@ const ScreenHeader = ({title, payload, chatMode}: IScreenHeaderProps) => {
         visible={isModalVisible}
         onClose={() => setModalVisible(false)}
         onConfirm={handleDelete}
-        text="Are you sure you want to delete this chat?"
-        confirmText="Delete"
-        cancelText="Cancel"
+        text={t('actions.DeleteChatAgreementTitle')}
+        confirmText={t('actions.Delete')}
+        cancelText={t('actions.Cancel')}
       />
     </>
   );

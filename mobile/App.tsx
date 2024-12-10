@@ -10,6 +10,7 @@ import {AuthProvider} from '@/context/Auth/AuthContext';
 import {ThemeProvider} from '@/context/Theme/ThemeContext';
 import store from './src/store';
 import axios from 'axios';
+import './i18n';
 
 enableScreens();
 axios.defaults.baseURL = 'http://10.0.2.2:5000/api';

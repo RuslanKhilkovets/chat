@@ -6,6 +6,7 @@ import {useForm, Controller} from 'react-hook-form';
 import * as yup from 'yup';
 import {yupResolver} from '@hookform/resolvers/yup';
 import SInfo from 'react-native-sensitive-info';
+import {useTranslation} from 'react-i18next';
 
 import {Button, Input, PhoneInput} from '@/components';
 import {useAuthMutation, useGoBack, useTypedSelector} from '@/hooks';
@@ -22,6 +23,7 @@ const ChangeDataForm = () => {
   const {type} = route.params || {};
   const dispatch = useDispatch();
 
+  const {t} = useTranslation();
   const goBack = useGoBack();
 
   const schema = personalDataSchema[type] || yup.object();
@@ -79,7 +81,7 @@ const ChangeDataForm = () => {
         }
       />
       <Button onPress={handleSubmit(onSubmit)} isLoading={isLoading}>
-        Change {type}
+        {t('actions.Change') + ' ' + t(`actions.${type}`)}
       </Button>
     </View>
   );
