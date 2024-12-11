@@ -5,12 +5,14 @@ import {useTranslation} from 'react-i18next';
 
 import {Input, MenuDrawer} from '@/components';
 import {useChatContext} from '@/context/Chat/ChatContext';
+import {useTheme} from '@/context/Theme/ThemeContext';
 
 export const Header = () => {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
   const [isSearchOpen, setIsSearchOpen] = React.useState(false);
   const {filterQuery, setFilterQuery} = useChatContext();
   const {t} = useTranslation();
+  const {theme, colorScheme} = useTheme();
 
   const searchWidth = React.useRef(
     new Animated.Value(isSearchOpen ? 1 : 0),
@@ -39,10 +41,13 @@ export const Header = () => {
           <Icon
             name={isSearchOpen ? 'arrow-back-ios' : 'menu'}
             size={32}
-            color="yellow"
+            color={theme[colorScheme].textPrimary}
           />
         </TouchableOpacity>
-        <Text style={styles.textLogo}>MChat</Text>
+        <Text
+          style={[styles.textLogo, {color: theme[colorScheme].textPrimary}]}>
+          MChat
+        </Text>
       </View>
 
       <Animated.View
@@ -53,6 +58,7 @@ export const Header = () => {
               inputRange: [0, 1],
               outputRange: ['0%', '100%'],
             }),
+            backgroundColor: theme[colorScheme].bgPrimary,
           },
         ]}>
         {isSearchOpen && (
@@ -71,7 +77,11 @@ export const Header = () => {
         <TouchableOpacity
           onPress={handleSearchToggle}
           style={styles.iconButton}>
-          <Icon name="search" size={30} color="yellow" />
+          <Icon
+            name="search"
+            size={30}
+            color={theme[colorScheme].textPrimary}
+          />
         </TouchableOpacity>
       )}
 
@@ -90,12 +100,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 10,
     paddingVertical: 6,
-    backgroundColor: '#000000',
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 4,
   },
   iconButton: {
     padding: 8,
@@ -104,7 +108,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     position: 'absolute',
     left: 40,
-    backgroundColor: '#000',
   },
   searchInput: {
     fontSize: 16,
@@ -113,7 +116,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   textLogo: {
-    color: 'yellow',
     fontSize: 28,
     fontFamily: 'Jersey20-Regular',
   },

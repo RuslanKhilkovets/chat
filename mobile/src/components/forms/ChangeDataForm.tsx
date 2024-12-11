@@ -66,7 +66,7 @@ const ChangeDataForm = () => {
             <PhoneInput
               value={value}
               onChange={onChange}
-              placeholder={type?.toUpperCase()}
+              placeholder={t(`actions.${type}`)}
               error={errors.fieldToChange?.message}
             />
           ) : (

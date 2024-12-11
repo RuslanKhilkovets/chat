@@ -19,7 +19,10 @@ export const StartScreen = () => {
 
   return (
     <View
-      style={[{backgroundColor: theme[colorScheme].dark}, styles.container]}>
+      style={[
+        {backgroundColor: theme[colorScheme].bgPrimary},
+        styles.container,
+      ]}>
       <Logo />
       <View style={{marginTop: 20}} />
       <Button
@@ -78,7 +81,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 100,
     flex: 1,
-    paddingHorizontal: Platform.OS === 'android' ? 20 : 0,
+    paddingHorizontal: 20,
   },
   text: {
     marginVertical: 10,

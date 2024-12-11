@@ -13,6 +13,7 @@ import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useChatContext} from '@/context/Chat/ChatContext';
 import {getAvatarColor} from '@/helpers';
+import {useTheme} from '@/context/Theme/ThemeContext';
 
 interface IScreenHeaderProps {
   chatMode?: boolean;
@@ -23,7 +24,9 @@ interface IScreenHeaderProps {
 const ScreenHeader = ({title, payload, chatMode}: IScreenHeaderProps) => {
   const {navigate} = useNavigation();
   const [isModalVisible, setModalVisible] = useState(false);
+
   const {deleteChat} = useChatContext();
+  const {theme, colorScheme} = useTheme();
   const {t} = useTranslation();
 
   const handleDelete = () => {
@@ -33,12 +36,25 @@ const ScreenHeader = ({title, payload, chatMode}: IScreenHeaderProps) => {
 
   return (
     <>
-      <View style={[styles.header, !chatMode && {justifyContent: 'center'}]}>
+      <View
+        style={[
+          styles.header,
+          {backgroundColor: theme[colorScheme].bgSecondary},
+          !chatMode && {justifyContent: 'center'},
+        ]}>
         <View style={styles.icon}>
           <GoBack />
         </View>
 
-        {title && <Text style={styles.headerTitle}>{title}</Text>}
+        {title && (
+          <Text
+            style={[
+              styles.headerTitle,
+              {color: theme[colorScheme].textPrimary},
+            ]}>
+            {title}
+          </Text>
+        )}
 
         {payload && (
           <Pressable
@@ -49,13 +65,24 @@ const ScreenHeader = ({title, payload, chatMode}: IScreenHeaderProps) => {
                 styles.profilePic,
                 {backgroundColor: getAvatarColor(payload.userId)},
               ]}>
-              <Text style={styles.profilePicText}>
+              <Text
+                style={[
+                  styles.profilePicText,
+                  {color: theme[colorScheme].textPrimary},
+                ]}>
                 {payload?.name?.[0]?.toUpperCase() || ''}
               </Text>
             </View>
             <View>
-              <Text style={styles.name}>{payload.name}</Text>
-              <Text style={styles.isOnline}>
+              <Text
+                style={[styles.name, {color: theme[colorScheme].textPrimary}]}>
+                {payload.name}
+              </Text>
+              <Text
+                style={[
+                  styles.isOnline,
+                  {color: theme[colorScheme].textPrimary},
+                ]}>
                 {payload.isTyping
                   ? t('actions.Typing')
                   : payload.isOnline
@@ -71,7 +98,11 @@ const ScreenHeader = ({title, payload, chatMode}: IScreenHeaderProps) => {
             style={styles.deleteIcon}
             activeOpacity={0.7}
             onPress={() => setModalVisible(true)}>
-            <Icon name="delete" color="yellow" size={32} />
+            <Icon
+              name="delete"
+              color={theme[colorScheme].textPrimary}
+              size={32}
+            />
           </TouchableOpacity>
         )}
       </View>

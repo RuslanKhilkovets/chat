@@ -38,7 +38,7 @@ const ChangePersonalDataScreen = () => {
           inactiveSlideScale={1}
           inactiveSlideOpacity={1}
           scrollEnabled={false}
-          slideStyle={Platform.OS === 'android' && {paddingHorizontal: 20}}
+          slideStyle={{paddingHorizontal: 20}}
         />
       </View>
     </Screen>

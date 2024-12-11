@@ -6,7 +6,7 @@ import fontelloConfig from '@/config/icons-config.json';
 const Icon = createIconSetFromFontello(fontelloConfig);
 
 export const AppIcon = ({
-  color = '#000',
+  color = 'yellow',
   name,
   size = 20,
   ...props

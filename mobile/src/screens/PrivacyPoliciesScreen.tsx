@@ -5,10 +5,12 @@ import {useTranslation} from 'react-i18next';
 
 import {Button, Screen} from '@/components';
 import {useAnimatedTyping, useGoBack} from '@/hooks';
+import {useTheme} from '@/context/Theme/ThemeContext';
 
 const PrivacyPoliciesScreen = () => {
   const goBack = useGoBack();
   const {t} = useTranslation();
+  const {theme, colorScheme} = useTheme();
 
   const fullText =
     '    MChat is committed to protecting your privacy. Our app uses end-to-end encryption to ensure that your messages, calls, and shared media remain secure and accessible only to you and your intended recipients. ' +
@@ -24,14 +26,22 @@ const PrivacyPoliciesScreen = () => {
   return (
     <Screen title="Privacy policies">
       <ScrollView style={styles.container}>
-        <Text style={styles.text}>
+        <Text style={[styles.text, {color: theme[colorScheme].textPrimary}]}>
           {displayedText}
-          {cursorVisible && <Text style={styles.cursor}>|</Text>}
+          {cursorVisible && (
+            <Text style={{color: theme[colorScheme].textPrimary}}>|</Text>
+          )}
         </Text>
       </ScrollView>
       <View style={{marginHorizontal: 20}}>
         <Button
-          before={<Icon name="arrow-back-ios" color={'yellow'} size={16} />}
+          before={
+            <Icon
+              name="arrow-back-ios"
+              color={theme[colorScheme].textPrimary}
+              size={16}
+            />
+          }
           onPress={goBack}>
           {t('actions.GoBack')}
         </Button>
@@ -52,9 +62,5 @@ const styles = StyleSheet.create({
     lineHeight: 26,
     fontSize: 22,
     fontFamily: 'Jersey20-Regular',
-    color: '#E1FF00',
-  },
-  cursor: {
-    color: '#E1FF00',
   },
 });

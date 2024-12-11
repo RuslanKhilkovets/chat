@@ -46,11 +46,21 @@ const MenuDrawer = ({onClose, visible}: MenuDrawerProps) => {
                   styles.avatar,
                   {backgroundColor: getAvatarColor(user?._id)},
                 ]}>
-                <Text style={styles.picText}>
+                <Text
+                  style={[
+                    styles.picText,
+                    {color: theme[colorScheme].textPrimary},
+                  ]}>
                   {user.name[0]?.toUpperCase()}
                 </Text>
               </TouchableOpacity>
-              <Text style={styles.userName}>{user?.name}</Text>
+              <Text
+                style={[
+                  styles.userName,
+                  {color: theme[colorScheme].textPrimary},
+                ]}>
+                {user?.name}
+              </Text>
             </View>
             <TouchableOpacity
               activeOpacity={0.7}
@@ -59,7 +69,7 @@ const MenuDrawer = ({onClose, visible}: MenuDrawerProps) => {
               }>
               <Icon
                 name={colorScheme === 'light' ? 'bedtime' : 'brightness-high'}
-                color={'yellow'}
+                color={theme[colorScheme].textPrimary}
                 size={32}
               />
             </TouchableOpacity>
@@ -138,7 +148,6 @@ const styles = StyleSheet.create({
     borderRadius: 35,
   },
   userName: {
-    color: 'yellow',
     fontFamily: 'Jersey20-Regular',
     fontSize: 24,
   },

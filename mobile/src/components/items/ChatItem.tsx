@@ -11,6 +11,7 @@ import {
 } from '@/hooks';
 import {unreadNotifications} from '@/helpers/unreadNotifications';
 import {getAvatarColor} from '@/helpers';
+import {useTheme} from '@/context/Theme/ThemeContext';
 
 interface IChatItemProps {
   chat: any;
@@ -21,6 +22,8 @@ const ChatItem = ({chat}: IChatItemProps) => {
   const {navigate} = useNavigation();
 
   const {t} = useTranslation();
+  const {theme, colorScheme} = useTheme();
+
   const {latestMessage} = useFetchLatestMessage(chat);
   const isLatestMessageMine = latestMessage?.senderId === user?._id;
 
@@ -51,14 +54,24 @@ const ChatItem = ({chat}: IChatItemProps) => {
   return (
     <TouchableOpacity
       activeOpacity={0.7}
-      style={styles.chatItem}
+      style={[
+        styles.chatItem,
+        {
+          backgroundColor: theme[colorScheme].bgTertiary,
+          borderBlockColor: theme[colorScheme].shadow,
+        },
+      ]}
       onPress={() => navigateToChat()}>
       <View
         style={[
           styles.profilePic,
           {backgroundColor: getAvatarColor(recipientUser?._id)},
         ]}>
-        <Text style={styles.profileInitials}>
+        <Text
+          style={[
+            styles.profileInitials,
+            {color: theme[colorScheme].textPrimary},
+          ]}>
           {getInitials(recipientUser?.name)}
         </Text>
         {isOnline && <View style={styles.onlineMark} />}
@@ -67,6 +80,7 @@ const ChatItem = ({chat}: IChatItemProps) => {
         <Text
           style={[
             styles.userName,
+            {color: theme[colorScheme].textPrimary},
             thisUserNotifications?.length !== 0 && {fontWeight: '700'},
           ]}>
           {recipientUser?.name || 'N/A'}
@@ -86,7 +100,9 @@ const ChatItem = ({chat}: IChatItemProps) => {
             </Text>
           )}
           {latestMessage?.messageType === 'audio' && (
-            <Text numberOfLines={1} style={[styles.lastMsg]}>
+            <Text
+              numberOfLines={1}
+              style={[styles.lastMsg, {color: theme[colorScheme].textPrimary}]}>
               {isLatestMessageMine
                 ? t('chats.You') + ': ' + t('chats.VoiceMessage')
                 : t('chats.VoiceMessage')}
@@ -124,9 +140,7 @@ const styles = StyleSheet.create({
   chatItem: {
     padding: 10,
     gap: 15,
-    backgroundColor: '#1a1a1a',
     paddingLeft: 20,
-    borderBottomColor: 'black',
     borderBottomWidth: 1,
     flexDirection: 'row',
     alignItems: 'center',
@@ -150,10 +164,8 @@ const styles = StyleSheet.create({
   },
   userName: {
     fontSize: 20,
-    color: 'yellow',
   },
   lastMsg: {
-    color: 'yellow',
     flex: 1,
     marginRight: 10,
   },

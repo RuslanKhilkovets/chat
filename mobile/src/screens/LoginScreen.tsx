@@ -11,6 +11,7 @@ import {useAuthMutation} from '@/hooks';
 import {AuthContext} from '@/context/Auth/AuthContext';
 import loginSchema from '@/validations/login';
 import {Api} from '@/api';
+import {useTheme} from '@/context/Theme/ThemeContext';
 
 export const LoginScreen = () => {
   const [formErrors, setFormErrors] = React.useState<any>({
@@ -19,6 +20,7 @@ export const LoginScreen = () => {
   });
   const {login} = React.useContext(AuthContext);
   const {t} = useTranslation();
+  const {theme, colorScheme} = useTheme();
 
   const navigation = useNavigation();
   const {
@@ -63,10 +65,15 @@ export const LoginScreen = () => {
 
   return (
     <Screen>
-      <View
-        style={[styles.container, Platform.OS === 'android' && {padding: 20}]}>
+      <View style={[styles.container, {padding: 20}]}>
         <View style={{alignItems: 'center'}}>
-          <Text style={styles.screenLabel}>Sign in</Text>
+          <Text
+            style={[
+              styles.screenLabel,
+              {color: theme[colorScheme].textPrimary},
+            ]}>
+            Sign in
+          </Text>
         </View>
         <Controller
           control={control}
@@ -85,7 +92,7 @@ export const LoginScreen = () => {
           name="password"
           render={({field: {onChange, value}}) => (
             <Input
-              placeholder={t('inputs.Password')}
+              placeholder={t('input.Password')}
               value={value}
               onChangeText={onChange}
               error={errors?.password?.message || formErrors?.password}
@@ -96,7 +103,11 @@ export const LoginScreen = () => {
         {/* <TouchableOpacity onPress={onForgotPassword}>
           <Text style={styles.text}>Forget password?</Text>
         </TouchableOpacity> */}
-        <Button onPress={handleSubmit(onSubmit)} type="primary" fullWidth>
+        <Button
+          onPress={handleSubmit(onSubmit)}
+          type="primary"
+          fullWidth
+          isLoading={isLoading}>
           {t('actions.SignIn')}
         </Button>
       </View>
@@ -114,13 +125,11 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 18,
     fontFamily: 'Jersey20-Regular',
-    color: '#E1FF00',
     textAlign: 'center',
   },
   screenLabel: {
     fontSize: 50,
     fontFamily: 'Jersey20-Regular',
-    color: '#E1FF00',
     marginVertical: 70,
   },
 });

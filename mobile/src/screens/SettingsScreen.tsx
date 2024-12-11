@@ -5,6 +5,7 @@ import RNSensitiveInfo from 'react-native-sensitive-info';
 import RadioButton from 'react-native-radio-button';
 
 import {BottomSheet, Screen, SettingsItem} from '@/components';
+import {useTheme} from '@/context/Theme/ThemeContext';
 
 const SettingsScreen = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -12,6 +13,7 @@ const SettingsScreen = () => {
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
 
   const {t, i18n} = useTranslation();
+  const {theme, colorScheme} = useTheme();
 
   const handleOpenBottomSheet = (type: string) => {
     setBottomSheetType(type);
@@ -50,7 +52,13 @@ const SettingsScreen = () => {
       case 'Language':
         return (
           <View style={styles.sheetContainer}>
-            <Text style={styles.sheetTitle}>{t('screens.Language')}</Text>
+            <Text
+              style={[
+                styles.sheetTitle,
+                {color: theme[colorScheme].textPrimary},
+              ]}>
+              {t('screens.Language')}
+            </Text>
             <View style={styles.radioGroup}>
               <TouchableOpacity
                 style={styles.radioOption}
@@ -58,9 +66,15 @@ const SettingsScreen = () => {
                 <RadioButton
                   isSelected={selectedLanguage === 'en'}
                   onPress={() => saveLanguage('en')}
-                  color="yellow"
+                  color={theme[colorScheme].textPrimary}
                 />
-                <Text style={styles.radioText}>English</Text>
+                <Text
+                  style={[
+                    styles.radioText,
+                    {color: theme[colorScheme].textPrimary},
+                  ]}>
+                  English
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.radioOption}
@@ -70,7 +84,13 @@ const SettingsScreen = () => {
                   onPress={() => saveLanguage('uk')}
                   color="yellow"
                 />
-                <Text style={styles.radioText}>Українська</Text>
+                <Text
+                  style={[
+                    styles.radioText,
+                    {color: theme[colorScheme].textPrimary},
+                  ]}>
+                  Українська
+                </Text>
               </TouchableOpacity>
             </View>
           </View>

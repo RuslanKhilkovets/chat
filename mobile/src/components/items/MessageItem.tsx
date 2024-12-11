@@ -8,6 +8,7 @@ import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import i18n from 'i18next';
 import 'moment/locale/uk';
 import 'moment/locale/uk';
+import {useTheme} from '@/context/Theme/ThemeContext';
 
 interface IMessageItemProps {
   message: any;
@@ -27,6 +28,7 @@ const MessageItem = ({message}: IMessageItemProps) => {
   ]);
 
   const {t} = useTranslation();
+  const {theme, colorScheme} = useTheme();
 
   const playAudio = async () => {
     if (!message.audioPath) return;
@@ -76,6 +78,7 @@ const MessageItem = ({message}: IMessageItemProps) => {
         styles.container,
         {
           alignSelf: isMessageMine ? 'flex-end' : 'flex-start',
+          backgroundColor: theme[colorScheme].bgTertiary,
         },
       ]}>
       {message?.audioPath ? (
@@ -83,19 +86,26 @@ const MessageItem = ({message}: IMessageItemProps) => {
           <Icon
             name={isPlaying ? 'pause-circle-filled' : 'play-circle-filled'}
             size={30}
-            color="yellow"
+            color={theme[colorScheme].textPrimary}
           />
           <View style={styles.equalizer}>
             {equalizerHeights.map((height, index) => (
               <Animated.View
                 key={index}
-                style={[styles.equalizerBar, {height}]}
+                style={[
+                  styles.equalizerBar,
+                  {height},
+                  {backgroundColor: theme[colorScheme].textPrimary},
+                ]}
               />
             ))}
           </View>
         </TouchableOpacity>
       ) : (
-        <Text style={styles.messageText}>{message?.text}</Text>
+        <Text
+          style={[styles.messageText, {color: theme[colorScheme].textPrimary}]}>
+          {message?.text}
+        </Text>
       )}
 
       {message?.duration ? (
@@ -113,16 +123,24 @@ const MessageItem = ({message}: IMessageItemProps) => {
           gap: 10,
           justifyContent: 'flex-end',
         }}>
-        <Text style={styles.date}>
+        <Text style={[styles.date, {color: theme[colorScheme].textPrimary}]}>
           {moment(message?.createdAt).locale(currentLanguage).calendar()}
         </Text>
 
         {isMessageMine && (
           <View style={styles.statusContainer}>
             {message?.isRead ? (
-              <Icon name="done-all" size={16} color="yellow" />
+              <Icon
+                name="done-all"
+                size={16}
+                color={theme[colorScheme].purpleLight}
+              />
             ) : (
-              <Icon name="done" size={16} color="yellow" />
+              <Icon
+                name="done"
+                size={16}
+                color={theme[colorScheme].purpleLight}
+              />
             )}
           </View>
         )}

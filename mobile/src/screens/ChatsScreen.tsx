@@ -5,12 +5,14 @@ import {useTranslation} from 'react-i18next';
 
 import {Button, ChatItem, Header, Screen} from '@/components';
 import {useChatContext} from '@/context/Chat/ChatContext';
+import {useTheme} from '@/context/Theme/ThemeContext';
 
 export const ChatsScreen = () => {
   const {filteredChats, filterQuery, isUserChatsLoading, notifications} =
     useChatContext();
   const {navigate} = useNavigation();
   const {t} = useTranslation();
+  const {theme, colorScheme} = useTheme();
 
   const sortedChats = React.useCallback(() => {
     const uniqueChats = filteredChats?.filter(
@@ -51,8 +53,19 @@ export const ChatsScreen = () => {
 
       {filteredChats?.length === 0 && !filterQuery && !isUserChatsLoading && (
         <View style={styles.container}>
-          <Text style={styles.noChatsText}>{t('warnings.NoChats')}</Text>
-          <Text style={[styles.noChatsText, {fontSize: 20}]}>
+          <Text
+            style={[
+              styles.noChatsText,
+              {color: theme[colorScheme].textPrimary},
+            ]}>
+            {t('warnings.NoChats')}
+          </Text>
+          <Text
+            style={[
+              styles.noChatsText,
+              {fontSize: 20},
+              {color: theme[colorScheme].textPrimary},
+            ]}>
             {t('warnings.NoChatsAdvice')}
           </Text>
           <Button onPress={onFindMateRedirectHandle}>
@@ -62,7 +75,12 @@ export const ChatsScreen = () => {
       )}
       {filteredChats?.length === 0 && filterQuery && (
         <View style={styles.container}>
-          <Text style={[styles.noChatsText, {fontSize: 20}]}>
+          <Text
+            style={[
+              styles.noChatsText,
+              {fontSize: 20},
+              {color: theme[colorScheme].textPrimary},
+            ]}>
             {t('warnings.DidNotFindChats')}
           </Text>
           <Button onPress={onFindMateRedirectHandle}>
@@ -86,7 +104,6 @@ const styles = StyleSheet.create({
   noChatsText: {
     fontSize: 24,
     fontFamily: 'Jersey20-Regular',
-    color: '#E1FF00',
     textAlign: 'center',
   },
 });

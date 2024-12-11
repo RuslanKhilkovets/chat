@@ -1,3 +1,4 @@
+import {useTheme} from '@/context/Theme/ThemeContext';
 import React from 'react';
 import {
   Modal,
@@ -25,21 +26,58 @@ const SmallModal: React.FC<ISmallModalProps> = ({
   confirmText = 'Delete',
   cancelText = 'Cancel',
 }) => {
+  const {theme, colorScheme} = useTheme();
+
   return (
     <Modal
       visible={visible}
       transparent
       animationType="fade"
       onRequestClose={onClose}>
-      <Pressable style={styles.modalOverlay} onPress={onClose}>
-        <Pressable style={styles.modalContent} onPress={null}>
-          <Text style={styles.modalText}>{text}</Text>
+      <Pressable
+        style={[
+          styles.modalOverlay,
+          {backgroundColor: theme[colorScheme].shadow},
+        ]}
+        onPress={onClose}>
+        <Pressable
+          style={[
+            styles.modalContent,
+            {backgroundColor: theme[colorScheme].bgSecondary},
+          ]}
+          onPress={null}>
+          <Text
+            style={[styles.modalText, {color: theme[colorScheme].textPrimary}]}>
+            {text}
+          </Text>
           <View style={styles.modalButtons}>
-            <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
-              <Text style={styles.cancelText}>{cancelText}</Text>
+            <TouchableOpacity
+              style={[
+                styles.cancelButton,
+                {backgroundColor: theme[colorScheme].bgPrimary},
+              ]}
+              onPress={onClose}>
+              <Text
+                style={[
+                  styles.cancelText,
+                  {color: theme[colorScheme].textPrimary},
+                ]}>
+                {cancelText}
+              </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.confirmButton} onPress={onConfirm}>
-              <Text style={styles.confirmText}>{confirmText}</Text>
+            <TouchableOpacity
+              style={[
+                styles.confirmButton,
+                {backgroundColor: theme[colorScheme].pink},
+              ]}
+              onPress={onConfirm}>
+              <Text
+                style={[
+                  styles.confirmText,
+                  {color: theme[colorScheme].textPrimary},
+                ]}>
+                {confirmText}
+              </Text>
             </TouchableOpacity>
           </View>
         </Pressable>
@@ -53,12 +91,10 @@ export default SmallModal;
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(18, 25, 2, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
   },
   modalContent: {
-    backgroundColor: 'black',
     padding: 20,
     borderRadius: 10,
     width: '80%',
@@ -66,7 +102,6 @@ const styles = StyleSheet.create({
   },
   modalText: {
     fontSize: 26,
-    color: 'yellow',
     marginBottom: 20,
     textAlign: 'center',
     fontFamily: 'Jersey20-Regular',
@@ -80,7 +115,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     paddingVertical: 10,
-    backgroundColor: 'gray',
     marginRight: 10,
     borderRadius: 5,
   },
@@ -88,16 +122,13 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     paddingVertical: 10,
-    backgroundColor: 'red',
     marginLeft: 10,
     borderRadius: 5,
   },
   cancelText: {
-    color: 'white',
     fontSize: 16,
   },
   confirmText: {
-    color: 'white',
     fontSize: 16,
   },
 });

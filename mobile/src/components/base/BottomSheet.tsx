@@ -1,3 +1,4 @@
+import {useTheme} from '@/context/Theme/ThemeContext';
 import React, {useRef} from 'react';
 import {
   View,
@@ -11,6 +12,7 @@ import {
 const {height} = Dimensions.get('window');
 
 const BottomSheet = ({visible, onClose, children}: any) => {
+  const {theme, colorScheme} = useTheme();
   const translateY = useRef(new Animated.Value(height)).current;
 
   const panResponder = useRef(
@@ -59,11 +61,20 @@ const BottomSheet = ({visible, onClose, children}: any) => {
     <>
       {visible && (
         <TouchableWithoutFeedback onPress={closeSheet}>
-          <View style={styles.overlay} />
+          <View
+            style={[
+              styles.overlay,
+              {backgroundColor: theme[colorScheme].shadow},
+            ]}
+          />
         </TouchableWithoutFeedback>
       )}
       <Animated.View
-        style={[styles.container, {transform: [{translateY}]}]}
+        style={[
+          styles.container,
+          {transform: [{translateY}]},
+          {backgroundColor: theme[colorScheme].bgSecondary},
+        ]}
         {...panResponder.panHandlers}>
         <View style={styles.dragIndicator} />
         {children}
@@ -75,7 +86,6 @@ const BottomSheet = ({visible, onClose, children}: any) => {
 const styles = StyleSheet.create({
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.5)',
     zIndex: 1,
   },
   container: {
@@ -84,7 +94,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: height * 0.6,
-    backgroundColor: '#000000',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     zIndex: 2,

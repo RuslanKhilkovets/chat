@@ -5,6 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useChatContext} from '@/context/Chat/ChatContext';
 import {useTypedSelector} from '@/hooks';
 import {getAvatarColor} from '@/helpers';
+import {useTheme} from '@/context/Theme/ThemeContext';
 
 interface IUser {
   _id: string;
@@ -20,6 +21,7 @@ const UserItem = ({user}: IUserItemProps) => {
   const {createChat} = useChatContext();
   const currentUser = useTypedSelector(state => state.user);
   const {navigate} = useNavigation();
+  const {theme, colorScheme} = useTheme();
 
   const redirectToChat = async () => {
     try {
@@ -36,12 +38,23 @@ const UserItem = ({user}: IUserItemProps) => {
       onPress={redirectToChat}
       activeOpacity={0.7}>
       <View style={[styles.pic, {backgroundColor: getAvatarColor(user._id)}]}>
-        <Text style={styles.picText}>{user?.name[0]?.toUpperCase()}</Text>
+        <Text style={[styles.picText, {color: theme[colorScheme].textPrimary}]}>
+          {user?.name[0]?.toUpperCase()}
+        </Text>
       </View>
       <View style={styles.info}>
-        <Text style={styles.text}>{user?.name}</Text>
+        <Text style={[styles.text, {color: theme[colorScheme].textPrimary}]}>
+          {user?.name}
+        </Text>
         {user.tag && (
-          <Text style={[styles.text, {fontSize: 16}]}>@{user.tag}</Text>
+          <Text
+            style={[
+              styles.text,
+              {fontSize: 16},
+              {color: theme[colorScheme].textPrimary},
+            ]}>
+            @{user.tag}
+          </Text>
         )}
       </View>
     </TouchableOpacity>
@@ -55,11 +68,10 @@ const styles = StyleSheet.create({
     gap: 20,
     flexDirection: 'row',
     marginBottom: 20,
-    paddingHorizontal: Platform.OS === 'android' ? 20 : 0,
+    paddingHorizontal: 20,
   },
   text: {
     fontSize: 20,
-    color: 'yellow',
   },
   info: {
     marginVertical: 5,
@@ -73,7 +85,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   picText: {
-    color: 'white',
     fontSize: 26,
     fontWeight: 'bold',
   },

@@ -34,7 +34,11 @@
 		"Register": "Зареєструватися",
 		"Login": "Логін",
 		"Or": "Або",
-		"AboutApp": "Про додаток"
+		"AboutApp": "Про додаток",
+		"Change": "Змінити",
+		"tag": "Тег",
+		"email": "E-mail",
+		"phone": "Телефон"
 	},
 	"errors": {
 		"IncorrectPassword": "Невірний пароль",

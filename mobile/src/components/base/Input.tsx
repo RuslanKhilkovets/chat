@@ -77,10 +77,20 @@ const Input: React.FC<IInputProps> = ({
 
   return (
     <View style={[style]}>
-      {!!label && <Text style={[styles.label, labelStyle]}>{label}</Text>}
+      {!!label && (
+        <Text
+          style={[
+            styles.label,
+            labelStyle,
+            {color: theme[colorScheme].textPrimary},
+          ]}>
+          {label}
+        </Text>
+      )}
       <View
         style={[
           styles.inputContainer,
+          {backgroundColor: theme[colorScheme].inputBg},
           transparent && {backgroundColor: 'transparent', borderWidth: 0},
           !!error && styles.error,
           isFocused && styles.activeInput,
@@ -89,7 +99,7 @@ const Input: React.FC<IInputProps> = ({
         ]}>
         {mask ? (
           <TextInputMask
-            placeholderTextColor="yellow"
+            placeholderTextColor={theme[colorScheme].textSecondary}
             type={'custom'}
             options={{
               mask,
@@ -115,7 +125,7 @@ const Input: React.FC<IInputProps> = ({
         ) : (
           <TextInput
             autoFocus={autoFocus}
-            placeholderTextColor={'yellow'}
+            placeholderTextColor={theme[colorScheme].textTertiary}
             ref={ref}
             textAlignVertical="top"
             value={value}
@@ -133,7 +143,7 @@ const Input: React.FC<IInputProps> = ({
               styles.input,
               inputStyle,
               multiline && {height: numberOfLines * 20},
-              {color: 'yellow'},
+              {color: theme[colorScheme].textPrimary},
             ]}
           />
         )}
@@ -151,7 +161,7 @@ const Input: React.FC<IInputProps> = ({
           <AppIcon
             style={styles.endAdornment}
             name="search"
-            color={'#757575'}
+            color={theme[colorScheme].textPrimary}
           />
         )}
       </View>
@@ -164,7 +174,6 @@ const styles = StyleSheet.create({
   label: {
     marginBottom: 15,
     fontSize: 16,
-    color: '#333',
     fontFamily: 'Raleway-Medium',
   },
   inputContainer: {
@@ -176,7 +185,6 @@ const styles = StyleSheet.create({
     height: 60,
     borderColor: '#424242',
     borderWidth: 1,
-    backgroundColor: '#1e1e1e',
   },
   input: {
     flex: 1,
@@ -196,7 +204,6 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   disabled: {
-    backgroundColor: '#333',
     borderColor: '#888',
     color: 'grey',
   },

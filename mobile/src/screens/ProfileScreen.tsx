@@ -9,10 +9,12 @@ import {ChangeDataType} from '@/constants';
 import {Api} from '@/api';
 import {useChatContext} from '@/context/Chat/ChatContext';
 import {getAvatarColor, getInitials} from '@/helpers';
+import {useTheme} from '@/context/Theme/ThemeContext';
 
 const ProfileScreen = () => {
   const {onlineUsers} = useChatContext();
   const {t} = useTranslation();
+  const {theme, colorScheme} = useTheme();
 
   const currentUser = useTypedSelector(state => state.user);
   const {navigate} = useNavigation();
@@ -26,7 +28,7 @@ const ProfileScreen = () => {
 
   const [user, setUser] = useState(!userId && currentUser);
 
-  const {mutate: getUserDataMutation, isLoading} = useAuthMutation({
+  const {mutate: getUserDataMutation} = useAuthMutation({
     mutationFn: Api.users.findById,
     onSuccess: res => {
       setUser(res.data);
@@ -41,7 +43,7 @@ const ProfileScreen = () => {
     <Screen title={t('screens.Profile')}>
       <ScrollView
         style={{
-          paddingHorizontal: Platform.OS === 'android' ? 20 : 0,
+          paddingHorizontal: 20,
         }}>
         <View style={styles.profileHeader}>
           <View
@@ -49,19 +51,36 @@ const ProfileScreen = () => {
               styles.profilePic,
               {backgroundColor: getAvatarColor(user._id)},
             ]}>
-            <Text style={styles.profileInitials}>
+            <Text
+              style={[
+                styles.profileInitials,
+                {color: theme[colorScheme].textPrimary},
+              ]}>
               {getInitials(user?.name)}
             </Text>
           </View>
           <View style={styles.profileDescription}>
-            <Text style={styles.username}>{user.name}</Text>
-            <Text style={styles.online}>
+            <Text
+              style={[
+                styles.username,
+                {color: theme[colorScheme].textPrimary},
+              ]}>
+              {user?.name}
+            </Text>
+            <Text
+              style={[styles.online, {color: theme[colorScheme].textTertiary}]}>
               {isOnline ? t('actions.Online') : t('actions.Offline')}
             </Text>
           </View>
         </View>
         <View style={styles.infoBlock}>
-          <Text style={styles.infoBlockText}>Account</Text>
+          <Text
+            style={[
+              styles.infoBlockText,
+              {color: theme[colorScheme].textPrimary},
+            ]}>
+            Account
+          </Text>
           <ProfileItem
             iconName="blur-on"
             value={user.tag && `@${user.tag}`}
@@ -91,7 +110,10 @@ const ProfileScreen = () => {
           />
         </View>
       </ScrollView>
-      <Text style={styles.appVersion}>MChat v1.0</Text>
+      <Text
+        style={[styles.appVersion, {color: theme[colorScheme].textPrimary}]}>
+        MChat v1.0
+      </Text>
     </Screen>
   );
 };
@@ -120,7 +142,7 @@ const styles = StyleSheet.create({
   profileDescription: {
     justifyContent: 'center',
     gap: 5,
-    marginLeft: 20,
+    marginLeft: 10,
   },
   username: {
     fontSize: 30,
@@ -129,7 +151,6 @@ const styles = StyleSheet.create({
   },
   online: {
     fontSize: 16,
-    color: 'grey',
     fontFamily: 'Jersey20-Regular',
   },
   infoBlock: {

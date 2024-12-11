@@ -34,7 +34,11 @@
 		"Register": "Register",
 		"Login": "Login",
 		"Or": "Or",
-		"AboutApp": "About app"
+		"AboutApp": "About app",
+		"Change": "Change",
+		"tag": "Tag",
+		"email": "E-mail",
+		"phone": "Phone"
 	},
 	"errors": {
 		"IncorrectPassword": "Incorrect password",

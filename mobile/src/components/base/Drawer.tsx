@@ -9,12 +9,14 @@ import React, {useEffect, useRef, useState} from 'react';
 
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {IModalProps} from '@/types';
+import {useTheme} from '@/context/Theme/ThemeContext';
 
 const Drawer = ({visible, onClose, openFrom, children}: IModalProps) => {
   const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
   const [isVisible, setIsVisible] = useState(visible);
 
   const insets = useSafeAreaInsets();
+  const {theme, colorScheme} = useTheme();
 
   const initialTranslate = {
     left: -screenWidth,
@@ -65,6 +67,7 @@ const Drawer = ({visible, onClose, openFrom, children}: IModalProps) => {
           styles.modalOverlay,
           {
             alignItems: openFrom === 'left' ? 'flex-start' : 'flex-end',
+            backgroundColor: theme[colorScheme].shadow,
           },
         ]}
         onPress={onClose}>
@@ -77,6 +80,7 @@ const Drawer = ({visible, onClose, openFrom, children}: IModalProps) => {
                 paddingTop: insets.top + 10,
                 paddingBottom: insets.bottom + 10,
                 paddingHorizontal: 20,
+                backgroundColor: theme[colorScheme].bgPrimary,
               },
             ]}>
             {children}
@@ -97,7 +101,5 @@ const styles = StyleSheet.create({
     flex: 1,
     width: 300,
     height: '100%',
-    backgroundColor: '#272727',
-    color: '#E1FF00',
   },
 });

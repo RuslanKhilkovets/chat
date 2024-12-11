@@ -46,7 +46,7 @@ const CheckPasswordForm = ({setIsPasswordChecked}: ICheckPasswordFormProps) => {
       <Input
         value={password}
         onChangeText={setPassword}
-        placeholder={t('inputs.Password')}
+        placeholder={t('input.Password')}
         error={error}
         disabled={isLoading}
         secureTextEntry

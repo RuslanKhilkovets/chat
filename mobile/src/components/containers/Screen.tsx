@@ -3,6 +3,7 @@ import React from 'react';
 
 import {ScreenHeader} from '@/components';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useTheme} from '@/context/Theme/ThemeContext';
 
 interface IScreen extends React.PropsWithChildren {
   title?: string;
@@ -16,18 +17,19 @@ const Screen = ({
   children,
   title,
   headerShown = true,
-  backColor = '#000000',
+  backColor,
   chatMode,
   payload,
 }: IScreen) => {
   const insets = useSafeAreaInsets();
+  const {theme, colorScheme} = useTheme();
 
   return (
     <View
       style={[
         styles.container,
         {
-          backgroundColor: backColor,
+          backgroundColor: backColor || theme[colorScheme].bgPrimary,
           paddingTop: Platform.OS === 'ios' ? insets.top - 10 : insets.top - 15,
           paddingBottom: insets.bottom,
         },

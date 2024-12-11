@@ -11,10 +11,12 @@ import {useTranslation} from 'react-i18next';
 import {Input, Screen, UserItem} from '@/components';
 import {useAuthMutation, useTypedSelector} from '@/hooks';
 import {Api} from '@/api';
+import {useTheme} from '@/context/Theme/ThemeContext';
 
 const FindUsersScreen = () => {
   const {_id: currentUserId} = useTypedSelector(state => state.user);
   const {t} = useTranslation();
+  const {theme, colorScheme} = useTheme();
 
   const [filterQuery, setFilterQuery] = useState('');
   const [users, setUsers] = useState([]);
@@ -63,13 +65,23 @@ const FindUsersScreen = () => {
         />
       ) : filterQuery ? (
         <View style={styles.centered}>
-          <Text style={styles.noChatsText}>
+          <Text
+            style={[
+              styles.noChatsText,
+              {color: theme[colorScheme].textPrimary},
+            ]}>
             {t('warnings.NoChatsWithGivenData')}
           </Text>
         </View>
       ) : (
         <View style={styles.centered}>
-          <Text style={styles.noChatsText}>{t('actions.TypeSomething')}</Text>
+          <Text
+            style={[
+              styles.noChatsText,
+              {color: theme[colorScheme].textPrimary},
+            ]}>
+            {t('actions.TypeSomething')}
+          </Text>
         </View>
       )}
     </Screen>
@@ -90,7 +102,6 @@ const styles = StyleSheet.create({
   noChatsText: {
     fontSize: 24,
     fontFamily: 'Jersey20-Regular',
-    color: '#E1FF00',
     textAlign: 'center',
   },
 });

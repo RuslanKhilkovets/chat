@@ -22,6 +22,7 @@ import {
 import {useAudioRecorder, useFetchRecipient, useTypedSelector} from '@/hooks';
 import {useChatContext} from '@/context/Chat/ChatContext';
 import {unreadNotifications} from '@/helpers/unreadNotifications';
+import {useTheme} from '@/context/Theme/ThemeContext';
 
 const ChatScreen = () => {
   const route = useRoute();
@@ -48,6 +49,7 @@ const ChatScreen = () => {
   const {isRecording, discardRecording, startRecording, stopRecording} =
     useAudioRecorder();
   const {t} = useTranslation();
+  const {theme, colorScheme} = useTheme();
 
   const [textMessage, setTextMessage] = useState<string>('');
   const [lastMessageId, setLastMessageId] = useState<string>();
@@ -200,7 +202,11 @@ const ChatScreen = () => {
             onScroll={handleScroll}
             scrollEventThrottle={100}
           />
-          <View style={styles.inputContainer}>
+          <View
+            style={[
+              styles.inputContainer,
+              {backgroundColor: theme[colorScheme].bgPrimary},
+            ]}>
             <Input
               disabled={isRecording}
               style={{flex: 1}}
@@ -210,7 +216,11 @@ const ChatScreen = () => {
               endAdornment={
                 textMessage && textMessage?.trim() ? (
                   <Pressable onPress={handleSendMessage}>
-                    <Icon name="send" color="yellow" size={20} />
+                    <Icon
+                      name="send"
+                      color={theme[colorScheme].textPrimary}
+                      size={20}
+                    />
                   </Pressable>
                 ) : null
               }
@@ -239,7 +249,6 @@ export default ChatScreen;
 
 const styles = StyleSheet.create({
   inputContainer: {
-    backgroundColor: '#000',
     paddingHorizontal: 10,
     padding: 10,
     flexDirection: 'row',

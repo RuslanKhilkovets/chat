@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {Controller, useForm} from 'react-hook-form';
 import {useNavigation} from '@react-navigation/native';
 import {yupResolver} from '@hookform/resolvers/yup';
@@ -79,7 +79,9 @@ export const LoginScreen = () => {
     <Screen>
       <View style={[styles.container]}>
         <View style={{alignItems: 'center'}}>
-          <Text style={styles.screenLabel}>Register</Text>
+          <Text style={[styles.screenLabel, theme[colorScheme].textPrimary]}>
+            Register
+          </Text>
         </View>
         <KeyboardScroll>
           <View style={{gap: 20, paddingVertical: 20}}>
@@ -88,7 +90,7 @@ export const LoginScreen = () => {
               name="token"
               render={({field: {onChange, value}}) => (
                 <Input
-                  placeholder={t('inputs.AccessToken')}
+                  placeholder={t('input.AccessToken')}
                   value={value}
                   onChangeText={onChange}
                   error={errors?.token?.message || formErrors?.token}
@@ -100,7 +102,7 @@ export const LoginScreen = () => {
               name="name"
               render={({field: {onChange, value}}) => (
                 <Input
-                  placeholder={t('inputs.Name')}
+                  placeholder={t('input.Name')}
                   value={value}
                   onChangeText={onChange}
                   error={errors?.password?.message || formErrors?.password}
@@ -112,7 +114,7 @@ export const LoginScreen = () => {
               name="phone"
               render={({field: {onChange, value}}) => (
                 <PhoneInput
-                  placeholder={t('inputs.Phone')}
+                  placeholder={t('input.Phone')}
                   value={value}
                   onChange={onChange}
                   error={errors?.password?.message || formErrors?.password}
@@ -136,7 +138,7 @@ export const LoginScreen = () => {
               name="password"
               render={({field: {onChange, value}}) => (
                 <Input
-                  placeholder={t('inputs.NPasswordame')}
+                  placeholder={t('input.Password')}
                   value={value}
                   onChangeText={onChange}
                   error={errors?.password?.message || formErrors?.password}
@@ -146,8 +148,12 @@ export const LoginScreen = () => {
             />
           </View>
 
-          <Button onPress={handleSubmit(onSubmit)} type="primary" fullWidth>
-            placeholder={t('actions.Register')}
+          <Button
+            onPress={handleSubmit(onSubmit)}
+            type="primary"
+            fullWidth
+            isLoading={isLoading}>
+            {t('actions.Register')}
           </Button>
         </KeyboardScroll>
         {/* <View
@@ -183,7 +189,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     gap: 20,
-    paddingHorizontal: Platform.OS === 'android' ? 20 : 0,
+    paddingHorizontal: 20,
   },
   text: {
     fontSize: 20,
@@ -194,7 +200,6 @@ const styles = StyleSheet.create({
   screenLabel: {
     fontSize: 50,
     fontFamily: 'Jersey20-Regular',
-    color: '#E1FF00',
     marginVertical: 50,
   },
 });
