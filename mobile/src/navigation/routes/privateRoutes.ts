@@ -4,13 +4,9 @@ import {
   ChatScreen,
   ChatsScreen,
   FindUsersScreen,
-  LanguageScreen,
-  NotificationsScreen,
   PrivacyPoliciesScreen,
   ProfileScreen,
-  SavedScreen,
-  SecurityScreen,
-  ThemeScreen,
+  SettingsScreen,
 } from '@/screens';
 import {IRoute} from '@/types';
 
@@ -20,16 +16,12 @@ export const privateRoutes: IRoute[] = [
     component: ChatsScreen,
   },
   {
+    name: 'Settings',
+    component: SettingsScreen,
+  },
+  {
     name: 'Profile',
     component: ProfileScreen,
-  },
-  {
-    name: 'Theme',
-    component: ThemeScreen,
-  },
-  {
-    name: 'Saved',
-    component: SavedScreen,
   },
   {
     name: 'About',
@@ -50,18 +42,6 @@ export const privateRoutes: IRoute[] = [
   {
     name: 'ChangePersonalData',
     component: ChangePersonalDataScreen,
-  },
-  {
-    name: 'Language',
-    component: LanguageScreen,
-  },
-  {
-    name: 'Security',
-    component: SecurityScreen,
-  },
-  {
-    name: 'Notifications',
-    component: NotificationsScreen,
   },
 ];
 

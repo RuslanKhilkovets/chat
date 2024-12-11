@@ -72,18 +72,16 @@ const MenuDrawer = ({onClose, visible}: MenuDrawerProps) => {
               }>
               {t('menu.Profile')}
             </MenuItem>
-            <MenuItem
-              iconName="texture"
-              onPress={() => onRedirectHandle('Theme')}>
-              {t('menu.Theme')}
-            </MenuItem>
+
             <MenuItem
               iconName="search"
               onPress={() => onRedirectHandle('FindUsers')}>
               {t('menu.FindUsers')}
             </MenuItem>
-            <MenuItem iconName="save" onPress={() => onRedirectHandle('Saved')}>
-              {t('menu.Saved')}
+            <MenuItem
+              iconName="settings"
+              onPress={() => onRedirectHandle('Settings')}>
+              {t('menu.Settings')}
             </MenuItem>
             <MenuItem
               iconName="shield"

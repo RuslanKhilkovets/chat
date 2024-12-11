@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 
-import {ProfileItem, Screen, SettingsItem} from '@/components';
+import {ProfileItem, Screen} from '@/components';
 import {useAuthMutation, useTypedSelector} from '@/hooks';
 import {ChangeDataType} from '@/constants';
 import {Api} from '@/api';
@@ -90,34 +90,8 @@ const ProfileScreen = () => {
             }
           />
         </View>
-
-        {isEditable && (
-          <View style={styles.infoBlock}>
-            <Text style={styles.infoBlockText}>Settings</Text>
-            <SettingsItem
-              iconName="language"
-              title="Language"
-              onPress={() => navigate('Language')}
-            />
-            <SettingsItem
-              iconName="light-mode"
-              title="Theme"
-              onPress={() => navigate('Theme')}
-            />
-            <SettingsItem
-              iconName="notifications"
-              title="Notifications"
-              onPress={() => navigate('Notifications')}
-            />
-            <SettingsItem
-              iconName="security"
-              title="Security"
-              onPress={() => navigate('Security')}
-            />
-          </View>
-        )}
-        {/* <Text style={styles.appVersion}>MChat v1.0</Text> */}
       </ScrollView>
+      <Text style={styles.appVersion}>MChat v1.0</Text>
     </Screen>
   );
 };
@@ -173,5 +147,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 18,
     marginVertical: 20,
+    position: 'absolute',
+    width: '100%',
+    bottom: 20,
   },
 });

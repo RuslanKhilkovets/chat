@@ -50,9 +50,9 @@
 	"menu": {
 		"Profile": "Мій профіль",
 		"Theme": "Тема",
-		"FindUsers": "Знайти користувачів",
-		"Saved": "Збережене",
-		"PrivacyPolicies": "Політика конфіденційності",
+		"FindUsers": "Пошук",
+		"Settings": "Налаштування",
+		"PrivacyPolicies": "Конфінденційність",
 		"AboutApp": "Про додаток"
 	},
 	"screens": {
@@ -61,7 +61,7 @@
 		"Language": "Мова",
 		"Notifications": "Сповіщення",
 		"Profile": "Профіль",
-		"Saved": "Збережене",
+		"Settings": "Налаштування",
 		"Security": "Безпека",
 		"Theme": "Тема"
 	},
