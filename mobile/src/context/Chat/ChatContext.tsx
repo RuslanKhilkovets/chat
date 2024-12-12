@@ -196,7 +196,7 @@ export const ChatProvider = ({children}) => {
         const responseMessages = res?.data?.messages;
 
         if (responseMessages && responseMessages?.length !== 0) {
-          setMessages(prevMessages => [...responseMessages, ...prevMessages]);
+          setMessages(prevMessages => [...prevMessages, ...responseMessages]);
           setPage(prev => ++prev);
         }
 

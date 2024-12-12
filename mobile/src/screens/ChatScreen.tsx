@@ -74,7 +74,7 @@ const ChatScreen = () => {
   }, [lastMessageId]);
 
   useEffect(() => {
-    setLastMessageId(messages?.[messages.length - 1]?._id);
+    setLastMessageId(messages?.[0]?._id);
   }, [messages]);
 
   useEffect(() => {
