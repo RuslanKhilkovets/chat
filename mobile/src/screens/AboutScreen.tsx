@@ -5,6 +5,7 @@ import {useTranslation} from 'react-i18next';
 
 import {Button, Screen} from '@/components';
 import {useGoBack, useAnimatedTyping} from '@/hooks';
+import {useTheme} from '@/context/Theme/ThemeContext';
 
 const AboutScreen = () => {
   const fullText =
@@ -20,13 +21,16 @@ const AboutScreen = () => {
   });
   const goBack = useGoBack();
   const {t} = useTranslation();
+  const {theme, colorScheme} = useTheme();
 
   return (
     <Screen title={t('screens.About')}>
       <ScrollView style={styles.container}>
-        <Text style={styles.text}>
+        <Text style={[styles.text, {color: theme[colorScheme].textPrimary}]}>
           {displayedText}
-          {cursorVisible && <Text style={styles.cursor}>|</Text>}
+          {cursorVisible && (
+            <Text style={{color: theme[colorScheme].textPrimary}}>|</Text>
+          )}
         </Text>
       </ScrollView>
       <View style={{marginHorizontal: 20}}>
@@ -52,9 +56,5 @@ const styles = StyleSheet.create({
     lineHeight: 26,
     fontSize: 22,
     fontFamily: 'Jersey20-Regular',
-    color: '#E1FF00',
-  },
-  cursor: {
-    color: '#E1FF00',
   },
 });

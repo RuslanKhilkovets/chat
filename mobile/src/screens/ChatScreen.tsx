@@ -5,7 +5,6 @@ import {
   View,
   KeyboardAvoidingView,
   Platform,
-  Keyboard,
   ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
@@ -103,11 +102,12 @@ const ChatScreen = () => {
     try {
       if (textMessage.trim()) {
         await sendMessage(textMessage, user, currentChat._id);
+        setTextMessage('');
+
         setIsTyping(false);
         if (typingTimeoutRef.current) {
           clearTimeout(typingTimeoutRef.current);
         }
-        setTextMessage('');
 
         setTimeout(() => {
           scrollToBottom();
