@@ -22,7 +22,7 @@ const createMessage = async (req, res) => {
 
 const getMessages = async (req, res) => {
   const { chatId } = req.params;
-  let { page = 1, limit = 8 } = req.query;
+  let { page = 1, limit = 20 } = req.query;
 
   try {
     const totalMessages = await messageModel.countDocuments({ chatId });
