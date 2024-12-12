@@ -133,13 +133,13 @@ const MessageItem = ({message}: IMessageItemProps) => {
               <Icon
                 name="done-all"
                 size={16}
-                color={theme[colorScheme].purpleLight}
+                color={theme[colorScheme].textPrimary}
               />
             ) : (
               <Icon
                 name="done"
                 size={16}
-                color={theme[colorScheme].purpleLight}
+                color={theme[colorScheme].textPrimary}
               />
             )}
           </View>

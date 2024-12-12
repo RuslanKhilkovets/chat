@@ -51,7 +51,7 @@ const MenuDrawer = ({onClose, visible}: MenuDrawerProps) => {
                     styles.picText,
                     {color: theme[colorScheme].textPrimary},
                   ]}>
-                  {user.name[0]?.toUpperCase()}
+                  {user?.name[0]?.toUpperCase()}
                 </Text>
               </TouchableOpacity>
               <Text

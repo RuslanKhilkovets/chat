@@ -14,6 +14,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useChatContext} from '@/context/Chat/ChatContext';
 import {getAvatarColor} from '@/helpers';
 import {useTheme} from '@/context/Theme/ThemeContext';
+import {useGoBack} from '@/hooks';
 
 interface IScreenHeaderProps {
   chatMode?: boolean;
@@ -28,10 +29,12 @@ const ScreenHeader = ({title, payload, chatMode}: IScreenHeaderProps) => {
   const {deleteChat} = useChatContext();
   const {theme, colorScheme} = useTheme();
   const {t} = useTranslation();
+  const goBack = useGoBack();
 
   const handleDelete = () => {
     deleteChat(payload?.chatId);
     setModalVisible(false);
+    goBack();
   };
 
   return (

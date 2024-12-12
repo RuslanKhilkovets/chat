@@ -110,8 +110,18 @@ const ChatItem = ({chat}: IChatItemProps) => {
             </Text>
           )}
           {thisUserNotifications?.length !== 0 && (
-            <View style={styles.notifications}>
-              <Text style={styles.notificationsText}>
+            <View
+              style={[
+                styles.notifications,
+                {
+                  backgroundColor: theme[colorScheme].textPrimary,
+                },
+              ]}>
+              <Text
+                style={[
+                  styles.notificationsText,
+                  {color: theme[colorScheme].bgPrimary},
+                ]}>
                 {thisUserNotifications?.length}
               </Text>
             </View>
@@ -126,10 +136,9 @@ export default ChatItem;
 
 const styles = StyleSheet.create({
   notifications: {
-    height: 20,
-    width: 20,
-    backgroundColor: 'yellow',
-    borderRadius: 10,
+    height: 25,
+    width: 25,
+    borderRadius: 13,
     justifyContent: 'center',
     alignItems: 'center',
   },

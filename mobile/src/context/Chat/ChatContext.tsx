@@ -146,7 +146,7 @@ export const ChatProvider = ({children}) => {
       }
 
       setNewMessage(response);
-      setMessages(prev => [...prev, response]);
+      setMessages(prev => [response, ...prev]);
     },
     [],
   );
@@ -195,11 +195,11 @@ export const ChatProvider = ({children}) => {
       onSuccess: res => {
         const responseMessages = res?.data?.messages;
 
-        setMessages(prevMessages => [
-          ...responseMessages.reverse(),
-          ...prevMessages,
-        ]);
-        setPage(prev => ++prev);
+        if (responseMessages && responseMessages?.length !== 0) {
+          setMessages(prevMessages => [...responseMessages, ...prevMessages]);
+          setPage(prev => ++prev);
+        }
+
         setHasMoreMessages(res?.data?.metadata?.hasMore);
       },
       onError: error => {
@@ -286,7 +286,7 @@ export const ChatProvider = ({children}) => {
       if (currentChat?._id !== res.chatId) {
         return;
       }
-      setMessages(prev => [...prev, res]);
+      setMessages(prev => [res, ...prev]);
     });
 
     return () => {

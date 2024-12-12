@@ -1,5 +1,5 @@
 export default axios => ({
-  getMessages({chatId, page = 1, limit = 8}) {
+  getMessages({chatId, page = 1, limit = 20}) {
     return axios.get(`/messages/${chatId}`, {
       params: {page, limit},
     });

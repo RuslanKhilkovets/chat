@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Keyboard,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {useRoute} from '@react-navigation/native';
@@ -45,6 +46,7 @@ const ChatScreen = () => {
     onlineUsers,
     isMessagesLoading,
     page,
+    hasMoreMessages,
   } = useChatContext();
   const {isRecording, discardRecording, startRecording, stopRecording} =
     useAudioRecorder();
@@ -94,7 +96,7 @@ const ChatScreen = () => {
   }, []);
 
   const scrollToBottom = () => {
-    flatListRef.current?.scrollToEnd({animated: true});
+    flatListRef.current?.scrollToOffset({offset: 0, animated: true});
   };
 
   const handleSendMessage = async () => {
@@ -132,15 +134,7 @@ const ChatScreen = () => {
   };
 
   useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => {
-        scrollToBottom();
-      },
-    );
-
     return () => {
-      keyboardDidShowListener.remove();
       if (typingTimeoutRef.current) {
         clearTimeout(typingTimeoutRef.current);
       }
@@ -176,11 +170,12 @@ const ChatScreen = () => {
     }
 
     debounceTimeout = setTimeout(() => {
-      const {contentOffset} = event.nativeEvent;
+      const {contentOffset, layoutMeasurement, contentSize} = event.nativeEvent;
 
-      const isAtTop = contentOffset.y <= 0;
+      const isNearTop =
+        contentOffset.y >= contentSize.height - layoutMeasurement.height - 300;
 
-      if (isAtTop && !isMessagesLoading) {
+      if (isNearTop && !isMessagesLoading && hasMoreMessages) {
         loadMoreMessages();
       }
     }, 300);
@@ -192,14 +187,32 @@ const ChatScreen = () => {
         style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <View style={{flex: 1}}>
+          {isMessagesLoading && (
+            <View
+              style={[
+                styles.loader,
+                {backgroundColor: theme[colorScheme].textPrimary},
+                {zIndex: 2},
+              ]}>
+              <ActivityIndicator
+                color={theme[colorScheme].bgPrimary}
+                size={32}
+              />
+            </View>
+          )}
           <FlatList
             ref={flatListRef}
             data={messages}
             renderItem={({item}) => <MessageItem message={item} />}
             keyExtractor={item => item._id}
-            style={{paddingBottom: 20}}
+            style={{zIndex: 1}}
+            contentContainerStyle={{
+              flexGrow: 1, // Дозволяє контейнеру заповнювати доступний простір
+              justifyContent: 'flex-end',
+            }}
             onViewableItemsChanged={handleViewableItemsChanged.current}
             onScroll={handleScroll}
+            inverted
             scrollEventThrottle={100}
           />
           <View
@@ -254,5 +267,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 20,
+  },
+  loader: {
+    padding: 5,
+    borderRadius: 25,
+    position: 'absolute',
+    left: '50%',
+    top: 30,
+    transform: [{translateX: -16}],
   },
 });
