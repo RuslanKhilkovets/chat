@@ -24,7 +24,7 @@ const PrivacyPoliciesScreen = () => {
   });
 
   return (
-    <Screen title="Privacy policies">
+    <Screen title={t('screens.Policies')}>
       <ScrollView style={styles.container}>
         <Text style={[styles.text, {color: theme[colorScheme].textPrimary}]}>
           {displayedText}

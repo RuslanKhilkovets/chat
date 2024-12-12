@@ -92,6 +92,7 @@ const ChatItem = ({chat}: IChatItemProps) => {
               style={[
                 styles.lastMsg,
                 thisUserNotifications?.length !== 0 && {fontWeight: '700'},
+                {color: theme[colorScheme].textPrimary},
               ]}
               ellipsizeMode="tail">
               {isLatestMessageMine

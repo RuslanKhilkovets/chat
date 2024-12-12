@@ -67,7 +67,8 @@
 		"Profile": "Profile",
 		"Settings": "Settings",
 		"Security": "Security",
-		"Theme": "Theme"
+		"Theme": "Theme",
+		"Policies": "Privacy policies"
 	},
 	"items": {
 		"UserTag": "User tag",

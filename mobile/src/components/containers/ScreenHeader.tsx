@@ -156,6 +156,7 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontFamily: 'Jersey20-Regular',
     textTransform: 'capitalize',
+    textAlign: 'center',
   },
   name: {
     color: 'yellow',
