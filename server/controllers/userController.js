@@ -169,7 +169,7 @@ const getUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   const { userId } = req.params;
-  const { name, phone, tag, email } = req.body;
+  const { name, phone, tag, email, playerId } = req.body;
 
   try {
     if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
@@ -190,6 +190,7 @@ const updateUser = async (req, res) => {
     if (phone !== undefined) user.phone = phone;
     if (tag !== undefined) user.tag = tag;
     if (email !== undefined) user.email = email;
+    if (playerId !== undefined) user.playerId = playerId;
 
     const updatedUser = await user.save();
 
