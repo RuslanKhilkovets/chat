@@ -1,5 +1,4 @@
 const moongoose = require('mongoose');
-const { v4: uuidv4 } = require('uuid');
 
 const userSchema = new moongoose.Schema(
   {
@@ -9,7 +8,6 @@ const userSchema = new moongoose.Schema(
     registerToken: { type: String, required: false, unique: true },
     phone: { type: String, required: false, unique: true },
     tag: { type: String, required: false, unique: true },
-    playerId: { type: String, required: true, unique: true, default: uuidv4 }, // Додано
   },
   {
     timestamps: true,

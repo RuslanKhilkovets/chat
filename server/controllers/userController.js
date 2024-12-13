@@ -5,7 +5,6 @@ const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const logger = require('../utils/logger');
 const { default: mongoose } = require('mongoose');
-const { v4: uuidv4 } = require('uuid');
 
 const createToken = _id => {
   const jwtkey = process.env.JWT_SECRET_KEY;
@@ -31,16 +30,14 @@ const registerUser = async (req, res) => {
     }
 
     if (!validator.isStrongPassword(password))
-      return res.status(400).json({ message: 'Password must be strong' });
+      return res.status(400).json({ message: 'Password must be a strong' });
 
     const tokenDoc = await tokenModel.findOne({ token: registerToken, isUsed: false });
 
     if (!tokenDoc)
       return res.status(400).json({ message: 'Invalid or already used registration token' });
 
-    const playerId = uuidv4();
-
-    user = new userModel({ name, email, password, registerToken, phone, tag, playerId });
+    user = new userModel({ name, email, password, registerToken, phone, tag });
 
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(password, salt);
@@ -54,7 +51,7 @@ const registerUser = async (req, res) => {
 
     logger.info(`User with email ${email} registered. Used token ${registerToken}`);
 
-    res.status(200).json({ _id: user._id, name, email, registerToken, token, playerId });
+    res.status(200).json({ _id: user._id, name, email, registerToken, token });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server Error', error: err });
