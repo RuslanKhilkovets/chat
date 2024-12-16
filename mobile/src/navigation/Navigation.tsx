@@ -4,6 +4,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {StatusBar, View} from 'react-native';
 import SInfo from 'react-native-sensitive-info';
 import {useDispatch} from 'react-redux';
+import {OneSignal} from 'react-native-onesignal';
 
 import {privateRoutes, publicRoutes} from '@/navigation';
 import {IRoute} from '@/types';
@@ -11,14 +12,23 @@ import {Logo} from '@/components';
 import {setUser} from '@/store/user';
 import {AuthContext} from '@/context/Auth/AuthContext';
 import SplashScreen from 'react-native-splash-screen';
+import {useAuthMutation} from '@/hooks';
+import {Api} from '@/api';
 
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
   const [isAuth, setIsAuth] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const {accessToken} = useContext(AuthContext);
   const dispatch = useDispatch();
+
+  const {mutate: updatePlayerId} = useAuthMutation({
+    mutateFn: Api.users.update,
+    onSuccess: res => {
+      console.log(res);
+    },
+  });
 
   const getToken = async () => {
     const accessToken = await SInfo.getItem('accessToken', {
@@ -44,14 +54,22 @@ const Navigation = () => {
       setIsAuth(!!accessToken);
       dispatch(setUser(user));
 
-      // Simulate loading for 5 seconds
+      if (user && user.playerId) {
+        OneSignal.login(user.playerId);
+      }
+
+      const playerId = await OneSignal.User.getOnesignalId();
+      if (playerId) {
+        updatePlayerId({playerId});
+      }
+
       setTimeout(() => {
         setLoading(false);
       }, 5000);
     };
 
     fetchToken();
-  });
+  }, []);
 
   useEffect(() => {
     if (accessToken) {

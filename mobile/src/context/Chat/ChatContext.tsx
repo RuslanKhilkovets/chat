@@ -7,9 +7,12 @@ import React, {
 } from 'react';
 import {baseUrl, getRequest, postRequest} from '../../helpers/services';
 import {io} from 'socket.io-client';
+import {OneSignal} from 'react-native-onesignal';
+
 import {SERVER_URL} from '@env';
 import {useAuthMutation, useTypedSelector} from '@/hooks';
 import {Api} from '@/api';
+import {sendNotification} from '@/helpers';
 
 export const ChatContext = createContext();
 
@@ -128,10 +131,11 @@ export const ChatProvider = ({children}) => {
   );
 
   const sendMessage = useCallback(
-    async (textMessage, sender, currentChatId) => {
+    async (textMessage, sender, currentChatId, recipient) => {
       if (!textMessage) {
-        throw new Error(`${currentChat} type smth`);
+        throw new Error(`${currentChatId} type smth`);
       }
+
       const response = await postRequest(
         `${baseUrl}/messages`,
         JSON.stringify({
@@ -147,8 +151,20 @@ export const ChatProvider = ({children}) => {
 
       setNewMessage(response);
       setMessages(prev => [response, ...prev]);
+
+      if (recipient && recipient.playerId) {
+        try {
+          await sendNotification({
+            playerIds: [recipient?.playerId],
+            title: `${sender.name}`,
+            message: textMessage,
+          });
+        } catch (error) {
+          console.error('Failed to send push notification:', error);
+        }
+      }
     },
-    [],
+    [baseUrl],
   );
 
   const handleMessageRead = async (messageIds, chatId) => {

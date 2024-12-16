@@ -101,7 +101,7 @@ const ChatScreen = () => {
   const handleSendMessage = async () => {
     try {
       if (textMessage.trim()) {
-        await sendMessage(textMessage, user, currentChat._id);
+        await sendMessage(textMessage, user, currentChat._id, recipientUser);
         setTextMessage('');
 
         setIsTyping(false);
@@ -207,7 +207,7 @@ const ChatScreen = () => {
             keyExtractor={item => item._id}
             style={{zIndex: 1}}
             contentContainerStyle={{
-              flexGrow: 1, // Дозволяє контейнеру заповнювати доступний простір
+              flexGrow: 1,
               justifyContent: 'flex-end',
             }}
             onViewableItemsChanged={handleViewableItemsChanged.current}
@@ -245,7 +245,7 @@ const ChatScreen = () => {
               <SendAudioButton
                 startRecording={startRecording}
                 stopRecording={async () => {
-                  await stopRecording();
+                  await stopRecording(recipientUser);
                   scrollToBottom();
                 }}
                 isRecording={isRecording}

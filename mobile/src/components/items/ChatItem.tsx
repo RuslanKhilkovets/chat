@@ -186,8 +186,8 @@ const styles = StyleSheet.create({
   },
   onlineMark: {
     position: 'absolute',
-    bottom: 5,
-    right: 5,
+    bottom: 3,
+    right: 0,
     height: 15,
     width: 15,
     borderRadius: 7.5,

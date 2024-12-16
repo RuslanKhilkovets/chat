@@ -14,7 +14,7 @@ import {Api} from '@/api';
 import {useTheme} from '@/context/Theme/ThemeContext';
 
 const FindUsersScreen = () => {
-  const {_id: currentUserId} = useTypedSelector(state => state.user);
+  const {_id: currentUserId} = useTypedSelector(state => state.user) || {};
   const {t} = useTranslation();
   const {theme, colorScheme} = useTheme();
 

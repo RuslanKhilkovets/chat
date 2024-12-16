@@ -8,11 +8,14 @@ import AudioRecorderPlayer, {
   AVEncodingOption,
   RecordBackType,
 } from 'react-native-audio-recorder-player';
+import {useTranslation} from 'react-i18next';
+import RNFS from 'react-native-fs';
+
 import {useChatContext} from '@/context/Chat/ChatContext';
 import useTypedSelector from '@/hooks/useTypedSelector';
 import useAuthMutation from '@/hooks/useAuthMutation';
 import {Api} from '@/api';
-import RNFS from 'react-native-fs';
+import {sendNotification} from '@/helpers';
 
 const audioRecorderPlayer = new AudioRecorderPlayer();
 
@@ -21,7 +24,9 @@ export const useAudioRecorder = () => {
   const [isRecordingFinished, setIsRecordingFinished] = useState(false);
   const [file, setFile] = useState<string | null>(null);
   const [isDiscardingRecording, setIsDiscardingRecording] = useState(false);
+  const [recipientUser, setRecipientUser] = useState(false);
 
+  const {t} = useTranslation();
   const {currentChat, recipientId, setMessages, socket} = useChatContext();
   const user = useTypedSelector(state => state.user);
 
@@ -91,8 +96,9 @@ export const useAudioRecorder = () => {
     }
   }, []);
 
-  const stopRecording = useCallback(async () => {
+  const stopRecording = useCallback(async recipientUser => {
     try {
+      setRecipientUser(recipientUser);
       await audioRecorderPlayer.stopRecorder();
       audioRecorderPlayer.removeRecordBackListener();
       setIsRecording(false);
@@ -119,15 +125,32 @@ export const useAudioRecorder = () => {
 
   const {mutate: sendAudio, isLoading: isUploading} = useAuthMutation({
     mutationFn: Api.media.sendMessage,
-    onSuccess: response => {
+    onSuccess: async response => {
+      setMessages((prevMessages: any[]) => [
+        response.data.data,
+        ...prevMessages,
+      ]);
+
       socket.emit('sendMessage', {
         ...response.data.data,
         recipientId,
       });
 
+      if (recipientUser && recipientUser.playerId) {
+        try {
+          await sendNotification({
+            playerIds: [recipientUser?.playerId],
+            title: `${user.name}`,
+            message: t('chats.VoiceMessage'),
+          });
+        } catch (error) {
+          console.error('Failed to send push notification:', error);
+        }
+      }
+
       setMessages((prevMessages: any[]) => [
-        ...prevMessages,
         response.data.data,
+        ...prevMessages,
       ]);
       setFile(null);
     },
