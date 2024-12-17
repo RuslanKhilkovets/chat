@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {Controller, useForm} from 'react-hook-form';
 import {useNavigation} from '@react-navigation/native';
 import {yupResolver} from '@hookform/resolvers/yup';
@@ -8,7 +8,7 @@ import {useTranslation} from 'react-i18next';
 import {Input, Screen} from '@/components';
 import {Button} from '@/components';
 import {useAuthMutation} from '@/hooks';
-import {AuthContext} from '@/context/Auth/AuthContext';
+import {useAuthContext} from '@/context/Auth/AuthContext';
 import loginSchema from '@/validations/login';
 import {Api} from '@/api';
 import {useTheme} from '@/context/Theme/ThemeContext';
@@ -18,7 +18,7 @@ export const LoginScreen = () => {
     password: '',
     email: '',
   });
-  const {login} = React.useContext(AuthContext);
+  const {login} = useAuthContext();
   const {t} = useTranslation();
   const {theme, colorScheme} = useTheme();
 

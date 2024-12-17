@@ -73,7 +73,7 @@ export const ChatsScreen = () => {
           </Button>
         </View>
       )}
-      {filteredChats?.length === 0 && filterQuery && (
+      {filteredChats?.length === 0 && filterQuery && !isUserChatsLoading && (
         <View style={styles.container}>
           <Text
             style={[

@@ -5,6 +5,7 @@ import {Modal} from '@/components';
 import {IModalProps} from '@/types';
 import {useAnimatedTyping} from '@/hooks';
 import {useTranslation} from 'react-i18next';
+import {useTheme} from '@/context/Theme/ThemeContext';
 
 const AboutModal = ({visible, onClose, openFrom}: IModalProps) => {
   const fullText =
@@ -21,6 +22,7 @@ const AboutModal = ({visible, onClose, openFrom}: IModalProps) => {
   });
 
   const {t} = useTranslation();
+  const {theme, colorScheme} = useTheme();
 
   return (
     <Modal
@@ -29,9 +31,22 @@ const AboutModal = ({visible, onClose, openFrom}: IModalProps) => {
       title={t('modals.About')}
       openFrom={openFrom}>
       <ScrollView style={styles.container}>
-        <Text style={styles.text}>
+        <Text
+          style={[
+            styles.text,
+            {
+              color: theme[colorScheme].textPrimary,
+            },
+          ]}>
           {displayedText}
-          {cursorVisible && <Text style={styles.cursor}>|</Text>}
+          {cursorVisible && (
+            <Text
+              style={{
+                color: theme[colorScheme].textPrimary,
+              }}>
+              |
+            </Text>
+          )}
         </Text>
       </ScrollView>
     </Modal>
@@ -50,9 +65,5 @@ const styles = StyleSheet.create({
     lineHeight: 26,
     fontSize: 22,
     fontFamily: 'Jersey20-Regular',
-    color: '#E1FF00',
-  },
-  cursor: {
-    color: '#E1FF00',
   },
 });

@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigationContainer} from '@react-navigation/native';
 import {StatusBar, View} from 'react-native';
@@ -10,7 +10,7 @@ import {privateRoutes, publicRoutes} from '@/navigation';
 import {IRoute} from '@/types';
 import {Logo} from '@/components';
 import {setUser} from '@/store/user';
-import {AuthContext} from '@/context/Auth/AuthContext';
+import {useAuthContext} from '@/context/Auth/AuthContext';
 import SplashScreen from 'react-native-splash-screen';
 import {useAuthMutation} from '@/hooks';
 import {Api} from '@/api';
@@ -20,7 +20,7 @@ const Stack = createNativeStackNavigator();
 const Navigation = () => {
   const [isAuth, setIsAuth] = useState(false);
   const [loading, setLoading] = useState(true);
-  const {accessToken} = useContext(AuthContext);
+  const {accessToken} = useAuthContext();
   const dispatch = useDispatch();
 
   const {mutate: updatePlayerId} = useAuthMutation({
@@ -72,9 +72,7 @@ const Navigation = () => {
   }, []);
 
   useEffect(() => {
-    if (accessToken) {
-      setIsAuth(!!accessToken);
-    }
+    setIsAuth(!!accessToken);
   }, [accessToken]);
 
   useEffect(() => {

@@ -21,7 +21,6 @@ const Modal = ({
   title,
   openFrom = 'right',
   children,
-  headerBgColor,
 }: IModalProps) => {
   const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
   const [isVisible, setIsVisible] = useState(visible);
@@ -74,12 +73,17 @@ const Modal = ({
       visible={isVisible}
       onRequestClose={onClose}>
       <View style={styles.modalOverlay}>
-        <Animated.View style={[styles.modalContainer, transformStyle]}>
+        <Animated.View
+          style={[
+            styles.modalContainer,
+            transformStyle,
+            {backgroundColor: theme[colorScheme].bgPrimary},
+          ]}>
           <Animated.View
             style={[
               styles.modalHeader,
               {
-                backgroundColor: headerBgColor,
+                backgroundColor: theme[colorScheme].bgSecondary,
                 paddingTop:
                   Platform.OS === 'android' ? insets.top - 25 : insets.top + 10,
               },
@@ -89,10 +93,19 @@ const Modal = ({
                 width: '100%',
                 flexDirection: 'row',
               }}>
-              <Text style={[styles.modalTitle]}>{title}</Text>
+              <Text
+                style={[
+                  styles.modalTitle,
+                  {color: theme[colorScheme].textPrimary},
+                ]}>
+                {title}
+              </Text>
 
               <TouchableOpacity onPress={onClose} style={[styles.closeIcon]}>
-                <AppIcon name="delete_filter" color="#E1FF00" />
+                <AppIcon
+                  name="delete_filter"
+                  color={theme[colorScheme].textPrimary}
+                />
               </TouchableOpacity>
             </View>
           </Animated.View>

@@ -99,7 +99,7 @@ const Input: React.FC<IInputProps> = ({
         ]}>
         {mask ? (
           <TextInputMask
-            placeholderTextColor={theme[colorScheme].textSecondary}
+            placeholderTextColor={theme[colorScheme].textTertiary}
             type={'custom'}
             options={{
               mask,
@@ -120,6 +120,7 @@ const Input: React.FC<IInputProps> = ({
               inputStyle,
               isFocused && styles.activeInput,
               disabled && styles.disabled,
+              {color: theme[colorScheme].textPrimary},
             ]}
           />
         ) : (
@@ -154,7 +155,10 @@ const Input: React.FC<IInputProps> = ({
           <TouchableOpacity
             style={styles.endAdornment}
             onPress={handleTogglePasswordVisibility}>
-            <AppIcon name={!showPassword ? 'hide' : 'see'} color={'yellow'} />
+            <AppIcon
+              name={!showPassword ? 'hide' : 'see'}
+              color={theme[colorScheme].textPrimary}
+            />
           </TouchableOpacity>
         )}
         {searchMode && (
@@ -190,7 +194,6 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 20,
     fontFamily: 'Jersey20-Regular',
-    color: '#E1FF00',
   },
   activeInput: {
     borderColor: '#000',

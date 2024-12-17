@@ -1,4 +1,4 @@
-import {Platform, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
@@ -49,7 +49,7 @@ const ProfileScreen = () => {
           <View
             style={[
               styles.profilePic,
-              {backgroundColor: getAvatarColor(user._id)},
+              {backgroundColor: getAvatarColor(user?._id)},
             ]}>
             <Text
               style={[

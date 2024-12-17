@@ -18,7 +18,7 @@ import {useAuthMutation} from '@/hooks';
 import {Api} from '@/api';
 import registerSchema from '@/validations/register';
 import {useTheme} from '@/context/Theme/ThemeContext';
-import {AuthContext} from '@/context/Auth/AuthContext';
+import {useAuthContext} from '@/context/Auth/AuthContext';
 
 export const LoginScreen = () => {
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = React.useState(false);
@@ -29,9 +29,8 @@ export const LoginScreen = () => {
     phone: '',
     token: '',
   });
-  const {register} = React.useContext(AuthContext);
+  const {login} = useAuthContext();
   const {theme, colorScheme} = useTheme();
-  const insets = useSafeAreaInsets();
   const {t} = useTranslation();
 
   const navigation = useNavigation();
@@ -52,10 +51,11 @@ export const LoginScreen = () => {
   });
 
   const onRegisterSuccess = async (res: any) => {
-    // TODO: add logic
+    login(res.data);
+    console.log(res);
 
     reset();
-    navigation.navigate('Consent');
+    //navigation.navigate('Chats');
   };
 
   const onRegisterError = ({errors}: any) => {
@@ -79,7 +79,11 @@ export const LoginScreen = () => {
     <Screen>
       <View style={[styles.container]}>
         <View style={{alignItems: 'center'}}>
-          <Text style={[styles.screenLabel, theme[colorScheme].textPrimary]}>
+          <Text
+            style={[
+              styles.screenLabel,
+              {color: theme[colorScheme].textPrimary},
+            ]}>
             Register
           </Text>
         </View>
@@ -190,12 +194,6 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 20,
     paddingHorizontal: 20,
-  },
-  text: {
-    fontSize: 20,
-    fontFamily: 'Jersey20-Regular',
-    color: '#E1FF00',
-    textAlign: 'center',
   },
   screenLabel: {
     fontSize: 50,

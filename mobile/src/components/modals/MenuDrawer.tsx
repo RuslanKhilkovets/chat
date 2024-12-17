@@ -78,7 +78,10 @@ const MenuDrawer = ({onClose, visible}: MenuDrawerProps) => {
             <MenuItem
               iconName="person"
               onPress={() =>
-                onRedirectHandle('Profile', {userId: null, isEditable: true})
+                onRedirectHandle('Profile', {
+                  userId: null,
+                  isEditable: true,
+                })
               }>
               {t('menu.Profile')}
             </MenuItem>

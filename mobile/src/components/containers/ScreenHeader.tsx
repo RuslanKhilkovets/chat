@@ -42,7 +42,10 @@ const ScreenHeader = ({title, payload, chatMode}: IScreenHeaderProps) => {
       <View
         style={[
           styles.header,
-          {backgroundColor: theme[colorScheme].bgSecondary},
+          {
+            backgroundColor: theme[colorScheme].bgSecondary,
+            paddingVertical: !!title || !!payload ? 10 : 30,
+          },
           !chatMode && {justifyContent: 'center'},
         ]}>
         <View style={styles.icon}>
@@ -53,7 +56,9 @@ const ScreenHeader = ({title, payload, chatMode}: IScreenHeaderProps) => {
           <Text
             style={[
               styles.headerTitle,
-              {color: theme[colorScheme].textPrimary},
+              {
+                color: theme[colorScheme].textPrimary,
+              },
             ]}>
             {title}
           </Text>
@@ -126,7 +131,6 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 10,
     position: 'relative',
   },
   icon: {
