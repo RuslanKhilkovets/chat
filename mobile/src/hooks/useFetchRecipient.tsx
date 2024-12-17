@@ -1,5 +1,7 @@
 import {useEffect, useState} from 'react';
-import {baseUrl, getRequest} from '../helpers/services';
+
+import {useAuthMutation} from '../hooks/useAuthMutation';
+import {Api} from '@/api';
 
 export const useFetchRecipient = (chat, user) => {
   const [recipientUser, setRecipientUser] = useState(null);
@@ -7,22 +9,25 @@ export const useFetchRecipient = (chat, user) => {
 
   const recipientId = chat?.members.find(id => id !== user?._id);
 
+  const {mutate: fetchRecipient, isLoading} = useAuthMutation({
+    mutationFn: async recipientId => {
+      return Api.users.findById(recipientId);
+    },
+    onSuccess: response => {
+      setRecipientUser(response.data);
+    },
+    onError: error => {
+      setError(error);
+    },
+  });
+
   useEffect(() => {
-    const getUser = async () => {
-      if (!recipientId) return null;
+    if (!recipientId) return;
 
-      const response = await getRequest(`${baseUrl}/users/find/${recipientId}`);
-
-      if (response.error) {
-        return setError(response);
-      }
-
-      setRecipientUser(response);
-    };
-    getUser();
+    fetchRecipient(recipientId);
   }, [recipientId]);
 
-  return {recipientUser, error};
+  return {recipientUser, error, isLoading};
 };
 
 export default useFetchRecipient;

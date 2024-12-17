@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 
 interface IUseAnimatedTypingProps {
   fullText: string;
-  typingSpeed?: number; // В мілісекундах
-  cursorBlinkSpeed?: number; // В мілісекундах
+  typingSpeed?: number;
+  cursorBlinkSpeed?: number;
   visible?: boolean;
 }
 
 const useAnimatedTyping = ({
   fullText,
-  typingSpeed = 10, // Більш реалістична швидкість
+  typingSpeed = 10,
   cursorBlinkSpeed = 500,
   visible = true,
 }: IUseAnimatedTypingProps) => {
@@ -45,7 +45,7 @@ const useAnimatedTyping = ({
     };
   }, [fullText, typingSpeed, cursorBlinkSpeed, visible]);
 
-  return { displayedText, cursorVisible };
+  return {displayedText, cursorVisible};
 };
 
 export default useAnimatedTyping;

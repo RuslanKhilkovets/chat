@@ -5,9 +5,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import {baseUrl, getRequest, postRequest} from '../../helpers/services';
 import {io} from 'socket.io-client';
-import {OneSignal} from 'react-native-onesignal';
 
 import {SERVER_URL} from '@env';
 import {useAuthMutation, useTypedSelector} from '@/hooks';
@@ -22,7 +20,6 @@ export const useChatContext = () => {
 
 export const ChatProvider = ({children}) => {
   const [userChats, setUserChats] = useState([]);
-  const [isUserChatsLoading, setIsUserChatsLoading] = useState(false);
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const [messagesError, setMessagesError] = useState(null);
@@ -97,18 +94,24 @@ export const ChatProvider = ({children}) => {
     setCurrentChat(chat);
   }, []);
 
+  const {mutateAsync: createChatMutate} = useAuthMutation({
+    mutationFn: Api.chats.createChat,
+    onSuccess: res => {
+      setUserChats(prev => [...prev, res.data]);
+    },
+    onError: error => {
+      console.error('Error while creating chat', error);
+    },
+  });
+
   const createChat = useCallback(async (firstId, secondId) => {
-    const response = await postRequest(
-      `${baseUrl}/chats`,
-      JSON.stringify({firstId, secondId}),
-    );
-    if (response.error) {
-      throw new Error(response);
+    try {
+      const response = await createChatMutate({firstId, secondId});
+      return response.data;
+    } catch (error) {
+      console.error('Failed to create chat:', error);
+      throw error;
     }
-
-    setUserChats(prev => [...prev, response]);
-
-    return response;
   }, []);
 
   const markThisUserNotificationsAsRead = useCallback(
@@ -130,27 +133,13 @@ export const ChatProvider = ({children}) => {
     [],
   );
 
-  const sendMessage = useCallback(
-    async (textMessage, sender, currentChatId, recipient) => {
-      if (!textMessage) {
-        throw new Error(`${currentChatId} type smth`);
-      }
-
-      const response = await postRequest(
-        `${baseUrl}/messages`,
-        JSON.stringify({
-          chatId: currentChatId,
-          senderId: sender._id,
-          text: textMessage,
-        }),
-      );
-
-      if (response.error) {
-        return;
-      }
-
-      setNewMessage(response);
-      setMessages(prev => [response, ...prev]);
+  const {mutate: sendMessageMutate} = useAuthMutation({
+    mutationFn: async ({chatId, senderId, textMessage, recipient, sender}) => {
+      const response = await Api.messages.sendMessage({
+        chatId,
+        senderId,
+        text: textMessage,
+      });
 
       if (recipient && recipient.playerId) {
         try {
@@ -163,8 +152,29 @@ export const ChatProvider = ({children}) => {
           console.error('Failed to send push notification:', error);
         }
       }
+
+      return response;
     },
-    [baseUrl],
+    onSuccess: response => {
+      setNewMessage(response.data);
+      setMessages(prev => [response.data, ...prev]);
+    },
+    onError: error => {
+      console.error('Failed to send message:', error);
+    },
+  });
+
+  const sendMessage = useCallback(
+    (textMessage, sender, currentChatId, recipient) => {
+      sendMessageMutate({
+        chatId: currentChatId,
+        senderId: sender._id,
+        textMessage,
+        recipient,
+        sender,
+      });
+    },
+    [sendMessageMutate],
   );
 
   const handleMessageRead = async (messageIds, chatId) => {
@@ -339,34 +349,20 @@ export const ChatProvider = ({children}) => {
     };
   }, [user]);
 
-  useEffect(() => {
-    const getUsers = async () => {
-      const response = await getRequest(`${baseUrl}/users`);
-      if (response.error) {
-        return;
-      }
-    };
-    getUsers();
-  }, [userChats]);
-
-  useEffect(() => {
-    const getUserChats = async () => {
-      setIsUserChatsLoading(true);
-
-      try {
-        if (user._id) {
-          const response = await fetch(`${baseUrl}/chats/${user._id}`);
-          const data = await response.json();
-
-          setUserChats(data);
-        }
-      } catch (error) {
+  const {mutate: getUserChats, isLoading: isUserChatsLoading} = useAuthMutation(
+    {
+      mutationFn: Api.chats.findUserChats,
+      onSuccess: res => {
+        setUserChats(res.data);
+      },
+      onError: error => {
         console.log(error.message);
-      } finally {
-        setIsUserChatsLoading(false);
-      }
-    };
-    getUserChats();
+      },
+    },
+  );
+
+  useEffect(() => {
+    getUserChats(user._id);
   }, [user]);
 
   useEffect(() => {

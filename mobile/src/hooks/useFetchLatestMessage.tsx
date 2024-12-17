@@ -1,25 +1,29 @@
 import {useEffect, useState} from 'react';
-import {baseUrl, getRequest} from '../helpers/services';
+import {useAuthMutation} from '@/hooks/useAuthMutation';
 import {useChatContext} from '@/context/Chat/ChatContext';
+import {Api} from '@/api';
 
 export const useFetchLatestMessage = chat => {
   const {newMessage, notifications} = useChatContext();
   const [latestMessage, setLatestMessage] = useState(null);
 
-  useEffect(() => {
-    const getMessage = async () => {
-      const response = await getRequest(`${baseUrl}/messages/${chat?._id}`);
-
-      if (response.error) {
-        console.log(response.error);
-
-        return;
-      }
-      const lastMessage = response?.messages[0];
-
+  const {mutate: fetchLatestMessage} = useAuthMutation({
+    mutationFn: async chatId => {
+      return Api.messages.getMessages({chatId});
+    },
+    onSuccess: response => {
+      const lastMessage = response?.data.messages[0];
       setLatestMessage(lastMessage);
-    };
-    getMessage();
+    },
+    onError: error => {
+      console.error('Error fetching latest message:', error);
+    },
+  });
+
+  useEffect(() => {
+    if (!chat?._id) return;
+
+    fetchLatestMessage(chat._id);
   }, [newMessage, notifications]);
 
   return {latestMessage};
