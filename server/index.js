@@ -9,6 +9,7 @@ const tokenRoute = require('./routes/tokenRoute');
 const messageRoute = require('./routes/messageRoute');
 const logRoute = require('./routes/logRoute');
 const mediaRoute = require('./routes/mediaRoute');
+const authMiddleware = require('./middleware/authMiddleware');
 
 const app = express();
 require('dotenv').config();
@@ -18,11 +19,11 @@ app.use(cors());
 
 app.use('/api/users', userRoute);
 app.use('/api/admin', adminRoute);
-app.use('/api/chats', chatRoute);
-app.use('/api/messages', messageRoute);
-app.use('/api/token', tokenRoute);
+app.use('/api/chats', authMiddleware, chatRoute);
+app.use('/api/messages', authMiddleware, messageRoute);
+app.use('/api/token', authMiddleware, tokenRoute);
 app.use('/api/logs', logRoute);
-app.use('/api/media', mediaRoute);
+app.use('/api/media', authMiddleware, mediaRoute);
 
 const port = process.env.PORT || 5000;
 const uri = process.env.ATLAS_URI;
