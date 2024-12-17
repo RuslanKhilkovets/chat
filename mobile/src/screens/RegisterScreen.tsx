@@ -52,10 +52,7 @@ export const LoginScreen = () => {
 
   const onRegisterSuccess = async (res: any) => {
     login(res.data);
-    console.log(res);
-
     reset();
-    //navigation.navigate('Chats');
   };
 
   const onRegisterError = ({errors}: any) => {
