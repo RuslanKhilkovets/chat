@@ -1,9 +1,12 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View, Switch} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import RNSensitiveInfo from 'react-native-sensitive-info';
 import RadioButton from 'react-native-radio-button';
+import SInfo from 'react-native-sensitive-info';
 
+import {OneSignal} from 'react-native-onesignal';
+import {useTypedSelector} from '@/hooks';
 import {BottomSheet, Screen, SettingsItem} from '@/components';
 import {useTheme} from '@/context/Theme/ThemeContext';
 
@@ -11,9 +14,11 @@ const SettingsScreen = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [bottomSheetType, setBottomSheetType] = useState<string | null>(null);
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+  const [isNotificationsDisabled, setIsNotificationsDisabled] = useState(false);
 
   const {t, i18n} = useTranslation();
   const {theme, colorScheme} = useTheme();
+  const user = useTypedSelector(state => state.user);
 
   const handleOpenBottomSheet = (type: string) => {
     setBottomSheetType(type);
@@ -32,20 +37,33 @@ const SettingsScreen = () => {
       console.log('Error saving language:', error);
     }
   };
+
+  const handleNotificationsToggle = () => {
+    if (isNotificationsDisabled) {
+      OneSignal.logout();
+    } else {
+      OneSignal.login(user?.playerId);
+    }
+    SInfo.setItem('notification_enabled', String(!isNotificationsDisabled), {
+      sharedPreferencesName: 'prefs',
+      keychainService: 'keychainService',
+    });
+
+    setIsNotificationsDisabled(!isNotificationsDisabled);
+  };
+
   useEffect(() => {
-    const loadLanguage = async () => {
-      const savedLanguage = await RNSensitiveInfo.getItem('language', {
+    const fetchStorage = async () => {
+      const notification_enabled = await SInfo.getItem('notification_enabled', {
         sharedPreferencesName: 'prefs',
-        keychainService: 'keychain',
+        keychainService: 'keychainService',
       });
-      if (savedLanguage) {
-        i18n.changeLanguage(savedLanguage);
-        setSelectedLanguage(savedLanguage);
-      }
+
+      setIsNotificationsDisabled(notification_enabled !== 'true');
     };
 
-    loadLanguage();
-  }, [i18n]);
+    fetchStorage();
+  }, []);
 
   const renderBottomSheetContent = () => {
     switch (bottomSheetType) {
@@ -95,22 +113,29 @@ const SettingsScreen = () => {
             </View>
           </View>
         );
-      case 'Theme':
-        return (
-          <View style={styles.sheetContainer}>
-            <Text style={styles.sheetTitle}>{t('screens.Theme')}</Text>
-          </View>
-        );
       case 'Notifications':
         return (
           <View style={styles.sheetContainer}>
-            <Text style={styles.sheetTitle}>{t('screens.Notifications')}</Text>
-          </View>
-        );
-      case 'Security':
-        return (
-          <View style={styles.sheetContainer}>
-            <Text style={styles.sheetTitle}>{t('screens.Security')}</Text>
+            <Text
+              style={[
+                styles.sheetTitle,
+                {color: theme[colorScheme].textPrimary},
+              ]}>
+              {t('screens.Notifications')}
+            </Text>
+            <View style={styles.checkboxContainer}>
+              <Text
+                style={[
+                  styles.radioText,
+                  {color: theme[colorScheme].textPrimary},
+                ]}>
+                {t('actions.disableNotifications')}
+              </Text>
+              <Switch
+                value={isNotificationsDisabled}
+                onValueChange={handleNotificationsToggle}
+              />
+            </View>
           </View>
         );
       default:
@@ -142,6 +167,7 @@ const SettingsScreen = () => {
           onPress={() => handleOpenBottomSheet('Security')}
         />
       </View>
+
       <BottomSheet visible={isVisible} onClose={() => setIsVisible(false)}>
         {renderBottomSheetContent()}
       </BottomSheet>
@@ -149,16 +175,9 @@ const SettingsScreen = () => {
   );
 };
 
-export default SettingsScreen;
-
 const styles = StyleSheet.create({
-  infoBlock: {
-    marginTop: 20,
-    marginHorizontal: 20,
-    gap: 10,
-  },
   sheetContainer: {
-    padding: 20,
+    padding: 15,
   },
   sheetTitle: {
     color: 'yellow',
@@ -167,18 +186,34 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   radioGroup: {
-    width: '100%',
-    gap: 5,
+    marginTop: 10,
   },
   radioOption: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
-    gap: 10,
+    marginVertical: 5,
   },
   radioText: {
     marginLeft: 10,
+  },
+  timePickerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingTop: 10,
+  },
+  timeText: {
     fontSize: 16,
-    color: 'yellow',
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 15,
+  },
+  infoBlock: {
+    margin: 20,
+    gap: 10,
   },
 });
+
+export default SettingsScreen;

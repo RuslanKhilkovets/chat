@@ -38,7 +38,11 @@
 		"Change": "Змінити",
 		"tag": "Тег",
 		"email": "E-mail",
-		"phone": "Телефон"
+		"phone": "Телефон",
+		"disableNotifications": "Вимкнути сповіщення",
+		"silenceTime": "Не турбувати",
+		"start": "З",
+		"End": "По"
 	},
 	"errors": {
 		"IncorrectPassword": "Невірний пароль",

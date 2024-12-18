@@ -38,7 +38,11 @@
 		"Change": "Change",
 		"tag": "Tag",
 		"email": "E-mail",
-		"phone": "Phone"
+		"phone": "Phone",
+		"disableNotifications": "Disable Notifications",
+		"silenceTime": "Silence time",
+		"start": "From",
+		"end": "To"
 	},
 	"errors": {
 		"IncorrectPassword": "Incorrect password",
