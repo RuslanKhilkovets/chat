@@ -19,11 +19,8 @@ client.interceptors.request.use(
       keychainService: 'keychain',
     });
 
-    if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-    } else {
-      console.log('No access token found');
-    }
+    config.headers.Authorization = `Bearer ${accessToken}`;
+
     return config;
   },
   error => {

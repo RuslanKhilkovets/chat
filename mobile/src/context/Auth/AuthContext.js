@@ -43,13 +43,17 @@ export const AuthProvider = ({children}) => {
   };
 
   const login = async userData => {
+    setAccessToken(userData.token);
+    dispatch(setUser(userData));
+
+    if (userData && userData.playerId) {
+      OneSignal.login(userData.playerId);
+    }
+
     // Зберігаємо токен доступу в захищеному місці збереження
     await SInfo.setItem('accessToken', userData.token, {
       sharedPreferencesName: 'prefs',
       keychainService: 'keychainService',
-    }).then(() => {
-      setAccessToken(userData.token);
-      dispatch(setUser(userData));
     });
     await SInfo.setItem('user', JSON.stringify(userData), {
       sharedPreferencesName: 'prefs',
@@ -58,6 +62,8 @@ export const AuthProvider = ({children}) => {
   };
 
   const logout = async () => {
+    console.log('logout');
+
     await SInfo.deleteItem('accessToken', {
       sharedPreferencesName: 'prefs',
       keychainService: 'keychainService',

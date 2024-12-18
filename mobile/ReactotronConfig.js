@@ -8,11 +8,15 @@ Reactotron.setAsyncStorageHandler(AsyncStorage)
   .useReactNative({
     asyncStorage: false,
     networking: {
-      ignoreUrls: /symbolicate/,
+      ignoreUrls: /symbolicate|10\.0\.2\.2:8081\/symbolicate/,
     },
     editor: false,
     errors: {veto: stackFrame => false},
     overlay: false,
   })
-  .use(networking())
+  .use(
+    networking({
+      ignoreUrls: /symbolicate|10\.0\.2\.2:8081\/symbolicate/,
+    }),
+  )
   .connect();

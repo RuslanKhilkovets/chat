@@ -54,10 +54,6 @@ const Navigation = () => {
       setIsAuth(!!accessToken);
       dispatch(setUser(user));
 
-      if (user && user.playerId) {
-        OneSignal.login(user.playerId);
-      }
-
       const playerId = await OneSignal.User.getOnesignalId();
       if (playerId) {
         updatePlayerId({playerId});

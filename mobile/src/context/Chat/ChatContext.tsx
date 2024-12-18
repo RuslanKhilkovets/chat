@@ -362,7 +362,7 @@ export const ChatProvider = ({children}) => {
   );
 
   useEffect(() => {
-    getUserChats(user._id);
+    user?._id && getUserChats?.(user?._id);
   }, [user]);
 
   useEffect(() => {
@@ -376,6 +376,8 @@ export const ChatProvider = ({children}) => {
   }, [userChats]);
 
   useEffect(() => {
+    if (!user?._id) return;
+
     const payload = {
       senderName: filterQuery,
       currentUserId: user?._id,
