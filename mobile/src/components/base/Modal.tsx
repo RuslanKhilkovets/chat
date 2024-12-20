@@ -21,6 +21,7 @@ const Modal = ({
   title,
   openFrom = 'right',
   children,
+  canClose = true,
 }: IModalProps) => {
   const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
   const [isVisible, setIsVisible] = useState(visible);
@@ -101,12 +102,14 @@ const Modal = ({
                 {title}
               </Text>
 
-              <TouchableOpacity onPress={onClose} style={[styles.closeIcon]}>
-                <AppIcon
-                  name="delete_filter"
-                  color={theme[colorScheme].textPrimary}
-                />
-              </TouchableOpacity>
+              {canClose && (
+                <TouchableOpacity onPress={onClose} style={[styles.closeIcon]}>
+                  <AppIcon
+                    name="delete_filter"
+                    color={theme[colorScheme].textPrimary}
+                  />
+                </TouchableOpacity>
+              )}
             </View>
           </Animated.View>
           {children}

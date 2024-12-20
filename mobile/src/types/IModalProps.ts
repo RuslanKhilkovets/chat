@@ -4,4 +4,5 @@ export default interface IModalProps extends React.PropsWithChildren {
   title?: string;
   openFrom?: 'left' | 'right' | 'top' | 'bottom';
   headerBgColor?: string;
+  canClose?: boolean;
 }

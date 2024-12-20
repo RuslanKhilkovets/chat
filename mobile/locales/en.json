@@ -42,15 +42,23 @@
 		"disableNotifications": "Disable Notifications",
 		"silenceTime": "Silence time",
 		"start": "From",
-		"end": "To"
+		"end": "To",
+		"usePinCode": "Use your PIN code to log in.",
+		"setPinCode": "Set pin code",
+		"verifyPin": "Verify pin"
 	},
 	"errors": {
 		"IncorrectPassword": "Incorrect password",
-		"AudioPlayingError": "Error playing audio"
+		"AudioPlayingError": "Error playing audio",
+		"FillAllFields": "Fill all fields at least",
+		"incorrectPin": "Incorrect PIN. Please try again.",
+		"lockoutMessage": "Too many attempts. Try again in {{seconds}} seconds."
 	},
 	"modals": {
 		"About": "About",
-		"PrivacyPolicy": "Privacy policy"
+		"PrivacyPolicy": "Privacy policy",
+		"PinCode": "Pin code",
+		"Verification": "Verification"
 	},
 	"long": {
 		"About": ""

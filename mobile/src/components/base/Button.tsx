@@ -18,6 +18,7 @@ interface IButtonProps extends React.PropsWithChildren {
   after?: React.JSX.Element | null;
   fullWidth?: boolean;
   isLoading?: boolean;
+  disabled?: boolean;
 }
 
 const Button = ({
@@ -29,6 +30,7 @@ const Button = ({
   after = null,
   before = null,
   isLoading,
+  disabled,
 }: IButtonProps) => {
   const {theme, colorScheme} = useTheme();
 
@@ -42,7 +44,7 @@ const Button = ({
       ]}
       activeOpacity={0.7}
       onPress={onPress}
-      disabled={isLoading}>
+      disabled={isLoading || disabled}>
       {!!isLoading ? (
         <ActivityIndicator
           size="small"

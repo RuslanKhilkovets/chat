@@ -42,15 +42,23 @@
 		"disableNotifications": "Вимкнути сповіщення",
 		"silenceTime": "Не турбувати",
 		"start": "З",
-		"End": "По"
+		"End": "По",
+		"usePinCode": "Використовувати пін код для входу",
+		"setPinCode": "Зберегти пін код",
+		"verifyPin": "Перевірити"
 	},
 	"errors": {
 		"IncorrectPassword": "Невірний пароль",
-		"AudioPlayingError": "Помилка відтворення аудіо"
+		"AudioPlayingError": "Помилка відтворення аудіо",
+		"FillAllFields": "Для збереження заповніть спочатку всі поля",
+		"incorrectPin": "Некоректний пін код. Спробуйте знову",
+		"lockoutMessage": "Забагато спроб. Спробуйте через {{seconds}} секун."
 	},
 	"modals": {
 		"About": "Про додаток",
-		"PrivacyPolicy": "Політика конфіденційності"
+		"PrivacyPolicy": "Політика конфіденційності",
+		"PinCode": "Пін код",
+		"Verification": "Верифікація"
 	},
 	"long": {
 		"About": ""

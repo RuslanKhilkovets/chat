@@ -5,21 +5,23 @@ import {StatusBar, View} from 'react-native';
 import SInfo from 'react-native-sensitive-info';
 import {useDispatch} from 'react-redux';
 import {OneSignal} from 'react-native-onesignal';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 import {privateRoutes, publicRoutes} from '@/navigation';
-import {IRoute} from '@/types';
-import {Logo} from '@/components';
+import {Logo, PinCodeModal} from '@/components';
 import {setUser} from '@/store/user';
 import {useAuthContext} from '@/context/Auth/AuthContext';
 import SplashScreen from 'react-native-splash-screen';
 import {useAuthMutation} from '@/hooks';
 import {Api} from '@/api';
+import {PinCodeService} from '@/helpers';
 
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
   const [isAuth, setIsAuth] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [showPinModal, setShowPinModal] = useState(false);
   const {accessToken} = useAuthContext();
   const dispatch = useDispatch();
 
@@ -47,6 +49,12 @@ const Navigation = () => {
   };
 
   useEffect(() => {
+    (async () => {
+      const savedPin = await PinCodeService.getPin();
+
+      setShowPinModal(savedPin);
+    })();
+
     const fetchToken = async () => {
       const accessToken = await getToken();
       const user = await getUser();
@@ -84,10 +92,10 @@ const Navigation = () => {
   }
 
   return (
-    <>
+    <SafeAreaProvider>
       <StatusBar
         barStyle="dark-content"
-        backgroundColor={'transparent'}
+        backgroundColor="transparent"
         translucent
       />
       <NavigationContainer>
@@ -109,7 +117,13 @@ const Navigation = () => {
               ))}
         </Stack.Navigator>
       </NavigationContainer>
-    </>
+      <PinCodeModal
+        isVisible={showPinModal && isAuth}
+        onClose={() => setShowPinModal(false)}
+        onSuccess={() => setShowPinModal(false)}
+        isVerification
+      />
+    </SafeAreaProvider>
   );
 };
 

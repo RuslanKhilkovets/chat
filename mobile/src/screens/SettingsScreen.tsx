@@ -4,17 +4,19 @@ import {useTranslation} from 'react-i18next';
 import RNSensitiveInfo from 'react-native-sensitive-info';
 import RadioButton from 'react-native-radio-button';
 import SInfo from 'react-native-sensitive-info';
-
 import {OneSignal} from 'react-native-onesignal';
 import {useTypedSelector} from '@/hooks';
-import {BottomSheet, Screen, SettingsItem} from '@/components';
+import {BottomSheet, PinCodeModal, Screen, SettingsItem} from '@/components';
 import {useTheme} from '@/context/Theme/ThemeContext';
+import {PinCodeService} from '@/helpers';
 
 const SettingsScreen = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [bottomSheetType, setBottomSheetType] = useState<string | null>(null);
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
   const [isNotificationsDisabled, setIsNotificationsDisabled] = useState(false);
+  const [isPinModalVisible, setIsPinModalVisible] = useState(false);
+  const [isSecurityEnabled, setIsSecurityEnabled] = useState(false);
 
   const {t, i18n} = useTranslation();
   const {theme, colorScheme} = useTheme();
@@ -52,14 +54,25 @@ const SettingsScreen = () => {
     setIsNotificationsDisabled(!isNotificationsDisabled);
   };
 
+  const handleSecurityToggle = () => {
+    if (!isSecurityEnabled) {
+      setIsPinModalVisible(true);
+    } else {
+      PinCodeService.removePin();
+    }
+    setIsSecurityEnabled(!isSecurityEnabled);
+  };
+
   useEffect(() => {
     const fetchStorage = async () => {
       const notification_enabled = await SInfo.getItem('notification_enabled', {
         sharedPreferencesName: 'prefs',
         keychainService: 'keychainService',
       });
+      const security_enabled = Boolean(await PinCodeService.getPin());
 
       setIsNotificationsDisabled(notification_enabled !== 'true');
+      setIsSecurityEnabled(security_enabled);
     };
 
     fetchStorage();
@@ -138,6 +151,32 @@ const SettingsScreen = () => {
             </View>
           </View>
         );
+      case 'Security':
+        return (
+          <View style={styles.sheetContainer}>
+            <Text
+              style={[
+                styles.sheetTitle,
+                {color: theme[colorScheme].textPrimary},
+              ]}>
+              {t('screens.Security')}
+            </Text>
+            <View style={styles.checkboxContainer}>
+              <Text
+                style={[
+                  styles.radioText,
+                  {color: theme[colorScheme].textPrimary},
+                ]}>
+                {t('actions.usePinCode')}
+              </Text>
+              <Switch
+                value={isSecurityEnabled}
+                onValueChange={handleSecurityToggle}
+              />
+            </View>
+          </View>
+        );
+
       default:
         return <Text>Unexpected Error</Text>;
     }
@@ -150,11 +189,6 @@ const SettingsScreen = () => {
           iconName="language"
           title={t('screens.Language')}
           onPress={() => handleOpenBottomSheet('Language')}
-        />
-        <SettingsItem
-          iconName="light-mode"
-          title={t('screens.Theme')}
-          onPress={() => handleOpenBottomSheet('Theme')}
         />
         <SettingsItem
           iconName="notifications"
@@ -171,6 +205,14 @@ const SettingsScreen = () => {
       <BottomSheet visible={isVisible} onClose={() => setIsVisible(false)}>
         {renderBottomSheetContent()}
       </BottomSheet>
+
+      <PinCodeModal
+        onClose={() => setIsPinModalVisible(false)}
+        isVisible={isPinModalVisible}
+        setIsSecurityEnabled={setIsSecurityEnabled}
+        onSuccess={() => setIsSecurityEnabled(true)}
+        canClose
+      />
     </Screen>
   );
 };
@@ -180,8 +222,11 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   sheetTitle: {
-    color: 'yellow',
+    textAlign: 'center',
     fontSize: 20,
+  },
+  pinModalTitle: {
+    fontSize: 18,
     textAlign: 'center',
     marginBottom: 20,
   },

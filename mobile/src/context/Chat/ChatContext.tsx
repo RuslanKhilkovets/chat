@@ -280,7 +280,7 @@ export const ChatProvider = ({children}) => {
     } else {
       socket.emit('typingStop', {
         chatId: currentChat?._id,
-        senderId: user._id,
+        senderId: user?._id,
         recipientId,
       });
     }
