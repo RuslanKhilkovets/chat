@@ -56,7 +56,6 @@ const PinCodeModal: React.FC<PinModalProps> = ({
   const handlePinSubmit = async () => {
     const enteredPin = pin.join('');
     const savedPin = await PinCodeService.getPin();
-    console.log(savedPin, 'savedPin');
 
     if (pin.some(value => value === '')) {
       setError(t('errors.FillAllFields'));
@@ -83,7 +82,6 @@ const PinCodeModal: React.FC<PinModalProps> = ({
       }
     } else {
       await PinCodeService.savePin(enteredPin);
-      setPin(['', '', '', '']);
       onSuccess();
       setError('');
       onClose();
@@ -113,10 +111,13 @@ const PinCodeModal: React.FC<PinModalProps> = ({
       canClose={canClose}
       visible={isVisible}
       onClose={() => {
+        if (pin.some(cell => cell === '')) {
+          setIsSecurityEnabled?.(false);
+        }
         onClose();
-        setIsSecurityEnabled?.(false);
         setPin(['', '', '', '']);
       }}
+      
       title={t(isVerification ? 'modals.Verification' : 'modals.PinCode')}>
       <View style={styles.container}>
         {lockoutTime && remainingLockoutTime > 0 ? (

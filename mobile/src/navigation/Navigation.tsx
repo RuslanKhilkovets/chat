@@ -122,6 +122,7 @@ const Navigation = () => {
         onClose={() => setShowPinModal(false)}
         onSuccess={() => setShowPinModal(false)}
         isVerification
+        canClose={false}
       />
     </SafeAreaProvider>
   );
