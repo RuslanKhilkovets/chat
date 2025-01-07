@@ -1,7 +1,6 @@
 import React from 'react';
 import {Provider} from 'react-redux';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
-import Toast from 'react-native-toast-message';
 import {enableScreens} from 'react-native-screens';
 import {LogLevel, OneSignal} from 'react-native-onesignal';
 
@@ -50,7 +49,6 @@ function App(): React.JSX.Element {
         <AuthProvider>
           <ChatProvider>
             <ThemeProvider>
-              <Toast />
               <Navigation />
             </ThemeProvider>
           </ChatProvider>
