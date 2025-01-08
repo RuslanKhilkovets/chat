@@ -118,4 +118,4 @@ const deleteMessage = async (req, res) => {
   }
 };
 
-module.exports = { createMessage, getMessages, markMessageAsRead };
+module.exports = { createMessage, getMessages, markMessageAsRead, deleteMessage, editMessage };
