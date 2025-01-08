@@ -23,6 +23,8 @@
 		"Offline": "Offline",
 		"Delete": "Delete",
 		"Cancel": "Cancel",
+		"Copy": "Copy",
+		"Edit": "Edit",
 		"CheckPassword": "Check password",
 		"DeleteChatAgreementTitle": "Are you sure you want to delete this chat?",
 		"LogOutAgreementTitle": "Are you sure you want to log out?",
