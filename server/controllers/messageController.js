@@ -59,13 +59,13 @@ const markMessageAsRead = async (req, res) => {
   try {
     const chat = await chatModel.findById(chatId);
     if (!chat) {
-      return res.status(404).json({ error: 'Chat not found' });
+      return res.status(404).json({ error: 'Chat was not found' });
     }
 
     const message = await messageModel.findOne({ _id: messageId, chatId });
 
     if (!message) {
-      return res.status(404).json({ error: 'Message not found in this chat' });
+      return res.status(404).json({ error: 'Message is not found in this chat' });
     }
 
     message.isRead = true;
@@ -75,6 +75,46 @@ const markMessageAsRead = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Error marking message as read' });
+  }
+};
+
+const editMessage = async (req, res) => {
+  const { messageId } = req.params;
+  const { text } = req.body;
+
+  try {
+    const message = await messageModel.findById(messageId);
+
+    if (!message) {
+      return res.status(404).json({ error: 'Message not found' });
+    }
+
+    message.text = text;
+    const updatedMessage = await message.save();
+
+    res.status(200).json(updatedMessage);
+  } catch (err) {
+    console.error(`Error updating message ${messageId}:`, err);
+    res.status(500).json({ error: 'Error editing message' });
+  }
+};
+
+const deleteMessage = async (req, res) => {
+  const { messageId } = req.params;
+
+  try {
+    const message = await messageModel.findById(messageId);
+
+    if (!message) {
+      return res.status(404).json({ error: 'Message not found' });
+    }
+
+    await message.remove();
+
+    res.status(200).json({ message: 'Message deleted successfully' });
+  } catch (err) {
+    console.error(`Error deleting message ${messageId}:`, err);
+    res.status(500).json({ error: 'Error deleting message' });
   }
 };
 
