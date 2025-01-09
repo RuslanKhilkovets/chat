@@ -111,7 +111,7 @@ const deleteMessage = async (req, res) => {
 
     await message.remove();
 
-    res.status(200).json({ message: 'Message deleted successfully' });
+    res.status(200).json({ message: 'Message deleted successfully', message });
   } catch (err) {
     console.error(`Error deleting message ${messageId}:`, err);
     res.status(500).json({ error: 'Error deleting message' });
