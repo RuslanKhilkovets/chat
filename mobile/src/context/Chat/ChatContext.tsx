@@ -186,7 +186,8 @@ export const ChatProvider = ({children}) => {
   const {mutate: deleteMessageMutate} = useAuthMutation({
     mutationFn: Api.messages.deleteMessage,
     onSuccess: response => {
-      const deletedMessage = response.data;
+      const deletedMessage = response.data.data;
+
       setMessages(prevMessages =>
         prevMessages?.filter(message => message._id !== deletedMessage._id),
       );

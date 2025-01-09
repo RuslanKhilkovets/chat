@@ -29,6 +29,7 @@ const MenuDrawer = ({onClose, visible}: MenuDrawerProps) => {
   const handleLogout = () => {
     logout();
     onClose();
+    setIsModalVisible(false);
   };
 
   return (
