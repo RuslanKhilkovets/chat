@@ -164,6 +164,42 @@ export const ChatProvider = ({children}) => {
     },
   });
 
+  const {mutate: editMessageMutate} = useAuthMutation({
+    mutationFn: Api.messages.editMessage,
+    onSuccess: response => {
+      const updatedMessage = response.data;
+      setMessages(prevMessages =>
+        prevMessages?.map(message =>
+          message._id === updatedMessage._id ? updatedMessage : message,
+        ),
+      );
+    },
+    onError: error => {
+      console.error('Failed to edit message:', error);
+    },
+  });
+
+  const editMessage = (messageId: string, text: string) => {
+    editMessageMutate({messageId, text});
+  };
+
+  const {mutate: deleteMessageMutate} = useAuthMutation({
+    mutationFn: Api.messages.deleteMessage,
+    onSuccess: response => {
+      const deletedMessage = response.data;
+      setMessages(prevMessages =>
+        prevMessages?.filter(message => message._id !== deletedMessage._id),
+      );
+    },
+    onError: error => {
+      console.error('Failed to delete message:', error);
+    },
+  });
+
+  const deleteMessage = (messageId: string) => {
+    deleteMessageMutate(messageId);
+  };
+
   const sendMessage = useCallback(
     (textMessage, sender, currentChatId, recipient) => {
       sendMessageMutate({
@@ -428,6 +464,8 @@ export const ChatProvider = ({children}) => {
         setMessages,
         socket,
         hasMoreMessages,
+        editMessage,
+        deleteMessage,
       }}>
       {children}
     </ChatContext.Provider>

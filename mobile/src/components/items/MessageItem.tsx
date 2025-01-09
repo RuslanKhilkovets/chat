@@ -20,7 +20,7 @@ import {useTranslation} from 'react-i18next';
 
 import {useTheme} from '@/context/Theme/ThemeContext';
 import {useTypedSelector} from '@/hooks';
-
+import {useChatContext} from '@/context/Chat/ChatContext';
 
 interface IMessageItemProps {
   message: any;
@@ -31,6 +31,7 @@ const audioPlayer = new AudioRecorderPlayer();
 const MessageItem = ({message}: IMessageItemProps) => {
   const currentLanguage = i18n.language;
   const user = useTypedSelector(state => state.user);
+  const {editMessage, deleteMessage} = useChatContext();
 
   const isMessageMine = message?.senderId === user?._id;
   const [isPlaying, setIsPlaying] = useState(false);
@@ -96,10 +97,10 @@ const MessageItem = ({message}: IMessageItemProps) => {
   const onCopyMessageHandle = () => {
     Clipboard.setString(message?.text);
     handleCloseModal();
-  }
+  };
 
   return (
-    <TouchableWithoutFeedback onPress={handleLongPress}>
+    <TouchableWithoutFeedback onPress={isMessageMine ? handleLongPress : undefined}>
       <View
         style={[
           styles.container,
@@ -181,16 +182,70 @@ const MessageItem = ({message}: IMessageItemProps) => {
           visible={modalVisible}
           onRequestClose={handleCloseModal}>
           <TouchableWithoutFeedback onPress={handleCloseModal}>
-            <View style={[styles.modalBackground, {backgroundColor: theme[colorScheme].shadow}]}>
-              <View style={[styles.modalContainer, {backgroundColor: theme[colorScheme].bgPrimary}]}>
-                <Pressable style={styles.modalOption}  android_ripple={{color: theme[colorScheme].bgSecondary, borderless: false}} onPress={onCopyMessageHandle}>
-                  <Text style={[styles.modalText,  {color: theme[colorScheme].textPrimary}]}>{t('actions.Copy')}</Text>
-                </Pressable>
-                <Pressable style={styles.modalOption}  android_ripple={{color: theme[colorScheme].bgSecondary, borderless: false}}>
-                  <Text style={[styles.modalText, {color: theme[colorScheme].textPrimary}]}>{t('actions.Edit')}</Text>
-                </Pressable>
-                <Pressable style={styles.modalOption}  android_ripple={{color: theme[colorScheme].bgSecondary, borderless: false}}>
-                  <Text style={[styles.modalText, {color: theme[colorScheme].textPrimary}]}>{t('actions.Delete')}</Text>
+            <View
+              style={[
+                styles.modalBackground,
+                {backgroundColor: theme[colorScheme].shadow},
+              ]}>
+              <View
+                style={[
+                  styles.modalContainer,
+                  {backgroundColor: theme[colorScheme].bgPrimary},
+                ]}>
+                {!message?.audioPath && (
+                  <>
+                    <Pressable
+                      style={styles.modalOption}
+                      android_ripple={{
+                        color: theme[colorScheme].bgSecondary,
+                        borderless: false,
+                      }}
+                      onPress={onCopyMessageHandle}>
+                      <Text
+                        style={[
+                          styles.modalText,
+                          {color: theme[colorScheme].textPrimary},
+                        ]}>
+                        {t('actions.Copy')}
+                      </Text>
+                    </Pressable>
+                    <Pressable
+                      onPress={() => {
+                        handleCloseModal();
+                        editMessage(message?._id, 'nigga');
+                      }}
+                      style={styles.modalOption}
+                      android_ripple={{
+                        color: theme[colorScheme].bgSecondary,
+                        borderless: false,
+                      }}>
+                      <Text
+                        style={[
+                          styles.modalText,
+                          {color: theme[colorScheme].textPrimary},
+                        ]}>
+                        {t('actions.Edit')}
+                      </Text>
+                    </Pressable>
+                  </>
+                )}
+                <Pressable
+                  onPress={() => {
+                    handleCloseModal();
+                    deleteMessage(message?._id);
+                  }}
+                  style={styles.modalOption}
+                  android_ripple={{
+                    color: theme[colorScheme].bgSecondary,
+                    borderless: false,
+                  }}>
+                  <Text
+                    style={[
+                      styles.modalText,
+                      {color: theme[colorScheme].textPrimary},
+                    ]}>
+                    {t('actions.Delete')}
+                  </Text>
                 </Pressable>
               </View>
             </View>
