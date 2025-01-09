@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const chatModel = require('../models/chatModel');
 const messageModel = require('../models/messageModel');
 
@@ -103,18 +104,20 @@ const deleteMessage = async (req, res) => {
   const { messageId } = req.params;
 
   try {
-    const message = await messageModel.findById(messageId);
+    if (!mongoose.Types.ObjectId.isValid(messageId)) {
+      return res.status(400).json({ error: 'Invalid message ID' });
+    }
+
+    const message = await messageModel.findByIdAndDelete(messageId);
 
     if (!message) {
       return res.status(404).json({ error: 'Message not found' });
     }
 
-    await message.remove();
-
-    res.status(200).json({ message: 'Message deleted successfully', message });
+    res.status(200).json({ message: 'Message deleted successfully', data: message });
   } catch (err) {
     console.error(`Error deleting message ${messageId}:`, err);
-    res.status(500).json({ message: 'Error deleting message',err });
+    res.status(500).json({ message: 'Error deleting message', error: err.message || err });
   }
 };
 
