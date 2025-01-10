@@ -170,6 +170,6 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     position: 'absolute',
     width: '100%',
-    bottom: 20,
+    bottom: 0,
   },
 });

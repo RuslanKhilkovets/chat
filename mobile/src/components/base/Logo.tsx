@@ -5,7 +5,7 @@ export const Logo = () => {
   const {theme, colorScheme} = useTheme();
 
   return (
-    <Text style={[{color: theme[colorScheme].textPrimary}, styles.logo]}>
+    <Text style={[{color: "yellow"}, styles.logo]}>
       M
     </Text>
   );
@@ -13,7 +13,7 @@ export const Logo = () => {
 
 const styles = StyleSheet.create({
   logo: {
-    fontSize: 210,
+    fontSize: 240,
     fontWeight: 'bold',
     fontFamily: 'Jersey20-Regular',
   },

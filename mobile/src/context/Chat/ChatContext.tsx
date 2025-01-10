@@ -281,6 +281,35 @@ export const ChatProvider = ({children}) => {
       return;
     }
 
+    const onEditMessage = updatedMessage => {
+      setMessages(prevMessages =>
+        prevMessages.map(message =>
+          message._id === updatedMessage._id ? updatedMessage : message,
+        ),
+      );
+    };
+
+    // Handle deleted message
+    const onDeleteMessage = deletedMessageId => {
+      setMessages(prevMessages =>
+        prevMessages.filter(message => message._id !== deletedMessageId),
+      );
+    };
+
+    socket.on('editMessage', onEditMessage);
+    socket.on('deleteMessage', onDeleteMessage);
+
+    return () => {
+      socket.off('editMessage', onEditMessage);
+      socket.off('deleteMessage', onDeleteMessage);
+    };
+  }, [socket]);
+
+  useEffect(() => {
+    if (socket === null) {
+      return;
+    }
+
     socket.emit('addNewUser', user?._id);
 
     socket.on('getOnlineUsers', response => {
