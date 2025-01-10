@@ -135,4 +135,32 @@ io.on('connection', socket => {
 
     io.emit('getOnlineUsers', Array.from(onlineUsers.values()));
   });
+  
+  socket.on('deleteMessage', ({ chatId, messageId, senderId, recipientId }) => {
+    const sender = onlineUsers.get(senderId);
+
+    if (sender) {
+      io.to(sender.socketId).emit('messageDeleted', { chatId, messageId });
+    }
+
+    const recipient = onlineUsers.get(recipientId);
+
+    if (recipient) {
+      io.to(recipient.socketId).emit('messageDeleted', { chatId, messageId });
+    }
+  });
+
+  socket.on('editMessage', ({ chatId, messageId, newContent, senderId, recipientId }) => {
+    const sender = onlineUsers.get(senderId);
+
+    if (sender) {
+      io.to(sender.socketId).emit('messageEdited', { chatId, messageId, newContent });
+    }
+
+    const recipient = onlineUsers.get(recipientId);
+
+    if (recipient) {
+      io.to(recipient.socketId).emit('messageEdited', { chatId, messageId, newContent });
+    }
+  });
 });
