@@ -15,6 +15,52 @@ PODS:
     - hermes-engine/Pre-built (= 0.73.10)
   - hermes-engine/Pre-built (0.73.10)
   - libevent (2.1.12)
+  - OneSignalXCFramework (5.2.8):
+    - OneSignalXCFramework/OneSignalComplete (= 5.2.8)
+  - OneSignalXCFramework/OneSignal (5.2.8):
+    - OneSignalXCFramework/OneSignalCore
+    - OneSignalXCFramework/OneSignalExtension
+    - OneSignalXCFramework/OneSignalLiveActivities
+    - OneSignalXCFramework/OneSignalNotifications
+    - OneSignalXCFramework/OneSignalOSCore
+    - OneSignalXCFramework/OneSignalOutcomes
+    - OneSignalXCFramework/OneSignalUser
+  - OneSignalXCFramework/OneSignalComplete (5.2.8):
+    - OneSignalXCFramework/OneSignal
+    - OneSignalXCFramework/OneSignalInAppMessages
+    - OneSignalXCFramework/OneSignalLocation
+  - OneSignalXCFramework/OneSignalCore (5.2.8)
+  - OneSignalXCFramework/OneSignalExtension (5.2.8):
+    - OneSignalXCFramework/OneSignalCore
+    - OneSignalXCFramework/OneSignalOutcomes
+  - OneSignalXCFramework/OneSignalInAppMessages (5.2.8):
+    - OneSignalXCFramework/OneSignalCore
+    - OneSignalXCFramework/OneSignalNotifications
+    - OneSignalXCFramework/OneSignalOSCore
+    - OneSignalXCFramework/OneSignalOutcomes
+    - OneSignalXCFramework/OneSignalUser
+  - OneSignalXCFramework/OneSignalLiveActivities (5.2.8):
+    - OneSignalXCFramework/OneSignalCore
+    - OneSignalXCFramework/OneSignalOSCore
+    - OneSignalXCFramework/OneSignalUser
+  - OneSignalXCFramework/OneSignalLocation (5.2.8):
+    - OneSignalXCFramework/OneSignalCore
+    - OneSignalXCFramework/OneSignalNotifications
+    - OneSignalXCFramework/OneSignalOSCore
+    - OneSignalXCFramework/OneSignalUser
+  - OneSignalXCFramework/OneSignalNotifications (5.2.8):
+    - OneSignalXCFramework/OneSignalCore
+    - OneSignalXCFramework/OneSignalExtension
+    - OneSignalXCFramework/OneSignalOutcomes
+  - OneSignalXCFramework/OneSignalOSCore (5.2.8):
+    - OneSignalXCFramework/OneSignalCore
+  - OneSignalXCFramework/OneSignalOutcomes (5.2.8):
+    - OneSignalXCFramework/OneSignalCore
+  - OneSignalXCFramework/OneSignalUser (5.2.8):
+    - OneSignalXCFramework/OneSignalCore
+    - OneSignalXCFramework/OneSignalNotifications
+    - OneSignalXCFramework/OneSignalOSCore
+    - OneSignalXCFramework/OneSignalOutcomes
   - RCT-Folly (2022.05.16.00):
     - boost
     - DoubleConversion
@@ -886,6 +932,9 @@ PODS:
   - React-Mapbuffer (0.73.10):
     - glog
     - React-debug
+  - react-native-onesignal (5.2.7):
+    - OneSignalXCFramework (= 5.2.8)
+    - React (< 1.0.0, >= 0.13.0)
   - react-native-safe-area-context (4.13.1):
     - React-Core
   - react-native-sensitive-info (5.5.8):
@@ -1063,6 +1112,8 @@ PODS:
     - React-Core
   - RNCAsyncStorage (1.24.0):
     - React-Core
+  - RNCClipboard (1.16.0):
+    - React-Core
   - RNDateTimePicker (8.2.0):
     - React-Core
   - RNFS (2.20.0):
@@ -1116,6 +1167,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector-modern`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
+  - react-native-onesignal (from `../node_modules/react-native-onesignal`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-sensitive-info (from `../node_modules/react-native-sensitive-info`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
@@ -1141,6 +1193,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - RNAudioRecorderPlayer (from `../node_modules/react-native-audio-recorder-player`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
+  - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNFS (from `../node_modules/react-native-fs`)
   - RNLocalize (from `../node_modules/react-native-localize`)
@@ -1154,6 +1207,7 @@ SPEC REPOS:
   trunk:
     - fmt
     - libevent
+    - OneSignalXCFramework
     - SocketRocket
 
 EXTERNAL SOURCES:
@@ -1212,6 +1266,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   React-Mapbuffer:
     :path: "../node_modules/react-native/ReactCommon"
+  react-native-onesignal:
+    :path: "../node_modules/react-native-onesignal"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-sensitive-info:
@@ -1262,6 +1318,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-audio-recorder-player"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
+  RNCClipboard:
+    :path: "../node_modules/@react-native-clipboard/clipboard"
   RNDateTimePicker:
     :path: "../node_modules/@react-native-community/datetimepicker"
   RNFS:
@@ -1288,6 +1346,7 @@ SPEC CHECKSUMS:
   glog: 035f1e36e53b355cf70f6434d161b36e7d21fecd
   hermes-engine: 42a7a4cbe3e20050fb031f64aaaffbe0c0b4a38f
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
+  OneSignalXCFramework: 4215fb8deb8a669504d39c02dffaf2ec8ebe10ae
   RCT-Folly: 7169b2b1c44399c76a47b5deaaba715eeeb476c0
   RCTRequired: 3c70a68a1acbfe8dec71921ddaf955ddceb6a8bd
   RCTTypeSafety: 6b502ff289b30da23609b707734e9c04089baa4f
@@ -1309,6 +1368,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 71e5fb28b810fa199987e600ec8a6e17abee373e
   React-logger: 82babb1e3fad0e04750981f24e6c38f644a0bf7c
   React-Mapbuffer: 758750eb32350b01dd9c350010aecc46842047bd
+  react-native-onesignal: 439c090f45a362ee8074d8821780a2380f002054
   react-native-safe-area-context: 004fe00b8c5aae5d57de1c27ff728cf6d3918b03
   react-native-sensitive-info: 400c6e3d27945e15c8cddb5b4b92233c85ee06f8
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
@@ -1334,6 +1394,7 @@ SPEC CHECKSUMS:
   ReactCommon: 92194c3d756b82bff5b75450544b2863b4df0d5f
   RNAudioRecorderPlayer: 224c7de87722938aedce04000d09baa633148f5b
   RNCAsyncStorage: ec53e44dc3e75b44aa2a9f37618a49c3bc080a7a
+  RNCClipboard: 88f7f4933e7731052210d77535560c485ecb75b0
   RNDateTimePicker: 40ffda97d071a98a10fdca4fa97e3977102ccd14
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNLocalize: 298e85ce16540a11de40c1a588ead39fc5e9a072
@@ -1342,8 +1403,8 @@ SPEC CHECKSUMS:
   RNSVG: 8b1a777d54096b8c2a0fd38fc9d5a454332bbb4d
   RNVectorIcons: 04d49881dab53fb3397b1129085271d9d21885c1
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
-  Yoga: 490c2ee2b0808472ab0877103fbdc0f557b797e1
+  Yoga: 66a97477b94264cc4e49990c8fe6b153260d871d
 
 PODFILE CHECKSUM: 54b91644ad4d9b86e25bacb9fcf80930f762b81c
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2

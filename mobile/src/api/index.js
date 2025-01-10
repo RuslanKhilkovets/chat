@@ -16,7 +16,7 @@ client.interceptors.request.use(
   async config => {
     const accessToken = await SInfo.getItem('accessToken', {
       sharedPreferencesName: 'prefs',
-      keychainService: 'keychain',
+      keychainService: 'keychainService',
     });
 
     config.headers.Authorization = `Bearer ${accessToken}`;

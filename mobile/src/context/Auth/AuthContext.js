@@ -20,25 +20,34 @@ export const AuthProvider = ({children}) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // Отримуємо токен доступу з захищеного місця збереження
-    SInfo.getItem('accessToken', {
-      sharedPreferencesName: 'prefs',
-      keychainService: 'keychainService',
-    }).then(token => {
-      token && setAccessToken(token);
-    });
+    const fetchToken = async () => {
+      try {
+        const token = await SInfo.getItem('accessToken', {
+          sharedPreferencesName: 'prefs',
+          keychainService: 'keychainService',
+        });
+        
+        if (token) {
+          setAccessToken(token);
+        }
+      } catch (error) {
+        console.error('Error fetching access token:', error);
+      }
+    };
+  
+    fetchToken();
   }, []);
+  
 
   const getToken = async () => {
     if (accessToken) {
       const {exp} = jwt_decode(accessToken);
       if (new Date().getTime() < exp * 1000) {
-        console.log('Access Token actived');
+        console.log('Access Token active');
         return accessToken;
       }
     }
 
-    await logout();
     return null;
   };
 
@@ -50,7 +59,8 @@ export const AuthProvider = ({children}) => {
       OneSignal.login(userData.playerId);
     }
 
-    // Зберігаємо токен доступу в захищеному місці збереження
+    console.log(userData, "userData");
+    
     await SInfo.setItem('accessToken', userData.token, {
       sharedPreferencesName: 'prefs',
       keychainService: 'keychainService',
@@ -62,7 +72,6 @@ export const AuthProvider = ({children}) => {
   };
 
   const logout = async () => {
-    console.log('logout');
 
     await SInfo.deleteItem('accessToken', {
       sharedPreferencesName: 'prefs',

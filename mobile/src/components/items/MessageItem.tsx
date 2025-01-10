@@ -24,14 +24,15 @@ import {useChatContext} from '@/context/Chat/ChatContext';
 
 interface IMessageItemProps {
   message: any;
+  setMessageToEdit: any;
 }
 
 const audioPlayer = new AudioRecorderPlayer();
 
-const MessageItem = ({message}: IMessageItemProps) => {
+const MessageItem = ({message, setMessageToEdit}: IMessageItemProps) => {
   const currentLanguage = i18n.language;
   const user = useTypedSelector(state => state.user);
-  const {editMessage, deleteMessage} = useChatContext();
+  const {deleteMessage} = useChatContext();
 
   const isMessageMine = message?.senderId === user?._id;
   const [isPlaying, setIsPlaying] = useState(false);
@@ -45,7 +46,9 @@ const MessageItem = ({message}: IMessageItemProps) => {
   const {theme, colorScheme} = useTheme();
 
   const playAudio = async () => {
-    if (!message.audioPath) return;
+    if (!message.audioPath) {
+      return;
+    }
 
     try {
       if (isPlaying) {
@@ -90,7 +93,7 @@ const MessageItem = ({message}: IMessageItemProps) => {
     setModalVisible(false);
   };
 
-  const handleLongPress = () => {
+  const handlePress = () => {
     setModalVisible(true);
   };
 
@@ -100,15 +103,17 @@ const MessageItem = ({message}: IMessageItemProps) => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={isMessageMine ? handleLongPress : undefined}>
-      <View
-        style={[
-          styles.container,
-          {
-            alignSelf: isMessageMine ? 'flex-end' : 'flex-start',
-            backgroundColor: theme[colorScheme].bgTertiary,
-          },
-        ]}>
+    <View
+      style={[
+        styles.container,
+        {
+          alignSelf: isMessageMine ? 'flex-end' : 'flex-start',
+          backgroundColor: theme[colorScheme].bgTertiary,
+        },
+      ]}>
+      <TouchableOpacity
+        onPress={isMessageMine ? handlePress : undefined}
+        activeOpacity={isMessageMine ? 0.7 : 1}>
         {message?.audioPath ? (
           <TouchableOpacity onPress={playAudio} style={styles.audioContainer}>
             <Icon
@@ -212,7 +217,7 @@ const MessageItem = ({message}: IMessageItemProps) => {
                     <Pressable
                       onPress={() => {
                         handleCloseModal();
-                        editMessage(message?._id, 'nigga');
+                        setMessageToEdit(message);
                       }}
                       style={styles.modalOption}
                       android_ripple={{
@@ -251,8 +256,8 @@ const MessageItem = ({message}: IMessageItemProps) => {
             </View>
           </TouchableWithoutFeedback>
         </Modal>
-      </View>
-    </TouchableWithoutFeedback>
+      </TouchableOpacity>
+    </View>
   );
 };
 

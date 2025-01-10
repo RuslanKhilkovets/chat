@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {useRoute} from '@react-navigation/native';
@@ -46,6 +47,7 @@ const ChatScreen = () => {
     isMessagesLoading,
     page,
     hasMoreMessages,
+    editMessage
   } = useChatContext();
   const {isRecording, discardRecording, startRecording, stopRecording} =
     useAudioRecorder();
@@ -55,6 +57,7 @@ const ChatScreen = () => {
   const [textMessage, setTextMessage] = useState<string>('');
   const [lastMessageId, setLastMessageId] = useState<string>();
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [messageToEdit, setMessageToEdit] = useState(null);
 
   const {recipientUser} = useFetchRecipient(currentChat, user);
   const unread = unreadNotifications(notifications);
@@ -101,7 +104,14 @@ const ChatScreen = () => {
   const handleSendMessage = async () => {
     try {
       if (textMessage.trim()) {
-        await sendMessage(textMessage, user, currentChat._id, recipientUser);
+        if(messageToEdit !== null){
+          
+          editMessage(messageToEdit?._id, textMessage);
+          setMessageToEdit(null);
+        } else {        
+          await sendMessage(textMessage, user, currentChat._id, recipientUser);
+        }
+
         setTextMessage('');
 
         setIsTyping(false);
@@ -181,6 +191,12 @@ const ChatScreen = () => {
     }, 300);
   };
 
+  useEffect(() => {
+    if(messageToEdit === null) return;
+
+    setTextMessage(messageToEdit?.text)
+  }, [messageToEdit])
+
   return (
     <Screen chatMode payload={payload}>
       <KeyboardAvoidingView
@@ -203,7 +219,7 @@ const ChatScreen = () => {
           <FlatList
             ref={flatListRef}
             data={messages}
-            renderItem={({item}) => <MessageItem message={item} />}
+            renderItem={({item}) => <MessageItem message={item} setMessageToEdit={setMessageToEdit}/>}
             keyExtractor={item => item._id}
             style={{zIndex: 1}}
             contentContainerStyle={{
