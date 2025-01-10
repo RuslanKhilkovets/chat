@@ -95,7 +95,7 @@ const SettingsScreen = () => {
                 style={styles.radioOption}
                 onPress={() => saveLanguage('en')}>
                 <RadioButton
-                  isSelected={selectedLanguage === 'en'}
+                  isSelected={selectedLanguage === 'en' || !selectedLanguage}
                   onPress={() => saveLanguage('en')}
                   color={theme[colorScheme].textPrimary}
                 />

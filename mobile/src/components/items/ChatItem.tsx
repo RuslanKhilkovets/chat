@@ -43,7 +43,7 @@ const ChatItem = ({chat}: IChatItemProps) => {
     if (thisUserNotifications.length > 0) {
       markThisUserNotificationsAsRead(thisUserNotifications, notifications);
     }
-    navigate('Chat', {chat});
+    navigate('Chat', {chat, recipientUser, isOnline});
   };
 
   const getInitials = (name: string | undefined) => {
@@ -83,7 +83,7 @@ const ChatItem = ({chat}: IChatItemProps) => {
             {color: theme[colorScheme].textPrimary},
             thisUserNotifications?.length !== 0 && {fontWeight: '700'},
           ]}>
-          {recipientUser?.name || 'N/A'}
+          {recipientUser?.name}
         </Text>
         <View style={styles.rowBetween}>
           {latestMessage?.text && (

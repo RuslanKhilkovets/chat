@@ -27,7 +27,7 @@ import {useTheme} from '@/context/Theme/ThemeContext';
 
 const ChatScreen = () => {
   const route = useRoute();
-  const chat = route?.params?.chat;
+  const {chat, recipientUser: savedRecipientUser, isOnline: savedIsOnline} = route?.params || {};
   const user = useTypedSelector(state => state.user);
   const {
     userChats,
@@ -160,9 +160,9 @@ const ChatScreen = () => {
   }, [thisUserNotifications]);
 
   const payload = {
-    name: recipientUser?.name,
+    name: savedRecipientUser?.name || recipientUser?.name,
     userId: recipientUser?._id,
-    isOnline,
+    isOnline: savedIsOnline,
     isTyping: isRecipientTyping,
     chatId: currentChat?._id,
   };
