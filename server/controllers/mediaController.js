@@ -35,7 +35,7 @@ const uploadAudio = async (req, res) => {
     return res.status(200).send({ message: 'Audio uploaded successfully', data: message });
   } catch (err) {
     console.error('Error uploading audio:', err);
-    return res.status(500).send({ error: 'Server error' });
+    return res.status(500).send({ error: 'Server error', err });
   }
 };
 

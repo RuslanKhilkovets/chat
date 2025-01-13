@@ -71,16 +71,19 @@ export const useAudioRecorder = () => {
 
     const audioSet: AudioSet = {
       AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
-      AudioSourceAndroid: AudioSourceAndroidType.MIC,
+      AudioSourceAndroid: AudioSourceAndroidType.VOICE_RECOGNITION,
       AVEncoderAudioQualityKeyIOS: AVEncoderAudioQualityIOSType.high,
       AVNumberOfChannelsKeyIOS: 2,
       AVFormatIDKeyIOS: AVEncodingOption.aac,
+      AudioBitRateAndroid: 192000,
+      AudioSampleRateAndroid: 48000,
     };
 
     try {
       let uri;
       if (Platform.OS === 'android') {
-        const path = RNFS.DocumentDirectoryPath + '/sound.m4a';
+        const path = RNFS.DocumentDirectoryPath + '/sound.wav';
+
         uri = await audioRecorderPlayer.startRecorder(path, audioSet);
       } else {
         uri = await audioRecorderPlayer.startRecorder(undefined, audioSet);

@@ -30,7 +30,7 @@ const Screen = ({
         styles.container,
         {
           backgroundColor: backColor || theme[colorScheme].bgPrimary,
-          paddingTop: Platform.OS === 'ios' ? insets.top - 10 : insets.top - 15,
+          paddingTop: Platform.OS === 'ios' ? insets.top - 10 : insets.top,
           paddingBottom: insets.bottom,
         },
       ]}>
