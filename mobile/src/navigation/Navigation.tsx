@@ -85,8 +85,14 @@ const Navigation = () => {
 
   if (loading) {
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: "black"}}>
-        <Logo />
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'black',
+        }}>
+        <Logo isAnimated />
       </View>
     );
   }
