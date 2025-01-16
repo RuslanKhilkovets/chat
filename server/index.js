@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const { Server } = require('socket.io');
+const rateLimit = require('express-rate-limit');
+
 const userRoute = require('./routes/userRoute');
 const chatRoute = require('./routes/chatRoute');
 const adminRoute = require('./routes/adminRoute');
@@ -14,6 +16,13 @@ const authMiddleware = require('./middleware/authMiddleware');
 const app = express();
 require('dotenv').config();
 
+const limiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: 'Too many requests from this IP, please try again later.',
+});
+
+app.use(limiter);
 app.use(express.json());
 app.use(cors());
 
