@@ -1,3 +1,5 @@
+import {ONE_SIGNAL_APP_TOKEN, ONE_SIGNAL_APP_ID} from '@env';
+
 const sendNotification = async (body: {
   playerIds: string[];
   title: string;
@@ -8,10 +10,10 @@ const sendNotification = async (body: {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Basic os_v2_app_hm6ylwcwgrc4hkky23ppfp674gbccf7gwmhutmmyzfkpkbyfqci5gqrcpcjgjsmqvsxl4556z7nb7ylcrjpqfix52ljkl7ydbxnx6uq`,
+        Authorization: `Basic ${ONE_SIGNAL_APP_TOKEN}`,
       },
       body: JSON.stringify({
-        app_id: '3b3d85d8-5634-45c3-a958-d6def2bfdfe1',
+        app_id: ONE_SIGNAL_APP_ID,
         headings: {en: body.title},
         contents: {en: body.message},
         include_external_user_ids: body.playerIds,
