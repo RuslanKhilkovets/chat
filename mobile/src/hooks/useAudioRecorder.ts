@@ -1,4 +1,4 @@
-import {useState, useCallback, useEffect} from 'react';
+import {useState, useCallback, useEffect, useRef} from 'react';
 import {Platform, PermissionsAndroid} from 'react-native';
 import AudioRecorderPlayer, {
   AudioSet,
@@ -16,6 +16,7 @@ import useTypedSelector from '@/hooks/useTypedSelector';
 import useAuthMutation from '@/hooks/useAuthMutation';
 import {Api} from '@/api';
 import {sendNotification} from '@/helpers';
+import {IMessage, IUser} from '@/types';
 
 const audioRecorderPlayer = new AudioRecorderPlayer();
 
@@ -24,13 +25,13 @@ export const useAudioRecorder = () => {
   const [isRecordingFinished, setIsRecordingFinished] = useState(false);
   const [file, setFile] = useState<string | null>(null);
   const [isDiscardingRecording, setIsDiscardingRecording] = useState(false);
-  const [recipientUser, setRecipientUser] = useState(false);
+  const [recipientUser, setRecipientUser] = useState<IUser>();
 
   const {t} = useTranslation();
   const {currentChat, recipientId, setMessages, socket} = useChatContext();
   const user = useTypedSelector(state => state.user);
 
-  let audioDurationLocal = 0;
+  const audioDurationLocal = useRef(0);
 
   const checkAndRequestPermissions = async () => {
     if (Platform.OS === 'ios') return true;
@@ -67,7 +68,7 @@ export const useAudioRecorder = () => {
     setIsRecordingFinished(false);
     setIsDiscardingRecording(false);
 
-    audioDurationLocal = 0;
+    audioDurationLocal.current = 0;
 
     const audioSet: AudioSet = {
       AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
@@ -75,8 +76,6 @@ export const useAudioRecorder = () => {
       AVEncoderAudioQualityKeyIOS: AVEncoderAudioQualityIOSType.high,
       AVNumberOfChannelsKeyIOS: 2,
       AVFormatIDKeyIOS: AVEncodingOption.aac,
-      AudioBitRateAndroid: 192000,
-      AudioSampleRateAndroid: 48000,
     };
 
     try {
@@ -91,7 +90,7 @@ export const useAudioRecorder = () => {
       setFile(uri);
 
       audioRecorderPlayer.addRecordBackListener((e: RecordBackType) => {
-        audioDurationLocal = e.currentPosition / 1000;
+        audioDurationLocal.current = e.currentPosition / 1000;
       });
     } catch (error) {
       console.error('Error starting recorder:', error);
@@ -99,7 +98,7 @@ export const useAudioRecorder = () => {
     }
   }, []);
 
-  const stopRecording = useCallback(async recipientUser => {
+  const stopRecording = useCallback(async (recipientUser: IUser) => {
     try {
       setRecipientUser(recipientUser);
       await audioRecorderPlayer.stopRecorder();
@@ -107,7 +106,7 @@ export const useAudioRecorder = () => {
       setIsRecording(false);
       setIsRecordingFinished(true);
 
-      console.log('Final audio duration:', audioDurationLocal);
+      console.log('Final audio duration:', audioDurationLocal.current);
     } catch (error) {
       console.error('Error stopping recorder:', error);
     }
@@ -128,14 +127,12 @@ export const useAudioRecorder = () => {
 
   const {mutate: sendAudio, isLoading: isUploading} = useAuthMutation({
     mutationFn: Api.media.sendMessage,
-    onSuccess: async response => {
-      setMessages((prevMessages: any[]) => [
-        response.data.data,
-        ...prevMessages,
-      ]);
+    onSuccess: async (response: {data: {data: IMessage}}) => {
+      const newMessage = response.data.data;
+      setMessages((prevMessages: IMessage[]) => [newMessage, ...prevMessages]);
 
-      socket.emit('sendMessage', {
-        ...response.data.data,
+      socket?.emit('sendMessage', {
+        newMessage,
         recipientId,
       });
 
@@ -151,14 +148,11 @@ export const useAudioRecorder = () => {
         }
       }
 
-      setMessages((prevMessages: any[]) => [
-        response.data.data,
-        ...prevMessages,
-      ]);
+      setMessages((prevMessages: IMessage[]) => [newMessage, ...prevMessages]);
       setFile(null);
     },
     onError: error => {
-      console.error('Error uploading audio:', error);
+      console.error('Error uploading audio:', error.message);
     },
   });
 
@@ -168,8 +162,9 @@ export const useAudioRecorder = () => {
       !file ||
       !isRecordingFinished ||
       (!currentChat && !isDiscardingRecording)
-    )
+    ) {
       return;
+    }
 
     const sendAudioMessage = async () => {
       try {
@@ -182,7 +177,7 @@ export const useAudioRecorder = () => {
 
         formData.append('chatId', currentChat?._id);
         formData.append('senderId', user?._id);
-        formData.append('duration', audioDurationLocal);
+        formData.append('duration', audioDurationLocal.current);
 
         sendAudio(formData);
       } catch (error) {
@@ -191,7 +186,15 @@ export const useAudioRecorder = () => {
     };
 
     sendAudioMessage();
-  }, [socket, file, currentChat, isRecordingFinished]);
+  }, [
+    socket,
+    file,
+    currentChat,
+    isRecordingFinished,
+    isDiscardingRecording,
+    user?._id,
+    sendAudio,
+  ]);
 
   return {
     isRecording,

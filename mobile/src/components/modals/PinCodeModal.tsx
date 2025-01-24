@@ -23,18 +23,20 @@ const PinCodeModal: React.FC<PinModalProps> = ({
   setIsSecurityEnabled,
   canClose = true,
 }) => {
-  const [pin, setPin] = useState(['', '', '', '']);
-  const [error, setError] = useState('');
-  const [remainingAttempts, setRemainingAttempts] = useState(3);
+  const [pin, setPin] = useState<string[]>(['', '', '', '']);
+  const [error, setError] = useState<string>('');
+  const [remainingAttempts, setRemainingAttempts] = useState<number>(3);
   const [lockoutTime, setLockoutTime] = useState<number | null>(null);
-  const [remainingLockoutTime, setRemainingLockoutTime] = useState(0);
+  const [remainingLockoutTime, setRemainingLockoutTime] = useState<number>(0);
 
-  const inputRefs = useRef<Array<TextInput | null>>([]);
+  const inputRefs = useRef<(TextInput | null)[]>([]);
   const {theme, colorScheme} = useTheme();
   const {t} = useTranslation();
 
   const handleInputChange = (text: string, index: number) => {
-    if (text.length > 1) return;
+    if (text.length > 1) {
+      return;
+    }
     const newPin = [...pin];
     newPin[index] = text;
     setPin(newPin);
@@ -57,7 +59,7 @@ const PinCodeModal: React.FC<PinModalProps> = ({
     const enteredPin = pin.join('');
     const savedPin = await PinCodeService.getPin();
 
-    if (pin.some(value => value === '')) {
+    if (enteredPin.length !== pin.length) {
       setError(t('errors.FillAllFields'));
       return;
     }
@@ -89,7 +91,8 @@ const PinCodeModal: React.FC<PinModalProps> = ({
   };
 
   useEffect(() => {
-    let interval: NodeJS.Timer | null = null;
+    let interval: NodeJS.Timeout | null = null;
+
     if (lockoutTime) {
       interval = setInterval(() => {
         const timeLeft = Math.max(
@@ -98,12 +101,17 @@ const PinCodeModal: React.FC<PinModalProps> = ({
         );
         setRemainingLockoutTime(timeLeft);
 
-        if (timeLeft === 0) {
-          clearInterval(interval!);
+        if (timeLeft === 0 && interval) {
+          clearInterval(interval);
         }
       }, 1000);
     }
-    return () => clearInterval(interval!);
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
   }, [lockoutTime]);
 
   return (
@@ -117,7 +125,6 @@ const PinCodeModal: React.FC<PinModalProps> = ({
         onClose();
         setPin(['', '', '', '']);
       }}
-      
       title={t(isVerification ? 'modals.Verification' : 'modals.PinCode')}>
       <View style={styles.container}>
         {lockoutTime && remainingLockoutTime > 0 ? (

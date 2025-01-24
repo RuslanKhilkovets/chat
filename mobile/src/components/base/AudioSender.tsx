@@ -1,8 +1,19 @@
+import React from 'react';
 import {useTheme} from '@/context/Theme/ThemeContext';
 import {TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const AudioStopper = ({isRecording, stopRecording, startRecording}) => {
+interface IAudioStopperProps {
+  isRecording: boolean;
+  stopRecording: () => void;
+  startRecording: () => void;
+}
+
+const AudioStopper = ({
+  isRecording,
+  stopRecording,
+  startRecording,
+}: IAudioStopperProps) => {
   const {theme, colorScheme} = useTheme();
 
   return (

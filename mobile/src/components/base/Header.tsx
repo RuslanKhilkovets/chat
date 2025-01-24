@@ -1,17 +1,21 @@
 import * as React from 'react';
-import { View, TouchableOpacity, StyleSheet, Animated, Text } from 'react-native';
+import {View, TouchableOpacity, StyleSheet, Animated, Text} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 
-import { Input } from '@/components';
-import { useChatContext } from '@/context/Chat/ChatContext';
-import { useTheme } from '@/context/Theme/ThemeContext';
+import {Input} from '@/components';
+import {useChatContext} from '@/context/Chat/ChatContext';
+import {useTheme} from '@/context/Theme/ThemeContext';
 
-export const Header = ({openMenu}) => {
+interface IHeaderProps {
+  openMenu: () => void;
+}
+
+export const Header = ({openMenu}: IHeaderProps) => {
   const [isSearchOpen, setIsSearchOpen] = React.useState(false);
-  const { filterQuery, setFilterQuery } = useChatContext();
-  const { t } = useTranslation();
-  const { theme, colorScheme } = useTheme();
+  const {filterQuery, setFilterQuery} = useChatContext();
+  const {t} = useTranslation();
+  const {theme, colorScheme} = useTheme();
 
   const searchWidth = React.useRef(
     new Animated.Value(isSearchOpen ? 1 : 0),
@@ -30,8 +34,8 @@ export const Header = ({openMenu}) => {
 
   return (
     <View style={styles.headerContainer}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20 }}>
-      <TouchableOpacity
+      <View style={{flexDirection: 'row', alignItems: 'center', gap: 20}}>
+        <TouchableOpacity
           onPress={() => {
             if (!isSearchOpen) openMenu();
             else handleSearchToggle();
@@ -43,7 +47,8 @@ export const Header = ({openMenu}) => {
             color={theme[colorScheme].textPrimary}
           />
         </TouchableOpacity>
-        <Text style={[styles.textLogo, { color: theme[colorScheme].textPrimary }]}>
+        <Text
+          style={[styles.textLogo, {color: theme[colorScheme].textPrimary}]}>
           MChat
         </Text>
       </View>

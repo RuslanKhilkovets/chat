@@ -1,3 +1,4 @@
+import React from 'react';
 import {createIconSetFromFontello} from 'react-native-vector-icons';
 import {IconProps} from 'react-native-vector-icons/Icon';
 

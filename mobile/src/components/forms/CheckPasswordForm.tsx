@@ -28,7 +28,7 @@ const CheckPasswordForm = ({setIsPasswordChecked}: ICheckPasswordFormProps) => {
     },
   });
 
-  const checkPassword = (id, password) => {
+  const checkPassword = (id: string, password: string) => {
     if (!password) {
       setError(t('errors.FieldMustBeFilled'));
       return;

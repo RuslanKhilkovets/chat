@@ -51,6 +51,8 @@ const ChatItem = ({chat}: IChatItemProps) => {
     return name.charAt(0).toUpperCase();
   };
 
+  console.log('notifications', notifications);
+
   return (
     <TouchableOpacity
       activeOpacity={0.7}

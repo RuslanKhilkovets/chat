@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {useDispatch} from 'react-redux';
-import {useForm, Controller} from 'react-hook-form';
+import {useForm, Controller, FieldValues} from 'react-hook-form';
 import * as yup from 'yup';
 import {yupResolver} from '@hookform/resolvers/yup';
 import SInfo from 'react-native-sensitive-info';
@@ -14,8 +14,13 @@ import {Api} from '@/api';
 import {setUser} from '@/store/user';
 import {ChangeDataType} from '@/constants';
 import personalDataSchema from '@/validations/personalData';
+import {IUser} from '@/types';
 
-const ChangeDataForm = () => {
+interface ChangeDataFormValues extends FieldValues {
+  fieldToChange: string;
+}
+
+const ChangeDataForm: React.FC = () => {
   const {_id: userId} = useTypedSelector(state => state.user);
   const route =
     useRoute<RouteProp<{params: {type: ChangeDataType}}, 'params'>>();
@@ -26,19 +31,21 @@ const ChangeDataForm = () => {
   const {t} = useTranslation();
   const goBack = useGoBack();
 
-  const schema = personalDataSchema[type] || yup.object();
+  const schema: yup.ObjectSchema<any> =
+    personalDataSchema[type] || yup.object();
+
   const {
     control,
     handleSubmit,
     formState: {errors},
-  } = useForm({
+  } = useForm<ChangeDataFormValues>({
     resolver: yupResolver(schema),
     defaultValues: {fieldToChange: ''},
   });
 
   const {mutate: updateMutation, isLoading} = useAuthMutation({
     mutationFn: Api.users.update,
-    onSuccess: async res => {
+    onSuccess: async (res: {data: {user: IUser}}) => {
       const {user} = res.data;
 
       dispatch(setUser(user));
@@ -51,7 +58,7 @@ const ChangeDataForm = () => {
     },
   });
 
-  const onSubmit = data => {
+  const onSubmit = (data: ChangeDataFormValues) => {
     const payload = {[type]: data.fieldToChange};
     updateMutation({userId, data: payload});
   };
