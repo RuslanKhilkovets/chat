@@ -4,7 +4,7 @@ import jwt_decode from 'jwt-decode';
 import {OneSignal} from 'react-native-onesignal';
 
 import {useDispatch} from 'react-redux';
-import {setUser} from '@/store/user';
+import {resetUser, setUser} from '@/store/user';
 import {useTypedSelector} from '@/hooks';
 
 export const AuthContext = React.createContext();
@@ -26,7 +26,7 @@ export const AuthProvider = ({children}) => {
           sharedPreferencesName: 'prefs',
           keychainService: 'keychainService',
         });
-        
+
         if (token) {
           setAccessToken(token);
         }
@@ -34,10 +34,9 @@ export const AuthProvider = ({children}) => {
         console.error('Error fetching access token:', error);
       }
     };
-  
+
     fetchToken();
   }, []);
-  
 
   const getToken = async () => {
     if (accessToken) {
@@ -59,8 +58,6 @@ export const AuthProvider = ({children}) => {
       OneSignal.login(userData.playerId);
     }
 
-    console.log(userData, "userData");
-    
     await SInfo.setItem('accessToken', userData.token, {
       sharedPreferencesName: 'prefs',
       keychainService: 'keychainService',
@@ -72,7 +69,6 @@ export const AuthProvider = ({children}) => {
   };
 
   const logout = async () => {
-
     await SInfo.deleteItem('accessToken', {
       sharedPreferencesName: 'prefs',
       keychainService: 'keychainService',
@@ -83,7 +79,7 @@ export const AuthProvider = ({children}) => {
       keychainService: 'keychainService',
     });
     setAccessToken(null);
-    dispatch(setUser(null));
+    dispatch(resetUser());
 
     OneSignal.logout(currentUser?.playerId);
   };
