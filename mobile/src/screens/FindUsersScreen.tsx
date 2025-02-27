@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
   },
   noChatsText: {
     fontSize: 24,
-    fontFamily: 'Jersey20-Regular',
+    fontFamily: 'Jersey-Regular',
     textAlign: 'center',
   },
 });

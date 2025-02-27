@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
   },
   textLogo: {
     fontSize: 28,
-    fontFamily: 'Jersey20-Regular',
+    fontFamily: 'Jersey-Regular',
   },
 });
 

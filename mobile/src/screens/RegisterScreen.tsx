@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
   },
   screenLabel: {
     fontSize: 50,
-    fontFamily: 'Jersey20-Regular',
+    fontFamily: 'Jersey-Regular',
     marginVertical: 50,
   },
 });

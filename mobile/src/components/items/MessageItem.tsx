@@ -274,7 +274,7 @@ const styles = StyleSheet.create({
   },
   messageText: {
     color: 'yellow',
-    fontFamily: 'Jersey20-Regular',
+    fontFamily: 'Jersey-Regular',
     fontSize: 20,
   },
   audioContainer: {

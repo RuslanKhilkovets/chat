@@ -86,6 +86,6 @@ const styles = StyleSheet.create({
   text: {
     marginVertical: 10,
     fontSize: 24,
-    fontFamily: 'Jersey20-Regular',
+    fontFamily: 'Jersey-Regular',
   },
 });

@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
     lineHeight: 26,
     fontSize: 22,
-    fontFamily: 'Jersey20-Regular',
+    fontFamily: 'Jersey-Regular',
     color: '#E1FF00',
   },
   cursor: {

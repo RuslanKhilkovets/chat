@@ -1,17 +1,25 @@
 import * as React from 'react';
-import { FlatList, StyleSheet, Text, View, PanResponder, Animated } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTranslation } from 'react-i18next';
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  PanResponder,
+  Animated,
+} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {useTranslation} from 'react-i18next';
 
-import { Button, ChatItem, Header, MenuDrawer, Screen } from '@/components';
-import { useChatContext } from '@/context/Chat/ChatContext';
-import { useTheme } from '@/context/Theme/ThemeContext';
+import {Button, ChatItem, Header, MenuDrawer, Screen} from '@/components';
+import {useChatContext} from '@/context/Chat/ChatContext';
+import {useTheme} from '@/context/Theme/ThemeContext';
 
 export const ChatsScreen = () => {
-  const { filteredChats, filterQuery, isUserChatsLoading, notifications } = useChatContext();
-  const { navigate } = useNavigation();
-  const { t } = useTranslation();
-  const { theme, colorScheme } = useTheme();
+  const {filteredChats, filterQuery, isUserChatsLoading, notifications} =
+    useChatContext();
+  const {navigate} = useNavigation();
+  const {t} = useTranslation();
+  const {theme, colorScheme} = useTheme();
 
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
   const pan = React.useRef(new Animated.Value(0)).current;
@@ -23,7 +31,10 @@ export const ChatsScreen = () => {
     PanResponder.create({
       onMoveShouldSetPanResponder: (_, gestureState) => {
         // Trigger only when the gesture is a horizontal swipe
-        return Math.abs(gestureState.dx) > Math.abs(gestureState.dy) && gestureState.dx > 20;
+        return (
+          Math.abs(gestureState.dx) > Math.abs(gestureState.dy) &&
+          gestureState.dx > 20
+        );
       },
       onPanResponderMove: (_, gestureState) => {
         if (gestureState.dx > 0) {
@@ -37,9 +48,9 @@ export const ChatsScreen = () => {
           openDrawer();
         }
         // Reset the animated value
-        Animated.spring(pan, { toValue: 0, useNativeDriver: true }).start();
+        Animated.spring(pan, {toValue: 0, useNativeDriver: true}).start();
       },
-    })
+    }),
   ).current;
 
   const sortedChats = React.useMemo(() => {
@@ -72,11 +83,11 @@ export const ChatsScreen = () => {
     <Screen headerShown={false}>
       <Header openMenu={openDrawer} />
       <MenuDrawer visible={isDrawerOpen} onClose={closeDrawer} />
-      <View style={{ flex: 1 }} {...panResponder.panHandlers}>
+      <View style={{flex: 1}} {...panResponder.panHandlers}>
         {filteredChats?.length !== 0 && (
           <FlatList
             data={sortedChats || []}
-            renderItem={({ item }) => <ChatItem chat={item} />}
+            renderItem={({item}) => <ChatItem chat={item} />}
             keyExtractor={item => item.id}
           />
         )}
@@ -86,15 +97,15 @@ export const ChatsScreen = () => {
             <Text
               style={[
                 styles.noChatsText,
-                { color: theme[colorScheme].textPrimary },
+                {color: theme[colorScheme].textPrimary},
               ]}>
               {t('warnings.NoChats')}
             </Text>
             <Text
               style={[
                 styles.noChatsText,
-                { fontSize: 20 },
-                { color: theme[colorScheme].textPrimary },
+                {fontSize: 20},
+                {color: theme[colorScheme].textPrimary},
               ]}>
               {t('warnings.NoChatsAdvice')}
             </Text>
@@ -108,8 +119,8 @@ export const ChatsScreen = () => {
             <Text
               style={[
                 styles.noChatsText,
-                { fontSize: 20 },
-                { color: theme[colorScheme].textPrimary },
+                {fontSize: 20},
+                {color: theme[colorScheme].textPrimary},
               ]}>
               {t('warnings.DidNotFindChats')}
             </Text>
@@ -134,7 +145,7 @@ const styles = StyleSheet.create({
   },
   noChatsText: {
     fontSize: 24,
-    fontFamily: 'Jersey20-Regular',
+    fontFamily: 'Jersey-Regular',
     textAlign: 'center',
   },
 });

@@ -161,19 +161,19 @@ const styles = StyleSheet.create({
     zIndex: 1,
     color: 'yellow',
     fontSize: 26,
-    fontFamily: 'Jersey20-Regular',
+    fontFamily: 'Jersey-Regular',
     textTransform: 'capitalize',
     textAlign: 'center',
   },
   name: {
     color: 'yellow',
     fontSize: 22,
-    fontFamily: 'Jersey20-Regular',
+    fontFamily: 'Jersey-Regular',
   },
   isOnline: {
     color: 'yellow',
     fontSize: 16,
-    fontFamily: 'Jersey20-Regular',
+    fontFamily: 'Jersey-Regular',
   },
   deleteIcon: {
     marginLeft: 'auto',

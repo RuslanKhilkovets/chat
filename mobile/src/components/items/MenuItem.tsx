@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    fontFamily: 'Jersey20-Regular',
+    fontFamily: 'Jersey-Regular',
     fontSize: 20,
   },
 });

@@ -54,12 +54,12 @@ const styles = StyleSheet.create({
     gap: 15,
   },
   title: {
-    fontFamily: 'Jersey20-Regular',
+    fontFamily: 'Jersey-Regular',
     color: 'yellow',
     fontSize: 22,
   },
   description: {
-    fontFamily: 'Jersey20-Regular',
+    fontFamily: 'Jersey-Regular',
     color: '#eaff00a2',
     fontSize: 21,
   },

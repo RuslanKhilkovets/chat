@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 22,
-    fontFamily: 'Jersey20-Regular',
+    fontFamily: 'Jersey-Regular',
   },
 });
 

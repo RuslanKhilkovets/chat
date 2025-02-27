@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 20,
-    fontFamily: 'Jersey20-Regular',
+    fontFamily: 'Jersey-Regular',
   },
   activeInput: {
     borderColor: '#000',

@@ -147,11 +147,11 @@ const styles = StyleSheet.create({
   username: {
     fontSize: 30,
     color: 'yellow',
-    fontFamily: 'Jersey20-Regular',
+    fontFamily: 'Jersey-Regular',
   },
   online: {
     fontSize: 16,
-    fontFamily: 'Jersey20-Regular',
+    fontFamily: 'Jersey-Regular',
   },
   infoBlock: {
     marginTop: 20,
@@ -160,11 +160,11 @@ const styles = StyleSheet.create({
   infoBlockText: {
     fontSize: 23,
     color: 'yellow',
-    fontFamily: 'Jersey20-Regular',
+    fontFamily: 'Jersey-Regular',
   },
   appVersion: {
     color: 'yellow',
-    fontFamily: 'Jersey20-Regular',
+    fontFamily: 'Jersey-Regular',
     textAlign: 'center',
     fontSize: 18,
     marginVertical: 20,

@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   title: {
-    fontFamily: 'Jersey20-Regular',
+    fontFamily: 'Jersey-Regular',
     color: 'yellow',
     fontSize: 22,
   },

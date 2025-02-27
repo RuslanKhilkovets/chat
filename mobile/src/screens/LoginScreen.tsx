@@ -124,12 +124,12 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 18,
-    fontFamily: 'Jersey20-Regular',
+    fontFamily: 'Jersey-Regular',
     textAlign: 'center',
   },
   screenLabel: {
     fontSize: 50,
-    fontFamily: 'Jersey20-Regular',
+    fontFamily: 'Jersey-Regular',
     marginVertical: 70,
   },
 });

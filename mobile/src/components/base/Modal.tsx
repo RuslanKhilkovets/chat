@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
   modalTitle: {
     width: '100%',
     fontSize: 32,
-    fontFamily: 'Jersey20-Regular',
+    fontFamily: 'Jersey-Regular',
     textAlign: 'center',
     lineHeight: 34,
     color: '#E1FF00',

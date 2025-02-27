@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     fontSize: 26,
     marginBottom: 20,
     textAlign: 'center',
-    fontFamily: 'Jersey20-Regular',
+    fontFamily: 'Jersey-Regular',
   },
   modalButtons: {
     flexDirection: 'row',

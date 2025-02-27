@@ -44,8 +44,7 @@ const styles = StyleSheet.create({
   },
   textLogo: {
     fontSize: 240,
-    fontWeight: 'bold',
-    fontFamily: 'Jersey20-Regular',
+    fontFamily: 'Jersey-Regular',
   },
 });
 

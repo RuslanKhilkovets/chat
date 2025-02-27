@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
     borderRadius: 35,
   },
   userName: {
-    fontFamily: 'Jersey20-Regular',
+    fontFamily: 'Jersey-Regular',
     fontSize: 24,
   },
   menuItemsContainer: {
