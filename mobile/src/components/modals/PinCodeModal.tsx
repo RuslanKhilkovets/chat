@@ -10,7 +10,6 @@ interface PinModalProps {
   isVisible: boolean;
   onClose: () => void;
   onSuccess: () => void;
-  setIsSecurityEnabled?: React.Dispatch<React.SetStateAction<boolean>>;
   isVerification?: boolean;
   canClose?: boolean;
 }
@@ -20,7 +19,6 @@ const PinCodeModal: React.FC<PinModalProps> = ({
   onClose,
   onSuccess,
   isVerification = false,
-  setIsSecurityEnabled,
   canClose = true,
 }) => {
   const [pin, setPin] = useState<string[]>(['', '', '', '']);
@@ -119,9 +117,6 @@ const PinCodeModal: React.FC<PinModalProps> = ({
       canClose={canClose}
       visible={isVisible}
       onClose={() => {
-        if (pin.some(cell => cell === '')) {
-          setIsSecurityEnabled?.(false);
-        }
         onClose();
         setPin(['', '', '', '']);
       }}

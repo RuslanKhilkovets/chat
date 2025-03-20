@@ -5,22 +5,25 @@ import RNSensitiveInfo from 'react-native-sensitive-info';
 import RadioButton from 'react-native-radio-button';
 import SInfo from 'react-native-sensitive-info';
 import {OneSignal} from 'react-native-onesignal';
-import {useTypedSelector} from '@/hooks';
+
 import {BottomSheet, PinCodeModal, Screen, SettingsItem} from '@/components';
 import {useTheme} from '@/context/Theme/ThemeContext';
 import {PinCodeService} from '@/helpers';
 
 const SettingsScreen = () => {
+  const {t, i18n} = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
   const [bottomSheetType, setBottomSheetType] = useState<string | null>(null);
-  const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+  const [selectedLanguage, setSelectedLanguage] = useState<string | null>(
+    i18n.language,
+  );
   const [isNotificationsDisabled, setIsNotificationsDisabled] = useState(false);
   const [isPinModalVisible, setIsPinModalVisible] = useState(false);
-  const [isSecurityEnabled, setIsSecurityEnabled] = useState(false);
+  const [isSecurityEnabled, setIsSecurityEnabled] = useState(
+    !!PinCodeService.getPin(),
+  );
 
-  const {t, i18n} = useTranslation();
   const {theme, colorScheme} = useTheme();
-  const user = useTypedSelector(state => state.user);
 
   const handleOpenBottomSheet = (type: string) => {
     setBottomSheetType(type);
@@ -42,9 +45,9 @@ const SettingsScreen = () => {
 
   const handleNotificationsToggle = () => {
     if (isNotificationsDisabled) {
-      OneSignal.logout();
+      OneSignal.Notifications.requestPermission(true);
     } else {
-      OneSignal.login(user?.playerId);
+      OneSignal.Notifications.requestPermission(false);
     }
     SInfo.setItem('notification_enabled', String(!isNotificationsDisabled), {
       sharedPreferencesName: 'prefs',
@@ -70,6 +73,8 @@ const SettingsScreen = () => {
         keychainService: 'keychainService',
       });
       const security_enabled = Boolean(await PinCodeService.getPin());
+
+      console.log('security_enabled', security_enabled);
 
       setIsNotificationsDisabled(notification_enabled !== 'true');
       setIsSecurityEnabled(security_enabled);
@@ -209,7 +214,6 @@ const SettingsScreen = () => {
       <PinCodeModal
         onClose={() => setIsPinModalVisible(false)}
         isVisible={isPinModalVisible}
-        setIsSecurityEnabled={setIsSecurityEnabled}
         onSuccess={() => setIsSecurityEnabled(true)}
         canClose
       />
