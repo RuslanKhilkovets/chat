@@ -35,7 +35,13 @@ const AboutScreen = () => {
       </ScrollView>
       <View style={{marginHorizontal: 20}}>
         <Button
-          before={<Icon name="arrow-back-ios" color={'yellow'} size={16} />}
+          before={
+            <Icon
+              name="arrow-back-ios"
+              color={theme[colorScheme].textPrimary}
+              size={16}
+            />
+          }
           onPress={goBack}>
           {t('actions.GoBack')}
         </Button>

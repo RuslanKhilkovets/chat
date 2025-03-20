@@ -5,121 +5,30 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import {io, Socket} from 'socket.io-client';
+import {io} from 'socket.io-client';
 
 import {SERVER_URL} from '@env';
 import {useAuthMutation, useTypedSelector} from '@/hooks';
 import {Api} from '@/api';
 import {sendNotification} from '@/helpers';
-import {IChat, IMessage, IUser} from '@/types';
-import {UseMutateFunction} from '@tanstack/react-query';
 
-interface ChatContextProps extends React.PropsWithChildren {}
-
-interface IChatContext {
-  userChats: IChat[];
-  isUserChatsLoading: boolean;
-  createChat: (firstId: string, secondId: string) => Promise<IChat>;
-  updateCurrentChat: (chat: IChat) => void;
-  messages: IMessage[];
-  isMessagesLoading: boolean;
-  messagesError: string | null;
-  currentChat: IChat | null;
-  sendMessage: (
-    textMessage: string,
-    sender: IUser,
-    currentChatId: string,
-    recipient: IUser,
-  ) => void;
-  newMessage: IMessage | null;
-  setNewMessage: (message: IMessage | null) => void;
-  onlineUsers: {userId: string; socketId: string}[];
-  notifications: {date: string; isRead: boolean; senderId: string}[];
-  markAsRead: (
-    n: any,
-    userChats: IChat[],
-    user: IUser,
-    notifications: any,
-  ) => void;
-  markThisUserNotificationsAsRead: (
-    thisUserNotifications: any,
-    notifications: any,
-  ) => void;
-  filterQuery: string;
-  setFilterQuery: (query: string) => void;
-  filteredChats: IChat[];
-  isTyping: boolean;
-  setIsTyping: (isTyping: boolean) => void;
-  isRecipientTyping: boolean;
-  setIsRecipientTyping: (isTyping: boolean) => void;
-  readMessages: (messages: IMessage[]) => void;
-  loadMoreMessages: () => void;
-  page: number;
-  setPage: (page: number) => void;
-  deleteChat: UseMutateFunction<{data: {chat: IChat}}, any, any, unknown>;
-  recipientId?: string;
-  setMessages: React.Dispatch<React.SetStateAction<IMessage[]>>;
-  socket: Socket | null;
-  hasMoreMessages: boolean;
-  editMessage: (messageId: string, text: string) => void;
-  deleteMessage: (messageId: string) => void;
-}
-
-const initialContext: IChatContext = {
-  userChats: [],
-  isUserChatsLoading: false,
-  createChat: async () => new Promise(() => ({id: '', name: ''})),
-  updateCurrentChat: () => {},
-  messages: [],
-  isMessagesLoading: false,
-  messagesError: null,
-  currentChat: null,
-  sendMessage: () => {},
-  newMessage: null,
-  setNewMessage: () => {},
-  onlineUsers: [],
-  notifications: [],
-  markAsRead: () => {},
-  markThisUserNotificationsAsRead: () => {},
-  filterQuery: '',
-  setFilterQuery: () => {},
-  filteredChats: [],
-  isTyping: false,
-  setIsTyping: () => {},
-  isRecipientTyping: false,
-  setIsRecipientTyping: () => {},
-  readMessages: () => {},
-  loadMoreMessages: () => {},
-  page: 1,
-  setPage: () => {},
-  deleteChat: () => {},
-  recipientId: undefined,
-  setMessages: () => {},
-  socket: null,
-  hasMoreMessages: true,
-  editMessage: () => {},
-  deleteMessage: () => {},
-};
-
-export const ChatContext = createContext<IChatContext>(initialContext);
+export const ChatContext = createContext();
 
 export const useChatContext = () => {
   return useContext(ChatContext);
 };
 
-export const ChatProvider = ({children}: ChatContextProps) => {
-  const [userChats, setUserChats] = useState<IChat[]>([]);
-  const [currentChat, setCurrentChat] = useState<IChat | null>(null);
-  const [messages, setMessages] = useState<IMessage[]>([]);
-  const [messagesError, setMessagesError] = useState<string | null>(null);
-  const [newMessage, setNewMessage] = useState<IMessage | null>(null);
-  const [socket, setSocket] = useState<Socket | null>(null);
-  const [onlineUsers, setOnlineUsers] = useState<
-    {userId: string; socketId: string}[]
-  >([]);
+export const ChatProvider = ({children}) => {
+  const [userChats, setUserChats] = useState([]);
+  const [currentChat, setCurrentChat] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [messagesError, setMessagesError] = useState(null);
+  const [newMessage, setNewMessage] = useState(null);
+  const [socket, setSocket] = useState(null);
+  const [onlineUsers, setOnlineUsers] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const [filterQuery, setFilterQuery] = useState('');
-  const [filteredChats, setFilteredChats] = useState<IChat[]>([]);
+  const [filteredChats, setFilteredChats] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const [isRecipientTyping, setIsRecipientTyping] = useState(false);
   const [page, setPage] = useState(1);
@@ -129,28 +38,26 @@ export const ChatProvider = ({children}: ChatContextProps) => {
 
   const {mutate: findChatsByQueryString} = useAuthMutation({
     mutationFn: Api.chats.findChatsBySenderName,
-    onSuccess: (res: {data: {chats: IChat[]}}) => {
+    onSuccess: res => {
       setFilteredChats(res.data.chats);
     },
   });
 
   const {mutate: deleteChat} = useAuthMutation({
     mutationFn: Api.chats.delete,
-    onSuccess: (res: {data: {chat: IChat}}) => {
+    onSuccess: res => {
       const chatId = res.data.chat._id;
 
-      setUserChats(prevChats =>
-        prevChats.filter((chat: IChat) => chat?._id !== chatId),
-      );
+      setUserChats(prevChats => prevChats.filter(chat => chat?._id !== chatId));
       setFilteredChats(prevFilteredChats =>
-        prevFilteredChats.filter((chat: IChat) => chat?._id !== chatId),
+        prevFilteredChats.filter(chat => chat?._id !== chatId),
       );
     },
   });
 
   const {mutate: readMessageMutation} = useAuthMutation({
     mutationFn: Api.messages.read,
-    onSuccess: (readMessage: IMessage) => {
+    onSuccess: readMessage => {
       setMessages(prevMessages =>
         prevMessages.map(message =>
           message._id === readMessage._id
@@ -161,57 +68,51 @@ export const ChatProvider = ({children}: ChatContextProps) => {
     },
   });
 
-  const updateCurrentChat = useCallback((chat: IChat) => {
+  const markAsRead = useCallback((n, userChats, user, notifications) => {
+    const desiredChat = userChats.find(chat => {
+      const chatMembers = [user._id, n.senderId];
+      const isDesiredChat = chat?.members.every(member => {
+        return chatMembers.includes(member);
+      });
+      return isDesiredChat;
+    });
+
+    const mNotifications = notifications.map(notification => {
+      if (notification.senderId === n.senderId) {
+        return {...n, isRead: true};
+      } else {
+        return notification;
+      }
+    });
+
+    updateCurrentChat(desiredChat);
+    setNotifications(mNotifications);
+  }, []);
+
+  const updateCurrentChat = useCallback(chat => {
     chat === null && setMessages([]);
     setCurrentChat(chat);
   }, []);
 
   const {mutateAsync: createChatMutate} = useAuthMutation({
     mutationFn: Api.chats.createChat,
-    onSuccess: (res: {data: IChat}) => {
+    onSuccess: res => {
       setUserChats(prev => [...prev, res.data]);
     },
-    onError: (error: any) => {
+    onError: error => {
       console.error('Error while creating chat', error);
     },
   });
 
-  const markAsRead = useCallback(
-    (n, userChats: IChat[], user: IUser, notifications) => {
-      const desiredChat = userChats.find((chat: IChat) => {
-        const chatMembers = [user._id, n.senderId];
-        const isDesiredChat = chat?.members.every(member => {
-          return chatMembers.includes(member);
-        });
-        return isDesiredChat;
-      });
-
-      const mNotifications = notifications.map(notification => {
-        if (notification.senderId === n.senderId) {
-          return {...n, isRead: true};
-        } else {
-          return notification;
-        }
-      });
-
-      updateCurrentChat(desiredChat);
-      setNotifications(mNotifications);
-    },
-    [updateCurrentChat],
-  );
-
-  const createChat = useCallback(
-    async (firstId: string, secondId: string) => {
-      try {
-        const response = await createChatMutate({firstId, secondId});
-        return response.data;
-      } catch (error) {
-        console.error('Failed to create chat:', error);
-        throw error;
-      }
-    },
-    [createChatMutate],
-  );
+  const createChat = useCallback(async (firstId, secondId) => {
+    try {
+      const response = await createChatMutate({firstId, secondId});
+      return response.data;
+    } catch (error) {
+      console.error('Failed to create chat:', error);
+      throw error;
+    }
+  }, []);
 
   const markThisUserNotificationsAsRead = useCallback(
     (thisUserNotifications, notifications) => {
@@ -233,19 +134,7 @@ export const ChatProvider = ({children}: ChatContextProps) => {
   );
 
   const {mutate: sendMessageMutate} = useAuthMutation({
-    mutationFn: async ({
-      chatId,
-      senderId,
-      textMessage,
-      recipient,
-      sender,
-    }: {
-      chatId: string;
-      senderId: string;
-      textMessage: string;
-      recipient: {playerId: string};
-      sender: {name: string};
-    }) => {
+    mutationFn: async ({chatId, senderId, textMessage, recipient, sender}) => {
       const response = await Api.messages.sendMessage({
         chatId,
         senderId,
@@ -266,18 +155,18 @@ export const ChatProvider = ({children}: ChatContextProps) => {
 
       return response;
     },
-    onSuccess: (response: {data: IMessage}) => {
+    onSuccess: response => {
       setNewMessage(response.data);
       setMessages(prev => [response.data, ...prev]);
     },
     onError: error => {
-      console.error('Failed to send message:', error.message);
+      console.error('Failed to send message:', error);
     },
   });
 
   const {mutate: editMessageMutate} = useAuthMutation({
     mutationFn: Api.messages.editMessage,
-    onSuccess: (response: {data: IMessage}) => {
+    onSuccess: response => {
       const updatedMessage = response.data;
       setMessages(prevMessages =>
         prevMessages?.map(message =>
@@ -286,7 +175,7 @@ export const ChatProvider = ({children}: ChatContextProps) => {
       );
     },
     onError: error => {
-      console.error('Failed to edit message:', error.message);
+      console.error('Failed to edit message:', error);
     },
   });
 
@@ -296,7 +185,7 @@ export const ChatProvider = ({children}: ChatContextProps) => {
 
   const {mutate: deleteMessageMutate} = useAuthMutation({
     mutationFn: Api.messages.deleteMessage,
-    onSuccess: (response: {data: {data: IMessage}}) => {
+    onSuccess: response => {
       const deletedMessage = response.data.data;
 
       setMessages(prevMessages =>
@@ -304,7 +193,7 @@ export const ChatProvider = ({children}: ChatContextProps) => {
       );
     },
     onError: error => {
-      console.error('Failed to delete message:', error.message);
+      console.error('Failed to delete message:', error);
     },
   });
 
@@ -313,12 +202,7 @@ export const ChatProvider = ({children}: ChatContextProps) => {
   };
 
   const sendMessage = useCallback(
-    (
-      textMessage: string,
-      sender: IUser,
-      currentChatId: string,
-      recipient: IUser,
-    ) => {
+    (textMessage, sender, currentChatId, recipient) => {
       sendMessageMutate({
         chatId: currentChatId,
         senderId: sender._id,
@@ -330,39 +214,34 @@ export const ChatProvider = ({children}: ChatContextProps) => {
     [sendMessageMutate],
   );
 
-  const handleMessageRead = useCallback(
-    async (messageIds: string[], chatId: string): Promise<void> => {
-      const senderId = user?._id;
+  const handleMessageRead = async (messageIds, chatId) => {
+    const senderId = user?._id;
 
-      if (socket && messageIds?.length) {
-        socket.emit('messageRead', {
-          messageIds,
-          chatId,
-          senderId,
-          recipientId,
-        });
+    if (socket && messageIds?.length) {
+      await socket.emit('messageRead', {
+        messageIds,
+        chatId,
+        senderId,
+        recipientId,
+      });
 
-        setMessages(prev => {
-          const updatedMessages = prev.map(message =>
-            messageIds.includes(message?._id)
-              ? {...message, isRead: true}
-              : message,
-          );
+      setMessages(prev => {
+        const updatedMessages = prev.map(message =>
+          messageIds.includes(message?._id)
+            ? {...message, isRead: true}
+            : message,
+        );
 
-          return updatedMessages;
-        });
-      }
-    },
-    [recipientId, socket, user?._id],
-  );
+        return updatedMessages;
+      });
+    }
+  };
 
   const readMessages = useCallback(
-    (messagesToUpdate: IMessage[]) => {
-      if (!currentChat || !user || !messages?.length) {
-        return;
-      }
+    messages => {
+      if (!currentChat || !user || !messages?.length) return;
 
-      const unreadMessageIds = messagesToUpdate
+      const unreadMessageIds = messages
         .filter(message => !message?.isRead && message?.senderId !== user?._id)
         .map(message => message._id);
 
@@ -370,13 +249,13 @@ export const ChatProvider = ({children}: ChatContextProps) => {
         handleMessageRead(unreadMessageIds, currentChat?._id);
       }
     },
-    [currentChat, user, handleMessageRead, messages],
+    [currentChat, user],
   );
 
   const {mutate: loadMessagesMutate, isLoading: isMessagesLoading} =
     useAuthMutation({
       mutationFn: Api.messages.getMessages,
-      onSuccess: (res: {data: {messages: IMessage[]; metadata: any}}) => {
+      onSuccess: res => {
         const responseMessages = res?.data?.messages;
 
         if (responseMessages && responseMessages?.length !== 0) {
@@ -386,7 +265,7 @@ export const ChatProvider = ({children}: ChatContextProps) => {
 
         setHasMoreMessages(res?.data?.metadata?.hasMore);
       },
-      onError: (error: {message: string}) => {
+      onError: error => {
         setMessagesError(error?.message);
       },
     });
@@ -402,7 +281,7 @@ export const ChatProvider = ({children}: ChatContextProps) => {
       return;
     }
 
-    const onEditMessage = (updatedMessage: IMessage) => {
+    const onEditMessage = updatedMessage => {
       setMessages(prevMessages =>
         prevMessages.map(message =>
           message._id === updatedMessage._id ? updatedMessage : message,
@@ -410,7 +289,8 @@ export const ChatProvider = ({children}: ChatContextProps) => {
       );
     };
 
-    const onDeleteMessage = (deletedMessageId: string) => {
+    // Handle deleted message
+    const onDeleteMessage = deletedMessageId => {
       setMessages(prevMessages =>
         prevMessages.filter(message => message._id !== deletedMessageId),
       );
@@ -426,38 +306,31 @@ export const ChatProvider = ({children}: ChatContextProps) => {
   }, [socket]);
 
   useEffect(() => {
-    if (socket === null || user === null) {
+    if (socket === null) {
       return;
     }
 
-    socket!.emit('addNewUser', user?._id);
+    socket.emit('addNewUser', user?._id);
 
-    socket!.on('getOnlineUsers', response => {
+    socket.on('getOnlineUsers', response => {
       setOnlineUsers(response);
     });
-
-    socket!.on('getNotification', res => {
+    socket.on('getNotification', res => {
       setNotifications(prev => [...prev, res]);
     });
 
-    const onMessageRead = ({
-      chatId,
-      messageId,
-    }: {
-      chatId: string;
-      messageId: string;
-    }) => {
+    const onMessageRead = ({chatId, messageId}) => {
       readMessageMutation({chatId, messageId});
     };
 
-    socket!.on('messageRead', onMessageRead);
+    socket.on('messageRead', onMessageRead);
 
     return () => {
-      socket!.off('getOnlineUsers');
-      socket!.off('getNotification');
-      socket!.off('messageRead', onMessageRead);
+      socket.off('getOnlineUsers');
+      socket.off('getNotification');
+      socket.off('messageRead', onMessageRead);
     };
-  }, [socket, user, readMessageMutation]);
+  }, [socket]);
 
   useEffect(() => {
     if (socket === null || currentChat === null) {
@@ -494,14 +367,14 @@ export const ChatProvider = ({children}: ChatContextProps) => {
       socket.off('typingStart');
       socket.off('typingStop');
     };
-  }, [socket, isTyping, currentChat, user?._id, recipientId]);
+  }, [socket, isTyping, currentChat, user?._id]);
 
   useEffect(() => {
-    if (currentChat === null && socket === null) {
+    if (currentChat === null) {
       return;
     }
 
-    socket?.on('getMessage', res => {
+    socket.on('getMessage', res => {
       if (currentChat?._id !== res.chatId) {
         return;
       }
@@ -509,7 +382,7 @@ export const ChatProvider = ({children}: ChatContextProps) => {
     });
 
     return () => {
-      socket?.off('getMessage');
+      socket.off('getMessage');
     };
   }, [socket, currentChat]);
 
@@ -523,7 +396,7 @@ export const ChatProvider = ({children}: ChatContextProps) => {
         handleMessageRead(unreadMessageIds, currentChat?._id);
       }
     }
-  }, [currentChat, messages, handleMessageRead, user?._id]);
+  }, [currentChat, messages]);
 
   useEffect(() => {
     const newSocket = io(SERVER_URL);
@@ -545,10 +418,10 @@ export const ChatProvider = ({children}: ChatContextProps) => {
   const {mutate: getUserChats, isLoading: isUserChatsLoading} = useAuthMutation(
     {
       mutationFn: Api.chats.findUserChats,
-      onSuccess: (res: {data: IChat[]}) => {
+      onSuccess: res => {
         setUserChats(res.data);
       },
-      onError: (error: any) => {
+      onError: error => {
         console.log(error.message);
       },
     },
@@ -556,24 +429,20 @@ export const ChatProvider = ({children}: ChatContextProps) => {
 
   useEffect(() => {
     user?._id && getUserChats?.(user?._id);
-  }, [user, getUserChats]);
+  }, [user]);
 
   useEffect(() => {
-    if (!currentChat) {
-      return;
-    }
+    if (!currentChat) return;
 
     loadMessagesMutate({chatId: currentChat?._id, page: 1});
-  }, [currentChat, loadMessagesMutate]);
+  }, [currentChat]);
 
   useEffect(() => {
     userChats?.length !== 0 && setFilteredChats(userChats);
   }, [userChats]);
 
   useEffect(() => {
-    if (!user?._id) {
-      return;
-    }
+    if (!user?._id) return;
 
     const payload = {
       senderName: filterQuery,
@@ -581,15 +450,15 @@ export const ChatProvider = ({children}: ChatContextProps) => {
     };
 
     findChatsByQueryString(payload);
-  }, [filterQuery, findChatsByQueryString, user?._id]);
+  }, [filterQuery]);
 
   useEffect(() => {
-    if (currentChat === null && socket === null) {
+    if (currentChat === null) {
       return;
     }
 
-    socket?.emit('sendMessage', {...newMessage, recipientId});
-  }, [newMessage, socket, recipientId, currentChat]);
+    socket.emit('sendMessage', {...newMessage, recipientId});
+  }, [newMessage]);
 
   return (
     <ChatContext.Provider

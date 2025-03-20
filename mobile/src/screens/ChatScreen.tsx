@@ -27,7 +27,12 @@ import {useTheme} from '@/context/Theme/ThemeContext';
 
 const ChatScreen = () => {
   const route = useRoute();
-  const {chat, recipientUser: savedRecipientUser, isOnline: savedIsOnline} = route?.params || {};
+  const {
+    chat,
+    recipientUser: savedRecipientUser,
+    isOnline: savedIsOnline,
+  } = route?.params || {};
+
   const user = useTypedSelector(state => state.user);
   const {
     userChats,
@@ -43,11 +48,10 @@ const ChatScreen = () => {
     markAsRead,
     loadMoreMessages,
     setPage,
-    onlineUsers,
     isMessagesLoading,
     page,
     hasMoreMessages,
-    editMessage
+    editMessage,
   } = useChatContext();
   const {isRecording, discardRecording, startRecording, stopRecording} =
     useAudioRecorder();
@@ -63,9 +67,6 @@ const ChatScreen = () => {
   const unread = unreadNotifications(notifications);
   const thisUserNotifications = unread?.filter(
     n => n.senderId === recipientUser?._id,
-  );
-  const isOnline = onlineUsers?.some(
-    user => user?.userId === recipientUser?._id,
   );
   let debounceTimeout: NodeJS.Timeout;
 
@@ -104,11 +105,10 @@ const ChatScreen = () => {
   const handleSendMessage = async () => {
     try {
       if (textMessage.trim()) {
-        if(messageToEdit !== null){
-          
+        if (messageToEdit !== null) {
           editMessage(messageToEdit?._id, textMessage);
           setMessageToEdit(null);
-        } else {        
+        } else {
           await sendMessage(textMessage, user, currentChat._id, recipientUser);
         }
 
@@ -192,10 +192,10 @@ const ChatScreen = () => {
   };
 
   useEffect(() => {
-    if(messageToEdit === null) return;
+    if (messageToEdit === null) return;
 
-    setTextMessage(messageToEdit?.text)
-  }, [messageToEdit])
+    setTextMessage(messageToEdit?.text);
+  }, [messageToEdit]);
 
   return (
     <Screen chatMode payload={payload}>
@@ -219,7 +219,9 @@ const ChatScreen = () => {
           <FlatList
             ref={flatListRef}
             data={messages}
-            renderItem={({item}) => <MessageItem message={item} setMessageToEdit={setMessageToEdit}/>}
+            renderItem={({item}) => (
+              <MessageItem message={item} setMessageToEdit={setMessageToEdit} />
+            )}
             keyExtractor={item => item._id}
             style={{zIndex: 1}}
             contentContainerStyle={{
