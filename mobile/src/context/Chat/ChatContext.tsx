@@ -35,6 +35,9 @@ export const ChatProvider = ({children}) => {
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
   const user = useTypedSelector(state => state.user);
   const recipientId = currentChat?.members?.find(id => id !== user?._id);
+  const isRecipientOnline = onlineUsers?.some(
+    user => user?.userId === recipientId,
+  );
 
   const {mutate: findChatsByQueryString} = useAuthMutation({
     mutationFn: Api.chats.findChatsBySenderName,
@@ -141,7 +144,7 @@ export const ChatProvider = ({children}) => {
         text: textMessage,
       });
 
-      if (recipient && recipient.playerId) {
+      if (recipient && recipient.playerId && !isRecipientOnline) {
         try {
           await sendNotification({
             playerIds: [recipient?.playerId],
