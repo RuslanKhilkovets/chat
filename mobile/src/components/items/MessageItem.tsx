@@ -1,13 +1,13 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   StyleSheet,
   Text,
   View,
   TouchableOpacity,
-  Animated,
   TouchableWithoutFeedback,
   Modal,
   Pressable,
+  Animated,
 } from 'react-native';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -37,36 +37,49 @@ const MessageItem = ({message, setMessageToEdit}: IMessageItemProps) => {
   const isMessageMine = message?.senderId === user?._id;
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentPosition, setCurrentPosition] = useState(0);
-  const [equalizerHeights, setEqualizerHeights] = useState<number[]>([
-    7, 8, 15, 10, 5, 7, 10, 7, 8, 8, 15, 10, 15, 5, 15, 12,
-  ]);
+  const [isPaused, setIsPaused] = useState(false);
+
   const [modalVisible, setModalVisible] = useState(false);
 
   const {t} = useTranslation();
   const {theme, colorScheme} = useTheme();
 
   const playAudio = async () => {
-    if (!message.audioPath) {
-      return;
-    }
+    if (!message.audioPath) return;
 
     try {
       if (isPlaying) {
-        await audioPlayer.stopPlayer();
-        setIsPlaying(false);
+        if (isPaused) {
+          // Resume audio playback
+          await audioPlayer.resumePlayer();
+          setIsPaused(false);
+        } else {
+          // Pause audio playback
+          await audioPlayer.pausePlayer();
+          setIsPaused(true);
+        }
         return;
       }
 
+      // Start playing from the beginning
       setIsPlaying(true);
+      setIsPaused(false);
       await audioPlayer.startPlayer(message.audioPath);
 
       audioPlayer.addPlayBackListener(e => {
-        setCurrentPosition(e.currentPosition / 1000);
+        if (!e) return;
 
-        if (e.currentPosition === e.duration) {
+        const progress = (e.currentPosition / e.duration) * 100;
+        setCurrentPosition(e.currentPosition / 1000);
+        setProgressWidth(progress);
+
+        if (e.currentPosition >= e.duration) {
           audioPlayer.stopPlayer();
           audioPlayer.removePlayBackListener();
           setIsPlaying(false);
+          setIsPaused(false);
+          setProgressWidth(0);
+          setCurrentPosition(0);
         }
       });
     } catch (error) {
@@ -75,19 +88,15 @@ const MessageItem = ({message, setMessageToEdit}: IMessageItemProps) => {
     }
   };
 
+  const [progressWidth, setProgressWidth] = useState(0);
+  const animatedWidth = useRef(new Animated.Value(0)).current;
   useEffect(() => {
-    if (isPlaying) {
-      const interval = setInterval(() => {
-        const newHeights = Array.from(
-          {length: 15},
-          () => Math.floor(Math.random() * 30) + 5,
-        );
-        setEqualizerHeights(newHeights);
-      }, 500);
-
-      return () => clearInterval(interval);
-    }
-  }, [isPlaying]);
+    Animated.timing(animatedWidth, {
+      toValue: progressWidth,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
+  }, [progressWidth]);
 
   const handleCloseModal = () => {
     setModalVisible(false);
@@ -115,25 +124,32 @@ const MessageItem = ({message, setMessageToEdit}: IMessageItemProps) => {
         onPress={handlePress}
         activeOpacity={isMessageMine ? 0.7 : 1}>
         {message?.audioPath ? (
-          <TouchableOpacity onPress={playAudio} style={styles.audioContainer}>
+          <Pressable onPress={playAudio} style={styles.audioContainer}>
             <Icon
-              name={isPlaying ? 'pause-circle-filled' : 'play-circle-filled'}
-              size={30}
+              name={
+                isPaused
+                  ? 'play-circle-filled'
+                  : isPlaying
+                  ? 'pause-circle-filled'
+                  : 'play-circle-filled'
+              }
+              size={48}
               color={theme[colorScheme].textPrimary}
             />
-            <View style={styles.equalizer}>
-              {equalizerHeights.map((height, index) => (
-                <Animated.View
-                  key={index}
-                  style={[
-                    styles.equalizerBar,
-                    {height},
-                    {backgroundColor: theme[colorScheme].textPrimary},
-                  ]}
-                />
-              ))}
+            <View
+              style={[
+                styles.progressBar,
+                {backgroundColor: theme[colorScheme].textPrimary},
+              ]}>
+              <Animated.View
+                style={[
+                  styles.progress,
+                  {width: `${progressWidth}%`},
+                  {backgroundColor: theme[colorScheme].bgSecondary},
+                ]}
+              />
             </View>
-          </TouchableOpacity>
+          </Pressable>
         ) : (
           <Text
             style={[
@@ -145,7 +161,11 @@ const MessageItem = ({message, setMessageToEdit}: IMessageItemProps) => {
         )}
 
         {message?.duration ? (
-          <Text style={styles.audioDuration}>
+          <Text
+            style={[
+              styles.audioDuration,
+              {color: theme[colorScheme].textPrimary},
+            ]}>
             {`${moment.utc(currentPosition * 1000).format('mm:ss')} / ${moment
               .utc(message?.duration * 1000)
               .format('mm:ss')}`}
@@ -268,9 +288,23 @@ const MessageItem = ({message, setMessageToEdit}: IMessageItemProps) => {
 export default MessageItem;
 
 const styles = StyleSheet.create({
+  audioContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: 200,
+  },
+  progressBar: {
+    flex: 1,
+    height: 4,
+    borderRadius: 2,
+    overflow: 'hidden',
+    marginLeft: 10,
+  },
+  progress: {
+    height: '100%',
+  },
   container: {
     maxWidth: '80%',
-    backgroundColor: '#333',
     margin: 10,
     marginBottom: 0,
     padding: 10,
@@ -281,29 +315,16 @@ const styles = StyleSheet.create({
     fontFamily: 'Jersey-Regular',
     fontSize: 20,
   },
-  audioContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  equalizer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginLeft: 10,
-    gap: 3,
-  },
   equalizerBar: {
     width: 5,
     backgroundColor: 'yellow',
     borderRadius: 2,
   },
   audioDuration: {
-    color: 'yellow',
     fontSize: 14,
     marginTop: 5,
   },
   date: {
-    color: 'yellow',
     textAlign: 'right',
     fontSize: 12,
     marginTop: 15,
