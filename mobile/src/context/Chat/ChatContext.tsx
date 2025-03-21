@@ -171,15 +171,41 @@ export const ChatProvider = ({children}) => {
     },
   });
 
+  const sendMessage = useCallback(
+    (textMessage, sender, currentChatId, recipient) => {
+      sendMessageMutate({
+        chatId: currentChatId,
+        senderId: sender._id,
+        textMessage,
+        recipient,
+        sender,
+      });
+    },
+    [sendMessageMutate],
+  );
+
   const {mutate: editMessageMutate} = useAuthMutation({
     mutationFn: Api.messages.editMessage,
     onSuccess: response => {
       const updatedMessage = response.data;
+      const {
+        chatId,
+        _id: messageId,
+        text: newContent,
+        senderId,
+      } = updatedMessage;
       setMessages(prevMessages =>
         prevMessages?.map(message =>
           message._id === updatedMessage._id ? updatedMessage : message,
         ),
       );
+      socket?.emit('editMessage', {
+        chatId,
+        messageId,
+        newContent,
+        senderId,
+        recipientId,
+      });
     },
     onError: error => {
       console.error('Failed to edit message:', error);
@@ -194,6 +220,14 @@ export const ChatProvider = ({children}) => {
     mutationFn: Api.messages.deleteMessage,
     onSuccess: response => {
       const deletedMessage = response.data.data;
+      const {chatId, _id, senderId} = deletedMessage;
+
+      socket?.emit('deleteMessage', {
+        chatId,
+        messageId: _id,
+        senderId,
+        recipientId,
+      });
 
       setMessages(prevMessages =>
         prevMessages?.filter(message => message._id !== deletedMessage._id),
@@ -208,19 +242,6 @@ export const ChatProvider = ({children}) => {
     deleteMessageMutate(messageId);
   };
 
-  const sendMessage = useCallback(
-    (textMessage, sender, currentChatId, recipient) => {
-      sendMessageMutate({
-        chatId: currentChatId,
-        senderId: sender._id,
-        textMessage,
-        recipient,
-        sender,
-      });
-    },
-    [sendMessageMutate],
-  );
-
   useEffect(() => {
     if (!socket) return;
 
@@ -232,24 +253,33 @@ export const ChatProvider = ({children}) => {
     };
 
     const handleChatDeleted = (chatId: string) => {
-      console.log('Chat deleted:', chatId);
-
-      setFilteredChats(prev => {
-        console.log('Previous chats:', prev);
-
-        const updatedChats = prev.filter(chat => chat._id !== chatId);
-        console.log('Updated chats:', updatedChats);
-
-        return updatedChats;
-      });
+      setFilteredChats(prev => prev.filter(chat => chat._id !== chatId));
     };
 
+    const handleMessageDeleted = ({messageId}) => {
+      setMessages(prevMessages =>
+        prevMessages.filter(message => message._id !== messageId),
+      );
+    };
+
+    const handleMessageEdited = ({messageId, newContent}) => {
+      setMessages(prevMessages =>
+        prevMessages.map(message =>
+          message._id === messageId ? {...message, text: newContent} : message,
+        ),
+      );
+    };
+
+    socket.on('deleteMessage', handleMessageDeleted);
+    socket.on('editMessage', handleMessageEdited);
     socket.on('chatCreated', handleChatCreated);
     socket.on('chatDeleted', handleChatDeleted);
 
     return () => {
       socket.off('chatCreated', handleChatCreated);
       socket.off('chatDeleted', handleChatDeleted);
+      socket.off('deleteMessage', handleChatCreated);
+      socket.off('editMessage', handleChatDeleted);
     };
   }, [socket]);
 

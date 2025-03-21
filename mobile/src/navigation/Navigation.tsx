@@ -123,13 +123,13 @@ const Navigation = () => {
               ))}
         </Stack.Navigator>
       </NavigationContainer>
-      {/* <PinCodeModal
+      <PinCodeModal
         isVisible={showPinModal && isAuth}
         onClose={() => setShowPinModal(false)}
         onSuccess={() => setShowPinModal(false)}
         isVerification
         canClose={false}
-      /> */}
+      />
     </SafeAreaProvider>
   );
 };
