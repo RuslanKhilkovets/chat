@@ -160,13 +160,13 @@ io.on("connection", (socket) => {
     const sender = onlineUsers.get(senderId);
 
     if (sender) {
-      io.to(sender.socketId).emit("messageDeleted", { chatId, messageId });
+      io.to(sender.socketId).emit("deleteMessage", { chatId, messageId });
     }
 
     const recipient = onlineUsers.get(recipientId);
 
     if (recipient) {
-      io.to(recipient.socketId).emit("messageDeleted", { chatId, messageId });
+      io.to(recipient.socketId).emit("deleteMessage", { chatId, messageId });
     }
   });
 
@@ -176,7 +176,7 @@ io.on("connection", (socket) => {
       const sender = onlineUsers.get(senderId);
 
       if (sender) {
-        io.to(sender.socketId).emit("messageEdited", {
+        io.to(sender.socketId).emit("editMessage", {
           chatId,
           messageId,
           newContent,
@@ -186,7 +186,7 @@ io.on("connection", (socket) => {
       const recipient = onlineUsers.get(recipientId);
 
       if (recipient) {
-        io.to(recipient.socketId).emit("messageEdited", {
+        io.to(recipient.socketId).emit("editMessage", {
           chatId,
           messageId,
           newContent,
