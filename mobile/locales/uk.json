@@ -1,96 +1,97 @@
 {
-	"warnings": {
-		"NoChats": "Ще немає чатів!",
-		"NoChatsAdvice": "Ви можете знайти співрозмовника прямо зараз ;)",
-		"DidNotFindChats": "Не знайдено жодного чату з вказаними користувачами!",
-		"NoChatsWithGivenData": "Немає користувачів з такими даними!"
-	},
-	"chats": {
-		"Search": "Пошук...",
-		"You": "Ви",
-		"VoiceMessage": "Голосове повідомлення",
-		"Message": "Повідомлення..."
-	},
-	"input": {
-		"Phone": "Телефон",
-		"Password": "Пароль",
-		"AccessToken": "Токен доступу",
-		"Name": "Ім'я"
-	},
-	"actions": {
-		"Typing": "Пише...",
-		"Online": "В мережі",
-		"Offline": "Не в мережі",
-		"Copy": "Копіювати",
-		"Edit": "Редагувати",
-		"Delete": "Видалити",
-		"Cancel": "Скасувати",
-		"CheckPassword": "Перевірити пароль",
-		"DeleteChatAgreementTitle": "Ви впевнені, що хочете видалити цей чат?",
-		"LogOutAgreementTitle": "Ви впевнені, що хочете вийти?",
-		"LogOut": "Вийти",
-		"GoBack": "Назад",
-		"FindMate": "Знайти співрозмовника",
-		"TypeSomething": "Напишіть щось...",
-		"SignIn": "Увійти",
-		"Register": "Зареєструватися",
-		"Login": "Логін",
-		"Or": "Або",
-		"AboutApp": "Про додаток",
-		"Change": "Змінити",
-		"tag": "Тег",
-		"email": "E-mail",
-		"phone": "Телефон",
-		"disableNotifications": "Вимкнути сповіщення",
-		"silenceTime": "Не турбувати",
-		"start": "З",
-		"End": "По",
-		"usePinCode": "Використовувати пін код для входу",
-		"setPinCode": "Зберегти пін код",
-		"verifyPin": "Перевірити"
-	},
-	"errors": {
-		"IncorrectPassword": "Невірний пароль",
-		"AudioPlayingError": "Помилка відтворення аудіо",
-		"FillAllFields": "Для збереження заповніть спочатку всі поля",
-		"incorrectPin": "Некоректний пін код. Спробуйте знову",
-		"lockoutMessage": "Забагато спроб. Спробуйте через {{seconds}} секун."
-	},
-	"modals": {
-		"About": "Про додаток",
-		"PrivacyPolicy": "Політика конфіденційності",
-		"PinCode": "Пін код",
-		"Verification": "Верифікація"
-	},
-	"long": {
-		"About": ""
-	},
-	"menu": {
-		"Profile": "Мій профіль",
-		"Theme": "Тема",
-		"FindUsers": "Пошук",
-		"Settings": "Налаштування",
-		"PrivacyPolicies": "Конфінденційність",
-		"AboutApp": "Про додаток"
-	},
-	"screens": {
-		"About": "Про додаток",
-		"Search": "Пошук",
-		"Language": "Мова",
-		"Notifications": "Сповіщення",
-		"Profile": "Профіль",
-		"Settings": "Налаштування",
-		"Security": "Безпека",
-		"Theme": "Тема",
-		"Policies": "Політика \n конфінденційності"
-	},
-	"items": {
-		"UserTag": "Тег користувача",
-		"Phone": "Телефон",
-		"Language": "Мова",
-		"Theme": "Тема",
-		"Notifications": "Сповіщення",
-		"Security": "Безпека",
-		"Saved": "Збережене"
-	}
+  "warnings": {
+    "NoChats": "Ще немає чатів!",
+    "NoChatsAdvice": "Ви можете знайти співрозмовника прямо зараз ;)",
+    "DidNotFindChats": "Не знайдено жодного чату з вказаними користувачами!",
+    "NoChatsWithGivenData": "Немає користувачів з такими даними!"
+  },
+  "chats": {
+    "Search": "Пошук...",
+    "You": "Ви",
+    "VoiceMessage": "Голосове повідомлення",
+    "Message": "Повідомлення...",
+    "NoMessages": "Ще немає повідомлень"
+  },
+  "input": {
+    "Phone": "Телефон",
+    "Password": "Пароль",
+    "AccessToken": "Токен доступу",
+    "Name": "Ім'я"
+  },
+  "actions": {
+    "Typing": "Пише...",
+    "Online": "В мережі",
+    "Offline": "Не в мережі",
+    "Copy": "Копіювати",
+    "Edit": "Редагувати",
+    "Delete": "Видалити",
+    "Cancel": "Скасувати",
+    "CheckPassword": "Перевірити пароль",
+    "DeleteChatAgreementTitle": "Ви впевнені, що хочете видалити цей чат?",
+    "LogOutAgreementTitle": "Ви впевнені, що хочете вийти?",
+    "LogOut": "Вийти",
+    "GoBack": "Назад",
+    "FindMate": "Знайти співрозмовника",
+    "TypeSomething": "Напишіть щось...",
+    "SignIn": "Увійти",
+    "Register": "Зареєструватися",
+    "Login": "Логін",
+    "Or": "Або",
+    "AboutApp": "Про додаток",
+    "Change": "Змінити",
+    "tag": "Тег",
+    "email": "E-mail",
+    "phone": "Телефон",
+    "disableNotifications": "Вимкнути сповіщення",
+    "silenceTime": "Не турбувати",
+    "start": "З",
+    "End": "По",
+    "usePinCode": "Використовувати пін код для входу",
+    "setPinCode": "Зберегти пін код",
+    "verifyPin": "Перевірити"
+  },
+  "errors": {
+    "IncorrectPassword": "Невірний пароль",
+    "AudioPlayingError": "Помилка відтворення аудіо",
+    "FillAllFields": "Для збереження заповніть спочатку всі поля",
+    "incorrectPin": "Некоректний пін код. Спробуйте знову",
+    "lockoutMessage": "Забагато спроб. Спробуйте через {{seconds}} секун."
+  },
+  "modals": {
+    "About": "Про додаток",
+    "PrivacyPolicy": "Політика конфіденційності",
+    "PinCode": "Пін код",
+    "Verification": "Верифікація"
+  },
+  "long": {
+    "About": ""
+  },
+  "menu": {
+    "Profile": "Мій профіль",
+    "Theme": "Тема",
+    "FindUsers": "Пошук",
+    "Settings": "Налаштування",
+    "PrivacyPolicies": "Конфінденційність",
+    "AboutApp": "Про додаток"
+  },
+  "screens": {
+    "About": "Про додаток",
+    "Search": "Пошук",
+    "Language": "Мова",
+    "Notifications": "Сповіщення",
+    "Profile": "Профіль",
+    "Settings": "Налаштування",
+    "Security": "Безпека",
+    "Theme": "Тема",
+    "Policies": "Політика \n конфінденційності"
+  },
+  "items": {
+    "UserTag": "Тег користувача",
+    "Phone": "Телефон",
+    "Language": "Мова",
+    "Theme": "Тема",
+    "Notifications": "Сповіщення",
+    "Security": "Безпека",
+    "Saved": "Збережене"
+  }
 }

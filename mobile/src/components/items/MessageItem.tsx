@@ -112,7 +112,7 @@ const MessageItem = ({message, setMessageToEdit}: IMessageItemProps) => {
         },
       ]}>
       <TouchableOpacity
-        onPress={isMessageMine ? handlePress : undefined}
+        onPress={handlePress}
         activeOpacity={isMessageMine ? 0.7 : 1}>
         {message?.audioPath ? (
           <TouchableOpacity onPress={playAudio} style={styles.audioContainer}>
@@ -214,44 +214,48 @@ const MessageItem = ({message, setMessageToEdit}: IMessageItemProps) => {
                         {t('actions.Copy')}
                       </Text>
                     </Pressable>
-                    <Pressable
-                      onPress={() => {
-                        handleCloseModal();
-                        setMessageToEdit(message);
-                      }}
-                      style={styles.modalOption}
-                      android_ripple={{
-                        color: theme[colorScheme].bgSecondary,
-                        borderless: false,
-                      }}>
-                      <Text
-                        style={[
-                          styles.modalText,
-                          {color: theme[colorScheme].textPrimary},
-                        ]}>
-                        {t('actions.Edit')}
-                      </Text>
-                    </Pressable>
+                    {isMessageMine && (
+                      <Pressable
+                        onPress={() => {
+                          handleCloseModal();
+                          setMessageToEdit(message);
+                        }}
+                        style={styles.modalOption}
+                        android_ripple={{
+                          color: theme[colorScheme].bgSecondary,
+                          borderless: false,
+                        }}>
+                        <Text
+                          style={[
+                            styles.modalText,
+                            {color: theme[colorScheme].textPrimary},
+                          ]}>
+                          {t('actions.Edit')}
+                        </Text>
+                      </Pressable>
+                    )}
                   </>
                 )}
-                <Pressable
-                  onPress={() => {
-                    handleCloseModal();
-                    deleteMessage(message?._id);
-                  }}
-                  style={styles.modalOption}
-                  android_ripple={{
-                    color: theme[colorScheme].bgSecondary,
-                    borderless: false,
-                  }}>
-                  <Text
-                    style={[
-                      styles.modalText,
-                      {color: theme[colorScheme].textPrimary},
-                    ]}>
-                    {t('actions.Delete')}
-                  </Text>
-                </Pressable>
+                {isMessageMine && (
+                  <Pressable
+                    onPress={() => {
+                      handleCloseModal();
+                      deleteMessage(message?._id);
+                    }}
+                    style={styles.modalOption}
+                    android_ripple={{
+                      color: theme[colorScheme].bgSecondary,
+                      borderless: false,
+                    }}>
+                    <Text
+                      style={[
+                        styles.modalText,
+                        {color: theme[colorScheme].textPrimary},
+                      ]}>
+                      {t('actions.Delete')}
+                    </Text>
+                  </Pressable>
+                )}
               </View>
             </View>
           </TouchableWithoutFeedback>

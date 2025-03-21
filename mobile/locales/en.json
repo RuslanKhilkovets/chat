@@ -1,96 +1,97 @@
 {
-	"warnings": {
-		"NoChats": "There is no chats yet!",
-		"NoChatsAdvice": "You can find person for chatting now ;)",
-		"DidNotFindChats": "Did not find any chats with given users!",
-		"NoChatsWithGivenData": "There are no users with given data!"
-	},
-	"chats": {
-		"Search": "Search...",
-		"You": "You",
-		"VoiceMessage": "Voice message",
-		"Message": "Message..."
-	},
-	"input": {
-		"Phone": "Phone",
-		"Password": "Password",
-		"AccessToken": "Access token",
-		"Name": "Name"
-	},
-	"actions": {
-		"Typing": "Typing...",
-		"Online": "Online",
-		"Offline": "Offline",
-		"Delete": "Delete",
-		"Cancel": "Cancel",
-		"Copy": "Copy",
-		"Edit": "Edit",
-		"CheckPassword": "Check password",
-		"DeleteChatAgreementTitle": "Are you sure you want to delete this chat?",
-		"LogOutAgreementTitle": "Are you sure you want to log out?",
-		"LogOut": "Log out",
-		"GoBack": "Go back",
-		"FindMate": "Find mate",
-		"TypeSomething": "Type something...",
-		"SignIn": "Sign in",
-		"Register": "Register",
-		"Login": "Login",
-		"Or": "Or",
-		"AboutApp": "About app",
-		"Change": "Change",
-		"tag": "Tag",
-		"email": "E-mail",
-		"phone": "Phone",
-		"disableNotifications": "Disable Notifications",
-		"silenceTime": "Silence time",
-		"start": "From",
-		"end": "To",
-		"usePinCode": "Use your PIN code to log in.",
-		"setPinCode": "Set pin code",
-		"verifyPin": "Verify pin"
-	},
-	"errors": {
-		"IncorrectPassword": "Incorrect password",
-		"AudioPlayingError": "Error playing audio",
-		"FillAllFields": "Fill all fields at least",
-		"incorrectPin": "Incorrect PIN. Please try again.",
-		"lockoutMessage": "Too many attempts. Try again in {{seconds}} seconds."
-	},
-	"modals": {
-		"About": "About",
-		"PrivacyPolicy": "Privacy policy",
-		"PinCode": "Pin code",
-		"Verification": "Verification"
-	},
-	"long": {
-		"About": ""
-	},
-	"menu": {
-		"Profile": "My profile",
-		"Theme": "Theme",
-		"FindUsers": "Find users",
-		"Settings": "Settings",
-		"PrivacyPolicies": "Privacy policies",
-		"AboutApp": "About app"
-	},
-	"screens": {
-		"About": "About",
-		"Search": "Search",
-		"Language": "Language",
-		"Notifications": "Notifications",
-		"Profile": "Profile",
-		"Settings": "Settings",
-		"Security": "Security",
-		"Theme": "Theme",
-		"Policies": "Privacy policies"
-	},
-	"items": {
-		"UserTag": "User tag",
-		"Phone": "Phone",
-		"Language": "Language",
-		"Theme": "Theme",
-		"Notifications": "Notifications",
-		"Security": "Security",
-		"Saved": "Saved"
-	}
+  "warnings": {
+    "NoChats": "There is no chats yet!",
+    "NoChatsAdvice": "You can find person for chatting now ;)",
+    "DidNotFindChats": "Did not find any chats with given users!",
+    "NoChatsWithGivenData": "There are no users with given data!"
+  },
+  "chats": {
+    "Search": "Search...",
+    "You": "You",
+    "VoiceMessage": "Voice message",
+    "Message": "Message...",
+    "NoMessages": "No messages yet"
+  },
+  "input": {
+    "Phone": "Phone",
+    "Password": "Password",
+    "AccessToken": "Access token",
+    "Name": "Name"
+  },
+  "actions": {
+    "Typing": "Typing...",
+    "Online": "Online",
+    "Offline": "Offline",
+    "Delete": "Delete",
+    "Cancel": "Cancel",
+    "Copy": "Copy",
+    "Edit": "Edit",
+    "CheckPassword": "Check password",
+    "DeleteChatAgreementTitle": "Are you sure you want to delete this chat?",
+    "LogOutAgreementTitle": "Are you sure you want to log out?",
+    "LogOut": "Log out",
+    "GoBack": "Go back",
+    "FindMate": "Find mate",
+    "TypeSomething": "Type something...",
+    "SignIn": "Sign in",
+    "Register": "Register",
+    "Login": "Login",
+    "Or": "Or",
+    "AboutApp": "About app",
+    "Change": "Change",
+    "tag": "Tag",
+    "email": "E-mail",
+    "phone": "Phone",
+    "disableNotifications": "Disable Notifications",
+    "silenceTime": "Silence time",
+    "start": "From",
+    "end": "To",
+    "usePinCode": "Use your PIN code to log in.",
+    "setPinCode": "Set pin code",
+    "verifyPin": "Verify pin"
+  },
+  "errors": {
+    "IncorrectPassword": "Incorrect password",
+    "AudioPlayingError": "Error playing audio",
+    "FillAllFields": "Fill all fields at least",
+    "incorrectPin": "Incorrect PIN. Please try again.",
+    "lockoutMessage": "Too many attempts. Try again in {{seconds}} seconds."
+  },
+  "modals": {
+    "About": "About",
+    "PrivacyPolicy": "Privacy policy",
+    "PinCode": "Pin code",
+    "Verification": "Verification"
+  },
+  "long": {
+    "About": ""
+  },
+  "menu": {
+    "Profile": "My profile",
+    "Theme": "Theme",
+    "FindUsers": "Find users",
+    "Settings": "Settings",
+    "PrivacyPolicies": "Privacy policies",
+    "AboutApp": "About app"
+  },
+  "screens": {
+    "About": "About",
+    "Search": "Search",
+    "Language": "Language",
+    "Notifications": "Notifications",
+    "Profile": "Profile",
+    "Settings": "Settings",
+    "Security": "Security",
+    "Theme": "Theme",
+    "Policies": "Privacy policies"
+  },
+  "items": {
+    "UserTag": "User tag",
+    "Phone": "Phone",
+    "Language": "Language",
+    "Theme": "Theme",
+    "Notifications": "Notifications",
+    "Security": "Security",
+    "Saved": "Saved"
+  }
 }

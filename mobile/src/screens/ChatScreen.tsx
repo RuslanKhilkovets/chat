@@ -6,7 +6,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
-  TouchableOpacity,
+  Text,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {useRoute} from '@react-navigation/native';
@@ -232,6 +232,14 @@ const ChatScreen = () => {
             onScroll={handleScroll}
             inverted
             scrollEventThrottle={100}
+            ListEmptyComponent={
+              <View style={{alignItems: 'center', padding: 20}}>
+                <Text
+                  style={{color: theme[colorScheme.textPrimary], fontSize: 18}}>
+                  {t('chats.NoMessages')}
+                </Text>
+              </View>
+            }
           />
           <View
             style={[
