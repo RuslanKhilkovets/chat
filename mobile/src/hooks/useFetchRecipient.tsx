@@ -15,7 +15,7 @@ export const useFetchRecipient = (
   const [recipientUser, setRecipientUser] = useState(null);
   const [error, setError] = useState('');
 
-  const recipientId = chat?.members.find(id => id !== user?._id);
+  const recipientId = chat?.members?.find(id => id !== user?._id);
 
   const {mutate: fetchRecipient, isLoading} = useAuthMutation({
     mutationFn: async (recipientId: string) => {

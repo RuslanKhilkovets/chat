@@ -55,6 +55,7 @@ export const ChatProvider = ({children}) => {
       setFilteredChats(prevFilteredChats =>
         prevFilteredChats.filter(chat => chat?._id !== chatId),
       );
+      socket?.emit('chatDeleted', res.data.chat._id);
     },
   });
 
@@ -219,18 +220,37 @@ export const ChatProvider = ({children}) => {
     },
     [sendMessageMutate],
   );
-  useEffect(() => {
-    if (socket) {
-      socket.on('chatCreated', chatData => {
-        console.log('New chat created:', chatData);
-        setUserChats(prev => [...prev, chatData]);
-      });
 
-      // Cleanup on unmount
-      return () => {
-        socket.off('chatCreated');
-      };
-    }
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleChatCreated = (chatData: ChatType) => {
+      setFilteredChats(prev => {
+        if (prev.some(chat => chat._id === chatData._id)) return prev;
+        return [...prev, chatData];
+      });
+    };
+
+    const handleChatDeleted = (chatId: string) => {
+      console.log('Chat deleted:', chatId);
+
+      setFilteredChats(prev => {
+        console.log('Previous chats:', prev);
+
+        const updatedChats = prev.filter(chat => chat._id !== chatId);
+        console.log('Updated chats:', updatedChats);
+
+        return updatedChats;
+      });
+    };
+
+    socket.on('chatCreated', handleChatCreated);
+    socket.on('chatDeleted', handleChatDeleted);
+
+    return () => {
+      socket.off('chatCreated', handleChatCreated);
+      socket.off('chatDeleted', handleChatDeleted);
+    };
   }, [socket]);
 
   const handleMessageRead = async (messageIds, chatId) => {
