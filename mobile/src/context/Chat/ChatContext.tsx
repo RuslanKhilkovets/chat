@@ -102,11 +102,6 @@ export const ChatProvider = ({children}) => {
     onSuccess: res => {
       setUserChats(prev => [...prev, res.data]);
       socket?.emit('chatCreated', {
-        chatId: res.data._id,
-        chatData: res.data,
-      });
-      console.log('chatCreated', {
-        chatId: res.data._id,
         chatData: res.data,
       });
     },

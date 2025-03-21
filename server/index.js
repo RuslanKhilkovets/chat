@@ -116,8 +116,13 @@ io.on("connection", (socket) => {
       io.to(recipient.socketId).emit("recordingStop", { chatId, senderId });
     }
   });
-  socket.on("chatCreated", ({ chatId, chatData }) => {
+
+  socket.on("chatCreated", ({ chatData }) => {
     io.emit("chatCreated", chatData);
+  });
+
+  socket.on("chatDeleted", (chatId) => {
+    io.emit("chatDeleted", chatId);
   });
 
   socket.on(
