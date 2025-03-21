@@ -101,6 +101,14 @@ export const ChatProvider = ({children}) => {
     mutationFn: Api.chats.createChat,
     onSuccess: res => {
       setUserChats(prev => [...prev, res.data]);
+      socket?.emit('chatCreated', {
+        chatId: res.data._id,
+        chatData: res.data,
+      });
+      console.log('chatCreated', {
+        chatId: res.data._id,
+        chatData: res.data,
+      });
     },
     onError: error => {
       console.error('Error while creating chat', error);
@@ -216,6 +224,19 @@ export const ChatProvider = ({children}) => {
     },
     [sendMessageMutate],
   );
+  useEffect(() => {
+    if (socket) {
+      socket.on('chatCreated', chatData => {
+        console.log('New chat created:', chatData);
+        setUserChats(prev => [...prev, chatData]);
+      });
+
+      // Cleanup on unmount
+      return () => {
+        socket.off('chatCreated');
+      };
+    }
+  }, [socket]);
 
   const handleMessageRead = async (messageIds, chatId) => {
     const senderId = user?._id;
