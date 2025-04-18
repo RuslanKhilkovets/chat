@@ -27,7 +27,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use("/api/users", userRoute);
-app.use("/api/admin", authMiddleware, adminRoute);
+app.use("/api/admin", adminRoute);
 app.use("/api/chats", authMiddleware, chatRoute);
 app.use("/api/messages", authMiddleware, messageRoute);
 app.use("/api/token", authMiddleware, tokenRoute);

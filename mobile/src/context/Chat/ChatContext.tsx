@@ -522,7 +522,7 @@ export const ChatProvider = ({children}) => {
   }, [filterQuery]);
 
   useEffect(() => {
-    if (currentChat === null) {
+    if (currentChat === null && !newMessage) {
       return;
     }
 

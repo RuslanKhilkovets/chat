@@ -38,8 +38,8 @@ const PrivacyPoliciesScreen = () => {
           before={
             <Icon
               name="arrow-back-ios"
-              color={theme[colorScheme].textPrimary}
-              size={16}
+              color={theme[colorScheme].dark}
+              size={24}
             />
           }
           onPress={goBack}>

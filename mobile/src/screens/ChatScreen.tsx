@@ -233,12 +233,17 @@ const ChatScreen = () => {
             inverted
             scrollEventThrottle={100}
             ListEmptyComponent={
-              <View style={{alignItems: 'center', padding: 20}}>
-                <Text
-                  style={{color: theme[colorScheme.textPrimary], fontSize: 18}}>
-                  {t('chats.NoMessages')}
-                </Text>
-              </View>
+              !isMessagesLoading && (
+                <View style={{alignItems: 'center', padding: 20}}>
+                  <Text
+                    style={{
+                      color: theme[colorScheme.textPrimary],
+                      fontSize: 18,
+                    }}>
+                    {t('chats.NoMessages')}
+                  </Text>
+                </View>
+              )
             }
           />
           <View

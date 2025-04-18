@@ -129,7 +129,6 @@ export const useAudioRecorder = () => {
     mutationFn: Api.media.sendMessage,
     onSuccess: async (response: {data: {data: IMessage}}) => {
       const newMessage = response.data.data;
-      setMessages((prevMessages: IMessage[]) => [newMessage, ...prevMessages]);
 
       socket?.emit('sendMessage', {
         newMessage,

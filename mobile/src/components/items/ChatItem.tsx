@@ -2,6 +2,8 @@ import {StyleSheet, View, TouchableOpacity, Text} from 'react-native';
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
+import i18n from 'i18next';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import {useChatContext} from '@/context/Chat/ChatContext';
 import {
@@ -12,12 +14,14 @@ import {
 import {unreadNotifications} from '@/helpers/unreadNotifications';
 import {getAvatarColor} from '@/helpers';
 import {useTheme} from '@/context/Theme/ThemeContext';
+import moment from 'moment';
 
 interface IChatItemProps {
   chat: any;
 }
 
 const ChatItem = ({chat}: IChatItemProps) => {
+  const currentLanguage = i18n.language;
   const user = useTypedSelector(state => state.user);
   const {navigate} = useNavigation();
 
@@ -77,14 +81,22 @@ const ChatItem = ({chat}: IChatItemProps) => {
         {isOnline && <View style={styles.onlineMark} />}
       </View>
       <View style={styles.chatInfo}>
-        <Text
-          style={[
-            styles.userName,
-            {color: theme[colorScheme].textPrimary},
-            thisUserNotifications?.length !== 0 && {fontWeight: '700'},
-          ]}>
-          {recipientUser?.name}
-        </Text>
+        <View style={styles.rowBetween}>
+          <Text
+            style={[
+              styles.userName,
+              {color: theme[colorScheme].textPrimary},
+              thisUserNotifications?.length !== 0 && {fontWeight: '700'},
+            ]}>
+            {recipientUser?.name}
+          </Text>
+          <Text style={[styles.date, {color: theme[colorScheme].textPrimary}]}>
+            {moment(latestMessage?.createdAt)
+              .locale(currentLanguage)
+              .calendar()}
+          </Text>
+        </View>
+
         <View style={styles.rowBetween}>
           {latestMessage?.text && (
             <Text
@@ -109,7 +121,7 @@ const ChatItem = ({chat}: IChatItemProps) => {
                 : t('chats.VoiceMessage')}
             </Text>
           )}
-          {thisUserNotifications?.length !== 0 && (
+          {thisUserNotifications?.length !== 0 ? (
             <View
               style={[
                 styles.notifications,
@@ -125,7 +137,7 @@ const ChatItem = ({chat}: IChatItemProps) => {
                 {thisUserNotifications?.length}
               </Text>
             </View>
-          )}
+          ) : null}
         </View>
       </View>
     </TouchableOpacity>
@@ -175,6 +187,7 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 20,
   },
+  date: {fontSize: 14},
   lastMsg: {
     flex: 1,
     marginRight: 10,

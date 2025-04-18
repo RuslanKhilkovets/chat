@@ -18,6 +18,7 @@ export const LoginScreen = () => {
     password: '',
     email: '',
   });
+  const [error, setError] = React.useState<any>(false);
   const {login} = useAuthContext();
   const {t} = useTranslation();
   const {theme, colorScheme} = useTheme();
@@ -43,10 +44,7 @@ export const LoginScreen = () => {
   };
 
   const onLoginError = (errors: any) => {
-    setFormErrors({
-      email: errors?.errors?.email ? errors.errors.email[0] : '',
-      password: errors?.errors?.password ? errors.errors.password[0] : '',
-    });
+    setError(true);
   };
 
   const {mutate: onLogin, isLoading} = useAuthMutation({
@@ -59,9 +57,9 @@ export const LoginScreen = () => {
     onLogin(data);
   };
 
-  const onForgotPassword = () => {
-    navigation.navigate('ResetPassword');
-  };
+  // const onForgotPassword = () => {
+  //   navigation.navigate('ResetPassword');
+  // };
 
   return (
     <Screen>
@@ -100,6 +98,9 @@ export const LoginScreen = () => {
             />
           )}
         />
+        {error && !formErrors.password && !formErrors.email && (
+          <Text style={styles.error}>Incorrect email or password</Text>
+        )}
         {/* <TouchableOpacity onPress={onForgotPassword}>
           <Text style={styles.text}>Forget password?</Text>
         </TouchableOpacity> */}
@@ -131,5 +132,10 @@ const styles = StyleSheet.create({
     fontSize: 50,
     fontFamily: 'Jersey-Regular',
     marginVertical: 70,
+  },
+  error: {
+    color: 'red',
+    fontSize: 16,
+    marginTop: 10,
   },
 });
