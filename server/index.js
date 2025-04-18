@@ -30,7 +30,7 @@ app.use("/api/users", userRoute);
 app.use("/api/admin", adminRoute);
 app.use("/api/chats", authMiddleware, chatRoute);
 app.use("/api/messages", authMiddleware, messageRoute);
-app.use("/api/token", authMiddleware, tokenRoute);
+app.use("/api/token", tokenRoute);
 app.use("/api/logs", logRoute);
 app.use("/api/media", authMiddleware, mediaRoute);
 
