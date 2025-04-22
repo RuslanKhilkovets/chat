@@ -79,7 +79,6 @@ export const AuthProvider = ({children}) => {
       keychainService: 'keychainService',
     });
     setAccessToken(null);
-    dispatch(resetUser());
 
     OneSignal.logout(currentUser?.playerId);
   };

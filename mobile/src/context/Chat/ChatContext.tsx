@@ -532,6 +532,7 @@ export const ChatProvider = ({children}) => {
   return (
     <ChatContext.Provider
       value={{
+        setUserChats,
         userChats,
         isUserChatsLoading,
         createChat,
@@ -565,6 +566,7 @@ export const ChatProvider = ({children}) => {
         hasMoreMessages,
         editMessage,
         deleteMessage,
+        setFilteredChats,
       }}>
       {children}
     </ChatContext.Provider>

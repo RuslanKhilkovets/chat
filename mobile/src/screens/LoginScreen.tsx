@@ -4,6 +4,7 @@ import {Controller, useForm} from 'react-hook-form';
 import {useNavigation} from '@react-navigation/native';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {useTranslation} from 'react-i18next';
+import {useDispatch} from 'react-redux';
 
 import {Input, Screen} from '@/components';
 import {Button} from '@/components';
@@ -12,6 +13,7 @@ import {useAuthContext} from '@/context/Auth/AuthContext';
 import loginSchema from '@/validations/login';
 import {Api} from '@/api';
 import {useTheme} from '@/context/Theme/ThemeContext';
+import {resetUser} from '@/store/user';
 
 export const LoginScreen = () => {
   const [formErrors, setFormErrors] = React.useState<any>({
@@ -46,6 +48,7 @@ export const LoginScreen = () => {
   const onLoginError = (errors: any) => {
     setError(true);
   };
+  const dispatch = useDispatch();
 
   const {mutate: onLogin, isLoading} = useAuthMutation({
     mutationFn: Api?.auth?.login,
@@ -60,6 +63,10 @@ export const LoginScreen = () => {
   // const onForgotPassword = () => {
   //   navigation.navigate('ResetPassword');
   // };
+
+  React.useEffect(() => {
+    dispatch(resetUser());
+  }, []);
 
   return (
     <Screen>

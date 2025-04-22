@@ -1,9 +1,7 @@
 import * as React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Controller, useForm} from 'react-hook-form';
-import {useNavigation} from '@react-navigation/native';
 import {yupResolver} from '@hookform/resolvers/yup';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
 
 import {
@@ -21,6 +19,7 @@ import {useTheme} from '@/context/Theme/ThemeContext';
 import {useAuthContext} from '@/context/Auth/AuthContext';
 
 export const LoginScreen = () => {
+  const [error, setError] = React.useState<any>(false);
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = React.useState(false);
   const [formErrors, setFormErrors] = React.useState<any>({
     email: '',
@@ -33,7 +32,6 @@ export const LoginScreen = () => {
   const {theme, colorScheme} = useTheme();
   const {t} = useTranslation();
 
-  const navigation = useNavigation();
   const {
     reset,
     control,
@@ -55,11 +53,14 @@ export const LoginScreen = () => {
     reset();
   };
 
-  const onRegisterError = ({errors}: any) => {
-    setFormErrors({
-      email: errors?.errors?.email ? errors.errors.email[0] : '',
-      password: errors?.errors?.password ? errors.errors.password[0] : '',
-    });
+  const onRegisterError = (errors: any) => {
+    setError(true);
+    if (errors?.response?.data?.message) {
+      setFormErrors({
+        ...formErrors,
+        [errors?.response?.data?.field]: errors?.response?.data?.message,
+      });
+    }
   };
 
   const {mutate: onRegister, isLoading} = useAuthMutation({
@@ -148,7 +149,9 @@ export const LoginScreen = () => {
               )}
             />
           </View>
-
+          {error && !formErrors.password && !formErrors.email && (
+            <Text style={styles.error}>Incorrect email or password</Text>
+          )}
           <Button
             onPress={handleSubmit(onSubmit)}
             type="primary"
@@ -196,5 +199,10 @@ const styles = StyleSheet.create({
     fontSize: 50,
     fontFamily: 'Jersey-Regular',
     marginVertical: 50,
+  },
+  error: {
+    color: 'red',
+    fontSize: 16,
+    marginTop: 10,
   },
 });

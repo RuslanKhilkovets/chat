@@ -3,6 +3,7 @@ import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useTranslation} from 'react-i18next';
+import {useDispatch} from 'react-redux';
 
 import {Drawer, MenuItem, SmallModal} from '@/components';
 import {IModalProps} from '@/types';
@@ -10,6 +11,8 @@ import {useAuthContext} from '@/context/Auth/AuthContext';
 import {useTypedSelector} from '@/hooks';
 import {useTheme} from '@/context/Theme/ThemeContext';
 import {getAvatarColor} from '@/helpers';
+import {useChatContext} from '@/context/Chat/ChatContext';
+import {resetUser} from '@/store/user';
 
 interface MenuDrawerProps extends IModalProps {}
 
@@ -18,8 +21,10 @@ const MenuDrawer = ({onClose, visible}: MenuDrawerProps) => {
   const {navigate} = useNavigation();
   const {theme, colorScheme, setColorScheme} = useTheme();
   const {logout} = useAuthContext();
+  const {setUserChats, setFilteredChats} = useChatContext();
   const user = useTypedSelector(state => state.user);
   const {t} = useTranslation();
+  const dispatch = useDispatch();
 
   const onRedirectHandle = (screen: string, payload?: any) => {
     onClose();
@@ -28,6 +33,9 @@ const MenuDrawer = ({onClose, visible}: MenuDrawerProps) => {
 
   const handleLogout = () => {
     logout();
+    setUserChats([]);
+    setFilteredChats([]);
+    dispatch(resetUser());
     onClose();
     setIsModalVisible(false);
   };
