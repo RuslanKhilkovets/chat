@@ -9,3 +9,4 @@ export default axios => ({
     return axios.post('/users/logout');
   },
 });
+console.log("test")
